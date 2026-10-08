@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Documents | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a class="active" href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">DIGITAL LOCKER</span>
+                <h1>Business Documents</h1>
+                <p class="subtitle">Store and manage your important business documents in one secure place.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn" onclick="openUploadModal()">+ Add Document</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="stat">
+                <small>Total Documents</small>
+                <b id="statTotalDocs">6</b>
+                <span class="positive">● Stored in digital locker</span>
+            </div>
+            <div class="stat">
+                <small>Verified Documents</small>
+                <b id="statVerifiedDocs">5</b>
+                <span class="positive">● Verified &amp; Attested</span>
+            </div>
+            <div class="stat">
+                <small>In Review</small>
+                <b id="statInReviewDocs">1</b>
+                <span class="warning" id="statInReviewSub">Pending review</span>
+            </div>
+        </div>
+
+        <!-- Main Document Table Card (Digital Locker View) -->
+        <section class="panel">
+            <div class="toolbar-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="docSearch" placeholder="Search documents by name, category, or reference..." onkeyup="filterDocs()">
+                </div>
+                <div class="filter-tabs" id="filterTabsContainer">
+                    <button class="filter-tab active" onclick="setDocFilter('all', this)">All Documents (<span id="countAllDocs">6</span>)</button>
+                    <button class="filter-tab" onclick="setDocFilter('Business Identity', this)">Business Identity</button>
+                    <button class="filter-tab" onclick="setDocFilter('Tax', this)">Tax</button>
+                    <button class="filter-tab" onclick="setDocFilter('Licenses & Certificates', this)">Licenses &amp; Certificates</button>
+                    <button class="filter-tab" onclick="setDocFilter('Bank & Financial', this)">Bank &amp; Financial</button>
+                    <button class="filter-tab" onclick="setDocFilter('Address', this)">Address</button>
+                    <button class="filter-tab" onclick="setDocFilter('Other', this)">Other</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none;border:none;">
+                <table class="saas-table" id="docTable">
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Category</th>
+                            <th>Upload Date</th>
+                            <th>Status</th>
+                            <th style="text-align:center;">View</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Upload Document Modal -->
+    <div class="modal-overlay" id="uploadModal" style="display:none; position:fixed; inset:0; background:rgba(11,31,58,0.6); backdrop-filter:blur(4px); z-index:1300; align-items:center; justify-content:center; padding:20px;">
+        <div class="modal-box" style="background:#fff; width:min(580px, 95%); border-radius:14px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <span class="eyebrow" style="color:var(--primary); font-size:11px; font-weight:700;">DIGITAL LOCKER</span>
+                    <h3 style="margin:2px 0 0; font-size:18px; color:var(--navy);">Upload Business Document</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeUploadModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+
+            <form id="uploadDocForm" onsubmit="handleDocUpload(event)" style="display:flex; flex-direction:column; gap:15px;">
+                <!-- Error Banner -->
+                <div id="uploadErrorBanner" style="display:none; background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:10px 14px; font-size:12.5px; color:#DC2626; font-weight:600; line-height:1.4;">
+                </div>
+
+                <!-- 1. Document Type * with auto-assigned Category badge -->
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <label for="upVerificationType" style="font-size:12.5px; font-weight:600; color:#475569;">Document Type *</label>
+                        <span id="upCategoryBadge" style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:12px; background:#f1f5f9; color:#64748b;">Category: Auto-assigned</span>
+                    </div>
+                    <select id="upVerificationType" required onchange="handleDocTypeChange()" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box; background:#fff; color:#1e293b;">
+                        <option value="" disabled selected>Select Document Type</option>
+                        <option value="aadhaar">Aadhaar</option>
+                        <option value="pan">PAN</option>
+                        <option value="gst">GST Certificate</option>
+                        <option value="cin">CIN / Incorporation Certificate</option>
+                        <option value="udyam">Udyam Registration</option>
+                        <option value="fssai">FSSAI License</option>
+                        <option value="shop_license">Shop &amp; Establishment / Trade License</option>
+                        <option value="bank">Bank Proof</option>
+                        <option value="address">Address Proof</option>
+                        <option value="domain">Domain Verification</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <!-- Hidden auto-assigned category input -->
+                    <input type="hidden" id="upDocCategory" value="Other">
+                </div>
+
+                <!-- 2. Document Title & Dynamic Identifier -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label for="upDocTitle" style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Document Title / Description *</label>
+                        <input type="text" id="upDocTitle" placeholder="e.g. PAN Card" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+
+                    <div>
+                        <label id="upRefLabel" for="upDocRef" style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Document Number <span style="font-weight:400; color:#94a3b8;">(Optional)</span></label>
+                        <input type="text" id="upDocRef" placeholder="Enter if available" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <!-- 3. Expiry / Valid Until & Issuing Authority (Optional) -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label for="upDocExpiry" style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Expiry / Valid Until</label>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <input type="date" id="upDocExpiry" disabled style="width:100%; padding:8px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; box-sizing:border-box; background:#f8fafc; color:#1e293b;">
+                            <label style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#475569; cursor:pointer; user-select:none;">
+                                <input type="checkbox" id="upPermanentCheck" checked onchange="togglePermanentExpiry(this.checked)" style="accent-color:var(--primary); width:14px; height:14px; cursor:pointer;">
+                                <span>No Expiry / Permanent</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="upDocAuthority" style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Issuing Authority / Agency <span style="font-weight:400; color:#94a3b8;">(Optional)</span></label>
+                        <input type="text" id="upDocAuthority" placeholder="e.g. Income Tax, GST, UIDAI" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <!-- 4. File Attachment Area (Digital Locker) -->
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">File Attachment (PDF, JPG, PNG) *</label>
+                    <input type="file" id="fileInputSim" accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="handleFileSelected(this)">
+
+                    <!-- State 1: Empty Drop Zone -->
+                    <div id="dropZoneEmpty" onclick="document.getElementById('fileInputSim').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" style="border:2px dashed #cbd5e1; border-radius:10px; padding:20px 16px; text-align:center; background:#f8fafc; cursor:pointer; transition:all 0.2s ease;">
+                        <div style="font-size:24px; margin-bottom:4px;">📁</div>
+                        <div style="font-size:13px; font-weight:600; color:#334155;">Click to select file or drag &amp; drop</div>
+                        <div style="font-size:11.5px; color:#64748b; margin-top:2px;">PDF, JPG, PNG (Max 15MB)</div>
+                    </div>
+
+                    <!-- State 2: Selected File Locker Card -->
+                    <div id="fileSelectedCard" style="display:none; border:1px solid #cbd5e1; border-radius:10px; padding:10px 14px; background:#f8fafc; align-items:center; justify-content:space-between; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                            <div id="fileSelectedIcon" style="width:36px; height:36px; border-radius:8px; background:#eff6ff; color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">
+                                PDF
+                            </div>
+                            <div style="min-width:0; flex:1;">
+                                <div id="fileSelectedName" style="font-size:13px; font-weight:600; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">document.pdf</div>
+                                <div style="display:flex; align-items:center; gap:6px; font-size:11.5px; color:#64748b; margin-top:2px;">
+                                    <span id="fileSelectedType">PDF</span>
+                                    <span>•</span>
+                                    <span id="fileSelectedSize">1.2 MB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                            <button type="button" class="btn-action" onclick="document.getElementById('fileInputSim').click()" style="padding:4px 9px; font-size:11.5px;">Replace</button>
+                            <button type="button" class="btn-action" onclick="removeSelectedFile()" style="padding:4px 9px; font-size:11.5px; color:#dc2626;" title="Remove file">Remove</button>
+                        </div>
+                    </div>
+
+                    <!-- Subtle Security Note -->
+                    <div style="margin-top:7px; display:flex; align-items:center; gap:6px; font-size:11.5px; color:#64748b;">
+                        <span>🛡️</span>
+                        <span>Your document is securely stored and validated after upload.</span>
+                    </div>
+                </div>
+
+                <!-- 5. Validation Status Banner (Upload -> Checking -> Validated) -->
+                <div id="uploadValidationStatus" style="display:none; border-radius:8px; padding:9px 12px; font-size:12.5px; font-weight:600; align-items:center; gap:8px;">
+                </div>
+
+                <!-- 6. Modal Action Buttons -->
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:4px;">
+                    <button type="button" class="btn outline" onclick="closeUploadModal()">Cancel</button>
+                    <button type="submit" class="btn" id="btnSubmitUpload">Upload &amp; Validate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Document Slider Drawer & Backdrop (Interactive Document Viewer) -->
+    <div id="docSliderBackdrop" class="doc-slider-backdrop" onclick="closeDocSlider()"></div>
+    <aside id="docSliderDrawer" class="doc-slider-drawer" role="dialog" aria-modal="true" aria-labelledby="sliderDocTitle">
+        <!-- Slider Header -->
+        <div class="doc-slider-header">
+            <div class="doc-slider-header-info">
+                <div class="doc-slider-header-icon" id="sliderDocIcon">📄</div>
+                <div style="min-width:0;">
+                    <h3 class="doc-slider-header-title" id="sliderDocTitle">Document Name</h3>
+                    <div class="doc-slider-header-meta">
+                        <span id="sliderDocCategory" class="badge badge-neutral" style="font-size:10.5px; padding:2px 8px;">Tax</span>
+                        <span id="sliderDocBadge" class="badge badge-verified">✓ L3 Verified</span>
+                    </div>
+                </div>
+            </div>
+            <div class="doc-slider-nav">
+                <button type="button" class="doc-slider-nav-btn" id="sliderPrevBtn" onclick="slideDoc(-1)" title="Previous Document (Left Arrow)">◀</button>
+                <span class="doc-slider-nav-counter" id="sliderCounter">1 of 6</span>
+                <button type="button" class="doc-slider-nav-btn" id="sliderNextBtn" onclick="slideDoc(1)" title="Next Document (Right Arrow)">▶</button>
+                <button type="button" class="doc-slider-close-btn" onclick="closeDocSlider()" title="Close Viewer (Esc)">&times;</button>
+            </div>
+        </div>
+
+        <!-- Slider Body (Document Sheet View + Security Attestation) -->
+        <div class="doc-slider-body" id="sliderBody">
+            <!-- Dynamically populated via renderDocInSlider(doc) -->
+        </div>
+
+        <!-- Slider Sticky Footer -->
+        <div class="doc-slider-footer">
+            <div style="font-size:11.5px; color:#64748B; display:flex; align-items:center; gap:6px;">
+                <span>🔒</span> <span>Ohana Vault &bull; Tamper-Proof</span>
+            </div>
+            <div class="doc-slider-footer-actions">
+                <button type="button" class="btn outline" id="sliderShareBtn" onclick="shareCurrentDoc()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    Share
+                </button>
+                <button type="button" class="btn" id="sliderDownloadBtn" onclick="downloadCurrentDoc()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Client-Side Engine for Documents Digital Locker -->
+    <script>
+        const DEFAULT_DOCUMENTS = [
+            {
+                id: "DOC-PAN-01",
+                name: "Permanent Account Number (PAN) Card",
+                category: "Business Identity",
+                ref: "PAN: ABCDE1234F · NSDL Validated",
+                uploadedDate: "10 Jan 2026",
+                status: "Verified",
+                fileName: "company_pan_nsdl.pdf",
+                icon: "🪪"
+            },
+            {
+                id: "DOC-GST-02",
+                name: "GST Registration Certificate",
+                category: "Tax",
+                ref: "GSTIN: 27ABCDE1234F1Z5 · REG-06",
+                uploadedDate: "12 Jan 2026",
+                status: "Verified",
+                fileName: "gst_reg_06_certificate.pdf",
+                icon: "📄"
+            },
+            {
+                id: "DOC-LIC-03",
+                name: "Shop & Commercial Establishment License",
+                category: "Licenses & Certificates",
+                ref: "Municipal Trade License · PMC/2026/0491",
+                uploadedDate: "18 Feb 2026",
+                status: "Verified",
+                fileName: "trade_license_2026.pdf",
+                icon: "📜"
+            },
+            {
+                id: "DOC-BNK-04",
+                name: "Current Bank Account Statement & Cancelled Cheque",
+                category: "Bank & Financial",
+                ref: "HDFC Bank · A/C 50200019283741",
+                uploadedDate: "20 Feb 2026",
+                status: "Verified",
+                fileName: "bank_verification_proof.pdf",
+                icon: "🏦"
+            },
+            {
+                id: "DOC-ADR-05",
+                name: "Commercial Office Electricity & Utility Bill",
+                category: "Address",
+                ref: "MSEDCL Consumer #0192830192 · Cyber City Pune",
+                uploadedDate: "05 Mar 2026",
+                status: "Verified",
+                fileName: "office_address_utility.pdf",
+                icon: "🏢"
+            },
+            {
+                id: "DOC-TAX-06",
+                name: "Professional Tax Challan (PTRC)",
+                category: "Tax",
+                ref: "Filing declaration · FY 2025-26",
+                uploadedDate: "28 Sep 2026",
+                status: "In Review",
+                fileName: "ptrc_challan_sep2026.pdf",
+                icon: "📋"
+            }
+        ];
+
+        let documentsData = [];
+        let currentDocFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDocumentsData();
+
+            // Support query parameters from Dashboard or direct links
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetType = urlParams.get('type') || urlParams.get('assoc') || urlParams.get('doc');
+            if (urlParams.get('openUpload') === 'true' || targetType) {
+                setTimeout(() => openUploadModal(targetType), 150);
+            } else if (urlParams.get('slider') === 'true' || urlParams.get('view')) {
+                const targetId = urlParams.get('view') || (documentsData[0] ? documentsData[0].id : null);
+                setTimeout(() => openDocSlider(targetId), 150);
+            }
+
+            // Dismiss modal when clicking overlay background or pressing Escape
+            const uploadModalEl = document.getElementById('uploadModal');
+            if (uploadModalEl) {
+                uploadModalEl.addEventListener('click', (e) => {
+                    if (e.target === uploadModalEl) {
+                        closeUploadModal();
+                    }
+                });
+            }
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeUploadModal();
+                }
+            });
+        });
+
+        function loadDocumentsData() {
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) {
+                    documentsData = JSON.parse(stored);
+                } else {
+                    documentsData = JSON.parse(JSON.stringify(DEFAULT_DOCUMENTS));
+                    saveDocumentsData();
+                }
+            } catch(e) {
+                documentsData = JSON.parse(JSON.stringify(DEFAULT_DOCUMENTS));
+            }
+
+            // Keep renewals data synchronized with active documents
+            if (window.syncRenewalsWithDocuments) {
+                try {
+                    window.syncRenewalsWithDocuments(documentsData);
+                } catch(e) {
+                    console.warn("Renewal sync warning:", e);
+                }
+            }
+
+            updateDocStats();
+            renderDocTable();
+        }
+
+        function saveDocumentsData() {
+            try {
+                localStorage.setItem('ohana_documents', JSON.stringify(documentsData));
+                if (window.syncRenewalsWithDocuments) {
+                    window.syncRenewalsWithDocuments(documentsData);
+                }
+            } catch(e) {}
+        }
+
+        function updateDocStats() {
+            const total = documentsData.length;
+            const verified = documentsData.filter(d => d.status === 'Verified' || (d.verificationLevel && d.verificationLevel.includes('Verified'))).length;
+            const inReview = documentsData.filter(d => d.status === 'In Review' || d.status === 'Pending Review' || (d.verificationLevel && d.verificationLevel.includes('In Review'))).length;
+
+            const elTotal = document.getElementById('statTotalDocs');
+            if (elTotal) elTotal.textContent = total;
+            const elVer = document.getElementById('statVerifiedDocs');
+            if (elVer) elVer.textContent = verified;
+            const elRev = document.getElementById('statInReviewDocs');
+            if (elRev) elRev.textContent = inReview;
+            const countAll = document.getElementById('countAllDocs');
+            if (countAll) countAll.textContent = total;
+        }
+
+        function renderDocTable() {
+            const tbody = document.getElementById('docTableBody');
+            const searchVal = (document.getElementById('docSearch').value || '').toLowerCase().trim();
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            const filtered = documentsData.filter(doc => {
+                const matchesFilter = (currentDocFilter === 'all') || (doc.category === currentDocFilter);
+                const matchesSearch = !searchVal ||
+                    doc.name.toLowerCase().includes(searchVal) ||
+                    (doc.ref && doc.ref.toLowerCase().includes(searchVal)) ||
+                    doc.category.toLowerCase().includes(searchVal);
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                const emptyMessage = documentsData.length === 0 
+                    ? "No business documents stored yet." 
+                    : "No documents found in this category.";
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:48px 16px; color:#64748B;">
+                            <div style="font-size:36px; margin-bottom:8px;">📁</div>
+                            <b style="font-size:15px; color:var(--navy);">${emptyMessage}</b>
+                            <p style="margin:6px 0 16px; font-size:13px; color:#64748B;">Add documents relevant to your business to store them securely in your digital locker.</p>
+                            <button class="btn" onclick="openUploadModal()">+ Add Document</button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(doc => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-cat', doc.category);
+
+                let badgeStatus = '<span class="badge badge-verified">✓ Verified</span>';
+                if (doc.status === 'In Review' || doc.status === 'Pending Review') {
+                    badgeStatus = '<span class="badge badge-warning">● In Review</span>';
+                } else if (doc.status === 'Uploaded') {
+                    badgeStatus = '<span class="badge" style="background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE;">↑ Uploaded</span>';
+                } else if (doc.status === 'Rejected') {
+                    badgeStatus = '<span class="badge badge-danger" style="background:#FEF2F2; color:#DC2626; border:1px solid #FECACA;">✕ Rejected</span>';
+                }
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="openDocSlider('${doc.id}')" title="Click to view document">
+                            <span style="font-size:24px;">${doc.icon || '📄'}</span>
+                            <div>
+                                <b style="color:var(--navy); font-size:13.5px; display:block;">${doc.name}</b>
+                                <span class="muted" style="font-size:11.5px; color:#64748B;">${doc.ref || doc.fileName || 'Document File'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-neutral" style="font-weight:600; padding:3px 10px;">${doc.category}</span></td>
+                    <td style="color:#475569; font-size:13px;">${doc.uploadedDate}</td>
+                    <td>${badgeStatus}</td>
+                    <td style="text-align:center;">
+                        <button type="button" class="btn-doc-view" onclick="openDocSlider('${doc.id}')" title="View ${doc.name}">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span>View</span>
+                        </button>
+                    </td>
+                    <td style="text-align:right; white-space:nowrap;">
+                        <button class="btn-action" onclick="downloadDoc('${doc.name}', '${doc.fileName || 'document.pdf'}')">Download</button>
+                        <button class="btn-action" style="color:#DC2626; margin-left:6px;" onclick="deleteDoc('${doc.id}')" title="Delete ${doc.name}">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterDocs() {
+            renderDocTable();
+        }
+
+        function setDocFilter(cat, btn) {
+            document.querySelectorAll('#filterTabsContainer .filter-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            currentDocFilter = cat;
+            renderDocTable();
+        }
+
+        const UPLOAD_DOC_CONFIG = {
+            aadhaar: {
+                title: 'Aadhaar Card',
+                category: 'Business Identity',
+                categoryBg: '#eff6ff',
+                categoryColor: '#1d4ed8',
+                refLabel: 'Aadhaar Number',
+                refPlaceholder: 'e.g. 5482 9102 3847',
+                authority: 'UIDAI',
+                hasExpiry: false,
+                icon: '🪪',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'avatar', 'portrait', 'profile_pic', 'profile', 'cheque', 'pan', 'gst', 'bill', 'receipt'],
+                detectName: 'Aadhaar'
+            },
+            pan: {
+                title: 'PAN Card',
+                category: 'Business Identity',
+                categoryBg: '#eff6ff',
+                categoryColor: '#1d4ed8',
+                refLabel: 'PAN Number',
+                refPlaceholder: 'e.g. ABCDE1234F',
+                authority: 'Income Tax',
+                hasExpiry: false,
+                icon: '🪪',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'avatar', 'aadhaar', 'aadhar', 'cheque', 'gst', 'bill'],
+                detectName: 'PAN'
+            },
+            gst: {
+                title: 'GST Certificate',
+                category: 'Tax',
+                categoryBg: '#fef3c7',
+                categoryColor: '#b45309',
+                refLabel: 'GSTIN',
+                refPlaceholder: 'e.g. 27ABCDE1234F1Z5',
+                authority: 'GST',
+                hasExpiry: false,
+                icon: '🧾',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'avatar', 'aadhaar', 'aadhar', 'pan_card', 'cheque'],
+                detectName: 'GST'
+            },
+            cin: {
+                title: 'CIN / Incorporation Certificate',
+                category: 'Business Identity',
+                categoryBg: '#eff6ff',
+                categoryColor: '#1d4ed8',
+                refLabel: 'CIN',
+                refPlaceholder: 'e.g. U72200PN2021PTC198765',
+                authority: 'Ministry of Corporate Affairs',
+                hasExpiry: false,
+                icon: '🏛️',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'avatar', 'aadhaar', 'pan', 'cheque'],
+                detectName: 'CIN'
+            },
+            udyam: {
+                title: 'Udyam Registration Certificate',
+                category: 'Licenses & Certificates',
+                categoryBg: '#f0fdf4',
+                categoryColor: '#15803d',
+                refLabel: 'Udyam Registration Number',
+                refPlaceholder: 'e.g. UDYAM-MH-26-0019284',
+                authority: 'Ministry of MSME',
+                hasExpiry: false,
+                icon: '📜',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'pan', 'cheque'],
+                detectName: 'Udyam'
+            },
+            fssai: {
+                title: 'FSSAI Food Safety License',
+                category: 'Licenses & Certificates',
+                categoryBg: '#f0fdf4',
+                categoryColor: '#15803d',
+                refLabel: 'FSSAI License Number',
+                refPlaceholder: 'e.g. 11521019000123',
+                authority: 'FSSAI',
+                hasExpiry: true,
+                icon: '📜',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'aadhaar', 'pan', 'gst'],
+                detectName: 'FSSAI'
+            },
+            shop_license: {
+                title: 'Shop & Establishment / Trade License',
+                category: 'Licenses & Certificates',
+                categoryBg: '#f0fdf4',
+                categoryColor: '#15803d',
+                refLabel: 'License Number',
+                refPlaceholder: 'e.g. PMC/2026/0491',
+                authority: 'Municipal Corporation',
+                hasExpiry: true,
+                icon: '📜',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'aadhaar', 'cheque'],
+                detectName: 'Shop License'
+            },
+            bank: {
+                title: 'Bank Proof',
+                category: 'Bank & Financial',
+                categoryBg: '#f5f3ff',
+                categoryColor: '#6d28d9',
+                refLabel: 'Account Number / IFSC',
+                refPlaceholder: 'e.g. A/C 50200019283741 or IFSC HDFC0001234',
+                authority: 'Bank',
+                hasExpiry: false,
+                icon: '🏦',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'aadhaar', 'fssai'],
+                detectName: 'Bank Proof'
+            },
+            address: {
+                title: 'Address Proof',
+                category: 'Address',
+                categoryBg: '#ecfeff',
+                categoryColor: '#0e7490',
+                refLabel: 'Consumer / Meter / Lease Ref',
+                refPlaceholder: 'e.g. MSEDCL-0192830192',
+                authority: 'Utility Agency',
+                hasExpiry: false,
+                icon: '🏢',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'aadhaar', 'cheque'],
+                detectName: 'Address Proof'
+            },
+            domain: {
+                title: 'Domain Verification',
+                category: 'Other',
+                categoryBg: '#f1f5f9',
+                categoryColor: '#475569',
+                refLabel: 'Domain Name',
+                refPlaceholder: 'e.g. abctechnologies.io',
+                authority: 'Domain Registrar',
+                hasExpiry: true,
+                icon: '🌐',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie', 'photo', 'pan', 'cheque'],
+                detectName: 'Domain Verification'
+            },
+            other: {
+                title: 'Business Document',
+                category: 'Other',
+                categoryBg: '#f1f5f9',
+                categoryColor: '#475569',
+                refLabel: 'Document Reference',
+                refPlaceholder: 'e.g. Registration or Reference Number',
+                authority: '',
+                hasExpiry: false,
+                icon: '📄',
+                rejectionKeywords: ['passport_photo', 'passport_size', 'passport-photo', 'passport', 'selfie'],
+                detectName: 'document'
+            }
+        };
+        window.UPLOAD_DOC_CONFIG = UPLOAD_DOC_CONFIG;
+
+        let selectedUploadFile = null;
+        let lastUserEditedTitle = false;
+        let lastUserEditedAuthority = false;
+
+        function handleDocTypeChange() {
+            const docTypeId = document.getElementById('upVerificationType').value;
+            const titleInput = document.getElementById('upDocTitle');
+            const catHidden = document.getElementById('upDocCategory');
+            const catBadge = document.getElementById('upCategoryBadge');
+            const refLabel = document.getElementById('upRefLabel');
+            const refInput = document.getElementById('upDocRef');
+            const expiryInput = document.getElementById('upDocExpiry');
+            const permCheck = document.getElementById('upPermanentCheck');
+            const authorityInput = document.getElementById('upDocAuthority');
+            const errBanner = document.getElementById('uploadErrorBanner');
+
+            if (errBanner) errBanner.style.display = 'none';
+
+            const cfg = UPLOAD_DOC_CONFIG[docTypeId];
+            if (!cfg) return;
+
+            // 1. Auto-assign Category
+            if (catHidden) catHidden.value = cfg.category;
+            if (catBadge) {
+                catBadge.textContent = `Category: ${cfg.category}`;
+                catBadge.style.background = cfg.categoryBg;
+                catBadge.style.color = cfg.categoryColor;
+            }
+
+            // 2. Smart Title populate
+            if (titleInput && (!titleInput.value || !lastUserEditedTitle)) {
+                titleInput.value = cfg.title;
+            }
+
+            // 3. Dynamic Reference Identifier Label & Placeholder
+            if (refLabel) {
+                refLabel.innerHTML = `${cfg.refLabel} <span style="font-weight:400; color:#94a3b8;">(Optional)</span>`;
+            }
+            if (refInput) {
+                refInput.placeholder = cfg.refPlaceholder;
+            }
+
+            // 4. Expiry / Permanent setting
+            if (permCheck && expiryInput) {
+                if (cfg.hasExpiry) {
+                    permCheck.checked = false;
+                    expiryInput.disabled = false;
+                    expiryInput.style.background = '#fff';
+                    if (!expiryInput.value) {
+                        const d = new Date();
+                        d.setFullYear(d.getFullYear() + (docTypeId === 'fssai' ? 3 : 1));
+                        expiryInput.value = d.toISOString().split('T')[0];
+                    }
+                } else {
+                    permCheck.checked = true;
+                    expiryInput.disabled = true;
+                    expiryInput.value = '';
+                    expiryInput.style.background = '#f8fafc';
+                }
+            }
+
+            // 5. Issuing Authority pre-population
+            if (authorityInput && (!authorityInput.value || !lastUserEditedAuthority)) {
+                authorityInput.value = cfg.authority;
+            }
+
+            // 6. Validate currently selected file if present
+            if (selectedUploadFile) {
+                validateCurrentFile();
+            }
+        }
+
+        function togglePermanentExpiry(isPermanent) {
+            const expiryInput = document.getElementById('upDocExpiry');
+            if (!expiryInput) return;
+            if (isPermanent) {
+                expiryInput.disabled = true;
+                expiryInput.value = '';
+                expiryInput.style.background = '#f8fafc';
+            } else {
+                expiryInput.disabled = false;
+                expiryInput.style.background = '#fff';
+                if (!expiryInput.value) {
+                    const d = new Date();
+                    d.setFullYear(d.getFullYear() + 1);
+                    expiryInput.value = d.toISOString().split('T')[0];
+                }
+            }
+        }
+
+        function handleFileSelected(input) {
+            if (input.files && input.files[0]) {
+                setUploadFile(input.files[0]);
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const dropZone = document.getElementById('dropZoneEmpty');
+            if (dropZone) {
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = '#eff6ff';
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const dropZone = document.getElementById('dropZoneEmpty');
+            if (dropZone) {
+                dropZone.style.borderColor = '#cbd5e1';
+                dropZone.style.background = '#f8fafc';
+            }
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const dropZone = document.getElementById('dropZoneEmpty');
+            if (dropZone) {
+                dropZone.style.borderColor = '#cbd5e1';
+                dropZone.style.background = '#f8fafc';
+            }
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                setUploadFile(e.dataTransfer.files[0]);
+            }
+        }
+
+        function setUploadFile(file) {
+            selectedUploadFile = file;
+            const dropZone = document.getElementById('dropZoneEmpty');
+            const fileCard = document.getElementById('fileSelectedCard');
+            const nameEl = document.getElementById('fileSelectedName');
+            const typeEl = document.getElementById('fileSelectedType');
+            const sizeEl = document.getElementById('fileSelectedSize');
+            const iconEl = document.getElementById('fileSelectedIcon');
+            const errBanner = document.getElementById('uploadErrorBanner');
+
+            if (errBanner) errBanner.style.display = 'none';
+
+            if (dropZone) dropZone.style.display = 'none';
+            if (fileCard) fileCard.style.display = 'flex';
+
+            const ext = (file.name.split('.').pop() || 'FILE').toUpperCase();
+            if (nameEl) nameEl.textContent = file.name;
+            if (typeEl) typeEl.textContent = ext + ' Document';
+            if (sizeEl) sizeEl.textContent = (file.size > 1024 * 1024) ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' : (file.size / 1024).toFixed(0) + ' KB';
+            if (iconEl) iconEl.textContent = ext.substring(0, 4);
+
+            validateCurrentFile();
+        }
+
+        function removeSelectedFile() {
+            selectedUploadFile = null;
+            const input = document.getElementById('fileInputSim');
+            if (input) input.value = '';
+            const dropZone = document.getElementById('dropZoneEmpty');
+            const fileCard = document.getElementById('fileSelectedCard');
+            const statusEl = document.getElementById('uploadValidationStatus');
+            const errBanner = document.getElementById('uploadErrorBanner');
+
+            if (dropZone) dropZone.style.display = 'block';
+            if (fileCard) fileCard.style.display = 'none';
+            if (statusEl) statusEl.style.display = 'none';
+            if (errBanner) errBanner.style.display = 'none';
+        }
+
+        function validateCurrentFile() {
+            const statusEl = document.getElementById('uploadValidationStatus');
+            const docTypeId = document.getElementById('upVerificationType').value;
+            const file = selectedUploadFile;
+
+            if (!statusEl) return;
+            if (!file) {
+                statusEl.style.display = 'none';
+                return;
+            }
+
+            if (!docTypeId) {
+                statusEl.style.display = 'flex';
+                statusEl.style.background = '#f8fafc';
+                statusEl.style.border = '1px solid #e2e8f0';
+                statusEl.style.color = '#64748b';
+                statusEl.innerHTML = '<span>ℹ️</span> <span>Please select a Document Type to validate your file.</span>';
+                return;
+            }
+
+            // Step 1: Checking state
+            statusEl.style.display = 'flex';
+            statusEl.style.background = '#eff6ff';
+            statusEl.style.border = '1px solid #bfdbfe';
+            statusEl.style.color = '#1d4ed8';
+            statusEl.innerHTML = '<span style="display:inline-block; animation:spin 1s linear infinite;">⏳</span> <span>Checking document...</span>';
+
+            // Step 2: Validate against selected document type
+            setTimeout(() => {
+                const res = testDocumentFile(file, docTypeId);
+                if (res.valid) {
+                    statusEl.style.background = '#ecfdf5';
+                    statusEl.style.border = '1px solid #a7f3d0';
+                    statusEl.style.color = '#047857';
+                    statusEl.innerHTML = `<span>✓</span> <span>${res.message}</span>`;
+                } else {
+                    statusEl.style.background = '#fef2f2';
+                    statusEl.style.border = '1px solid #fecaca';
+                    statusEl.style.color = '#dc2626';
+                    statusEl.innerHTML = `<span>❌</span> <span>${res.message}</span>`;
+                }
+            }, 250);
+        }
+
+        function testDocumentFile(file, docTypeId) {
+            const cfg = UPLOAD_DOC_CONFIG[docTypeId] || UPLOAD_DOC_CONFIG.other;
+            const fileName = (file.name || '').trim().toLowerCase();
+            const ext = fileName.split('.').pop().toLowerCase();
+            const allowed = ['pdf', 'jpg', 'jpeg', 'png'];
+
+            if (!allowed.includes(ext)) {
+                return { valid: false, message: `Unsupported file format (.${ext}). Only PDF, JPG, and PNG are allowed.` };
+            }
+
+            if (file.size && file.size > 15 * 1024 * 1024) {
+                return { valid: false, message: 'File size exceeds 15 MB limit. Please upload a smaller file.' };
+            }
+
+            const cleanFileName = fileName.replace(/[\-_.]/g, ' ').toLowerCase();
+
+            // Document type mismatch check
+            if (cfg.rejectionKeywords && cfg.rejectionKeywords.length > 0) {
+                for (const badWord of cfg.rejectionKeywords) {
+                    const pattern = new RegExp(`\\b${badWord.replace(/_/g, '[\\s_-]?')}\\b`, 'i');
+                    if (pattern.test(cleanFileName)) {
+                        return {
+                            valid: false,
+                            message: `This file does not appear to be a valid ${cfg.detectName || 'selected'} document.`
+                        };
+                    }
+                }
+            }
+
+            // Also check app-level validation if available
+            if (window.validateDocumentUpload) {
+                const titleVal = document.getElementById('upDocTitle') ? document.getElementById('upDocTitle').value : '';
+                const refVal = document.getElementById('upDocRef') ? document.getElementById('upDocRef').value : '';
+                const v = window.validateDocumentUpload(file, docTypeId, titleVal, refVal);
+                if (!v.valid && v.level === 2) {
+                    return {
+                        valid: false,
+                        message: `This file does not appear to be a valid ${cfg.detectName || 'selected'} document.`
+                    };
+                }
+            }
+
+            return {
+                valid: true,
+                message: `${cfg.detectName} document detected.`
+            };
+        }
+
+        function openUploadModal(preselectedType) {
+            const modal = document.getElementById('uploadModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+                modal.style.opacity = '1';
+                modal.style.pointerEvents = 'auto';
+
+                // Reset form state
+                document.getElementById('uploadDocForm').reset();
+                selectedUploadFile = null;
+                lastUserEditedTitle = false;
+                lastUserEditedAuthority = false;
+
+                const dropZone = document.getElementById('dropZoneEmpty');
+                const fileCard = document.getElementById('fileSelectedCard');
+                const statusEl = document.getElementById('uploadValidationStatus');
+                const errBanner = document.getElementById('uploadErrorBanner');
+
+                if (dropZone) dropZone.style.display = 'block';
+                if (fileCard) fileCard.style.display = 'none';
+                if (statusEl) statusEl.style.display = 'none';
+                if (errBanner) errBanner.style.display = 'none';
+
+                const catBadge = document.getElementById('upCategoryBadge');
+                if (catBadge) {
+                    catBadge.textContent = 'Category: Auto-assigned';
+                    catBadge.style.background = '#f1f5f9';
+                    catBadge.style.color = '#64748b';
+                }
+
+                const refLabel = document.getElementById('upRefLabel');
+                if (refLabel) refLabel.innerHTML = 'Document Number <span style="font-weight:400; color:#94a3b8;">(Optional)</span>';
+                const refInput = document.getElementById('upDocRef');
+                if (refInput) refInput.placeholder = 'Enter if available';
+
+                const expiryInput = document.getElementById('upDocExpiry');
+                const permCheck = document.getElementById('upPermanentCheck');
+                if (permCheck) permCheck.checked = true;
+                if (expiryInput) {
+                    expiryInput.value = '';
+                    expiryInput.disabled = true;
+                    expiryInput.style.background = '#f8fafc';
+                }
+
+                const titleInput = document.getElementById('upDocTitle');
+                if (titleInput) {
+                    titleInput.value = '';
+                    titleInput.oninput = () => { lastUserEditedTitle = true; };
+                }
+                const authorityInput = document.getElementById('upDocAuthority');
+                if (authorityInput) {
+                    authorityInput.value = '';
+                    authorityInput.oninput = () => { lastUserEditedAuthority = true; };
+                }
+
+                const typeSel = document.getElementById('upVerificationType');
+                if (preselectedType && typeSel) {
+                    typeSel.value = preselectedType;
+                    handleDocTypeChange();
+                } else if (typeSel) {
+                    typeSel.value = '';
+                }
+            }
+        }
+
+        function closeUploadModal() {
+            const modal = document.getElementById('uploadModal');
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.display = 'none';
+                modal.style.opacity = '0';
+                modal.style.pointerEvents = 'none';
+                const errBanner = document.getElementById('uploadErrorBanner');
+                if (errBanner) errBanner.style.display = 'none';
+                const statusEl = document.getElementById('uploadValidationStatus');
+                if (statusEl) statusEl.style.display = 'none';
+            }
+        }
+
+        function handleDocUpload(e) {
+            e.preventDefault();
+
+            const docTypeId = document.getElementById('upVerificationType').value;
+            const titleInput = document.getElementById('upDocTitle');
+            const title = titleInput ? titleInput.value.trim() : '';
+            const category = document.getElementById('upDocCategory').value || 'Other';
+            const refVal = document.getElementById('upDocRef') ? document.getElementById('upDocRef').value.trim() : '';
+            const isPermanent = document.getElementById('upPermanentCheck') ? document.getElementById('upPermanentCheck').checked : true;
+            const expiryVal = (isPermanent || !document.getElementById('upDocExpiry')) ? '' : document.getElementById('upDocExpiry').value;
+            const authorityVal = document.getElementById('upDocAuthority') ? document.getElementById('upDocAuthority').value.trim() : '';
+            const file = selectedUploadFile;
+            const errBanner = document.getElementById('uploadErrorBanner');
+
+            if (!docTypeId) {
+                if (errBanner) {
+                    errBanner.innerHTML = '<strong>Selection Required:</strong> Please select a Document Type.';
+                    errBanner.style.display = 'block';
+                    errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
+            if (!title) {
+                if (errBanner) {
+                    errBanner.innerHTML = '<strong>Required:</strong> Please enter a Document Title.';
+                    errBanner.style.display = 'block';
+                    errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
+            if (!file) {
+                if (errBanner) {
+                    errBanner.innerHTML = '<strong>File Missing:</strong> Please attach a document file (PDF, JPG, PNG).';
+                    errBanner.style.display = 'block';
+                    errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
+            // Document validation check
+            const validation = testDocumentFile(file, docTypeId);
+            if (!validation.valid) {
+                if (errBanner) {
+                    errBanner.innerHTML = `<strong>Validation Failed:</strong> ${validation.message}`;
+                    errBanner.style.display = 'block';
+                    errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
+            if (errBanner) errBanner.style.display = 'none';
+
+            const submitBtn = document.getElementById('btnSubmitUpload');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Uploading & Validating...';
+            }
+
+            setTimeout(() => {
+                const cfg = UPLOAD_DOC_CONFIG[docTypeId] || UPLOAD_DOC_CONFIG.other;
+                const todayStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                // Format expiry display if applicable
+                let formattedExpiry = null;
+                if (!isPermanent && expiryVal) {
+                    try {
+                        const d = new Date(expiryVal);
+                        formattedExpiry = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    } catch(err) {
+                        formattedExpiry = expiryVal;
+                    }
+                }
+
+                // Sensible fallback reference if not entered manually
+                let docRef = refVal;
+                if (!docRef) {
+                    if (docTypeId === 'aadhaar') docRef = 'Aadhaar: **** **** 9012';
+                    else if (docTypeId === 'pan') docRef = 'PAN: ABCDE1234F';
+                    else if (docTypeId === 'gst') docRef = 'GSTIN: 27ABCDE1234F1Z5';
+                    else if (docTypeId === 'cin') docRef = 'CIN: U72200PN2021PTC198765';
+                    else if (docTypeId === 'udyam') docRef = 'UDYAM-MH-26-0019284';
+                    else if (docTypeId === 'fssai') docRef = `FSSAI Lic # 115${Math.floor(10000000000 + Math.random() * 90000000000)}`;
+                    else if (docTypeId === 'shop_license') docRef = `PMC/2026/${Math.floor(1000 + Math.random() * 9000)}`;
+                    else if (docTypeId === 'bank') docRef = 'A/C 50200019283741';
+                    else if (docTypeId === 'address') docRef = 'MSEDCL-0192830192';
+                    else if (docTypeId === 'domain') docRef = 'DNS Cryptographic TXT Record';
+                    else docRef = `REF-${Math.floor(100000 + Math.random() * 900000)}`;
+                }
+
+                const newDoc = {
+                    id: 'DOC-' + Date.now(),
+                    name: title,
+                    category: category,
+                    verificationType: docTypeId,
+                    ref: docRef,
+                    uploadedDate: todayStr,
+                    status: 'Uploaded',
+                    hasExpiry: !isPermanent && !!formattedExpiry,
+                    expiryDate: (!isPermanent && formattedExpiry) ? formattedExpiry : null,
+                    issuingAuthority: authorityVal || cfg.authority || '',
+                    fileName: file.name,
+                    icon: cfg.icon || '📄'
+                };
+
+                documentsData.unshift(newDoc);
+                saveDocumentsData();
+                updateDocStats();
+                renderDocTable();
+
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Upload & Validate';
+                }
+
+                closeUploadModal();
+
+                if (newDoc.hasExpiry && newDoc.expiryDate) {
+                    showToast(`Document uploaded & renewal automatically registered (Valid until ${newDoc.expiryDate})`, 'success');
+                } else {
+                    showToast(`Document "${newDoc.name}" uploaded to your digital locker!`, 'success');
+                }
+
+                setTimeout(() => {
+                    openDocSlider(newDoc.id);
+                }, 300);
+            }, 300);
+        }
+
+        function downloadDoc(name, fileName) {
+            showToast(`Downloading ${name} (${fileName})...`, 'success');
+        }
+
+        function shareDoc(name) {
+            showToast(`Generated secure Share Room link for ${name}`, 'info');
+        }
+
+        function deleteDoc(id) {
+            const doc = documentsData.find(d => d.id === id);
+            if (!doc) return;
+
+            if (confirm(`Remove document "${doc.name}" from Vault?\n(Linked renewals will be automatically removed)`)) {
+                documentsData = documentsData.filter(d => d.id !== id);
+                saveDocumentsData();
+                updateDocStats();
+                renderDocTable();
+                showToast(`Removed "${doc.name}" and synchronized renewals.`, 'info');
+            }
+        }
+
+        /* ==========================================================================
+           DOCUMENT SLIDER DRAWER & VIEWER LOGIC
+           ========================================================================== */
+        let currentViewingDocIndex = 0;
+        let activeSliderList = [];
+
+        function getActiveDocList() {
+            const searchVal = (document.getElementById('docSearch').value || '').toLowerCase().trim();
+            return documentsData.filter(doc => {
+                const matchesFilter = (currentDocFilter === 'all') || (doc.category === currentDocFilter);
+                const matchesSearch = !searchVal ||
+                    doc.name.toLowerCase().includes(searchVal) ||
+                    (doc.ref && doc.ref.toLowerCase().includes(searchVal)) ||
+                    doc.category.toLowerCase().includes(searchVal) ||
+                    (doc.verificationType && doc.verificationType.toLowerCase().includes(searchVal));
+                return matchesFilter && matchesSearch;
+            });
+        }
+
+        function openDocSlider(docId) {
+            activeSliderList = getActiveDocList();
+            if (activeSliderList.length === 0) activeSliderList = [...documentsData];
+
+            let index = activeSliderList.findIndex(d => d.id === docId);
+            if (index === -1) index = 0;
+            currentViewingDocIndex = index;
+
+            renderCurrentSliderDoc();
+
+            const backdrop = document.getElementById('docSliderBackdrop');
+            const drawer = document.getElementById('docSliderDrawer');
+            if (backdrop) backdrop.classList.add('open');
+            if (drawer) drawer.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDocSlider() {
+            const backdrop = document.getElementById('docSliderBackdrop');
+            const drawer = document.getElementById('docSliderDrawer');
+            if (backdrop) backdrop.classList.remove('open');
+            if (drawer) drawer.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function slideDoc(direction) {
+            if (activeSliderList.length === 0) return;
+            currentViewingDocIndex += direction;
+            if (currentViewingDocIndex < 0) currentViewingDocIndex = 0;
+            if (currentViewingDocIndex >= activeSliderList.length) currentViewingDocIndex = activeSliderList.length - 1;
+            renderCurrentSliderDoc();
+        }
+
+        function renderCurrentSliderDoc() {
+            const doc = activeSliderList[currentViewingDocIndex];
+            if (!doc) {
+                const body = document.getElementById('sliderBody');
+                if (body) {
+                    body.innerHTML = `
+                        <div style="text-align:center; padding:70px 24px; color:#64748B;">
+                            <div style="font-size:48px; margin-bottom:14px;">📁</div>
+                            <h4 style="color:#0B1F3A; font-size:18px; margin:0 0 8px; font-weight:700;">No Documents in Vault</h4>
+                            <p style="font-size:13.5px; margin:0 0 24px; color:#64748B; max-width:380px; margin-left:auto; margin-right:auto; line-height:1.5;">Add statutory business proofs, certificates, or compliance filings to preview them in this viewer.</p>
+                            <button type="button" class="btn" onclick="closeDocSlider(); openUploadModal();" style="display:inline-flex; align-items:center; gap:8px;">+ Upload Document</button>
+                        </div>
+                    `;
+                }
+                const counter = document.getElementById('sliderCounter');
+                if (counter) counter.textContent = '0 of 0';
+                const docTitle = document.getElementById('sliderDocTitle');
+                if (docTitle) docTitle.textContent = 'Evidence Vault Empty';
+                const docCat = document.getElementById('sliderDocCategory');
+                if (docCat) docCat.textContent = 'No Category';
+                const badgeEl = document.getElementById('sliderDocBadge');
+                if (badgeEl) {
+                    badgeEl.className = 'badge badge-neutral';
+                    badgeEl.textContent = 'Pending Upload';
+                }
+                const prevBtn = document.getElementById('sliderPrevBtn');
+                if (prevBtn) prevBtn.disabled = true;
+                const nextBtn = document.getElementById('sliderNextBtn');
+                if (nextBtn) nextBtn.disabled = true;
+                return;
+            }
+
+            // Update Header
+            document.getElementById('sliderDocIcon').textContent = doc.icon || '📄';
+            document.getElementById('sliderDocTitle').textContent = doc.name;
+            document.getElementById('sliderDocCategory').textContent = doc.category;
+            
+            const badgeEl = document.getElementById('sliderDocBadge');
+            const isReview = doc.status === 'Pending Review' || doc.status === 'In Review' || (doc.verificationLevel && doc.verificationLevel.includes('In Review'));
+            if (badgeEl) {
+                if (isReview) {
+                    badgeEl.className = 'badge badge-warning';
+                    badgeEl.textContent = '● In Review';
+                } else {
+                    badgeEl.className = 'badge badge-verified';
+                    badgeEl.textContent = '✓ ' + (doc.verificationLevel || 'Verified');
+                }
+            }
+
+            // Update navigation buttons
+            const prevBtn = document.getElementById('sliderPrevBtn');
+            const nextBtn = document.getElementById('sliderNextBtn');
+            const counter = document.getElementById('sliderCounter');
+
+            if (prevBtn) prevBtn.disabled = (currentViewingDocIndex === 0);
+            if (nextBtn) nextBtn.disabled = (currentViewingDocIndex === activeSliderList.length - 1);
+            if (counter) counter.textContent = `${currentViewingDocIndex + 1} of ${activeSliderList.length}`;
+
+            // Render Body (Realistic Document Sheet + Security Card)
+            const body = document.getElementById('sliderBody');
+            if (!body) return;
+            body.scrollTop = 0;
+
+            const sha256 = generateDocHash(doc.id + doc.name);
+            const vaultBlock = `OHANA-BLK-${(doc.id.charCodeAt(doc.id.length-1) * 312).toString().padStart(4, '0')}`;
+
+            let docSheetHtml = '';
+
+            if (doc.id === 'DOC-GST-01' || doc.verificationType === 'gst') {
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">GST REG-06</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">🏛️</div>
+                            <div class="doc-sheet-authority">GOVERNMENT OF INDIA</div>
+                            <div class="doc-sheet-sub-authority">CENTRAL BOARD OF INDIRECT TAXES AND CUSTOMS</div>
+                            <div class="doc-sheet-doc-name">FORM GST REG-06 &bull; REGISTRATION CERTIFICATE</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field">
+                                <small>Registration Number (GSTIN)</small>
+                                <strong style="color:#FF2028; font-size:15px; letter-spacing:0.5px;">27ABCDE1234F1Z5</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Legal Name of Business</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Trade Name</small>
+                                <strong>Ohana Tech Solutions</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Constitution of Business</small>
+                                <strong>Private Limited Company</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Principal Place of Business</small>
+                                <strong>Level 4, Pentagone Tower, Cyber City, Magarpatta, Pune, Maharashtra 411014</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Liability</small>
+                                <strong>01/04/2021</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Period of Validity</small>
+                                <strong>From 01/04/2021 to Regular</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Type of Registration</small>
+                                <strong>Regular Taxpayer</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Jurisdictional Office</small>
+                                <strong>Range-II, Division-I, Pune-I Commissionerate</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge">
+                                    <span>✓</span>
+                                    ATTESTED
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>GSTN PORTAL VERIFIED</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Cryptographically Validated</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#0F172A">
+                                    <rect x="2" y="2" width="6" height="6" fill="#0F172A" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" fill="#0F172A" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" fill="#0F172A" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" fill="#0F172A" />
+                                    <rect x="10" y="9" width="4" height="2" fill="#0F172A" />
+                                    <rect x="14" y="11" width="2" height="4" fill="#0F172A" />
+                                    <rect x="10" y="15" width="4" height="2" fill="#0F172A" />
+                                    <rect x="17" y="15" width="4" height="4" fill="#0F172A" />
+                                    <rect x="10" y="19" width="3" height="2" fill="#0F172A" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">Statutory QR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.id === 'DOC-PAN-02' || doc.verificationType === 'pan') {
+                docSheetHtml = `
+                    <div class="doc-sheet" style="border-top:4px solid #1E40AF;">
+                        <div class="doc-sheet-watermark">INCOME TAX</div>
+                        <div class="doc-sheet-top" style="background:#EFF6FF; margin:-28px -24px 20px -24px; padding:18px 24px;">
+                            <div class="doc-sheet-authority" style="color:#1E40AF; font-size:14px;">INCOME TAX DEPARTMENT</div>
+                            <div class="doc-sheet-sub-authority" style="color:#3B82F6;">GOVT. OF INDIA &bull; PERMANENT ACCOUNT CARD</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Permanent Account Number (PAN)</small>
+                                <strong style="color:#1E40AF; font-size:18px; letter-spacing:1px;">ABCDE1234F</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Company Name</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Incorporation</small>
+                                <strong>10/01/2021</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Entity Category</small>
+                                <strong>Company (Incorporated in India)</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Validation Status</small>
+                                <strong style="color:#059669;">✓ NSDL Verified &amp; Active</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Card Issue Number</small>
+                                <strong>ITD-P-2021-994120</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge" style="border-color:#1E40AF; color:#1E40AF; background:#EFF6FF;">
+                                    <span>★</span>
+                                    OFFICIAL
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>NSDL DATABASE ATTESTED</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Valid for PAN Authentication</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#1E40AF">
+                                    <rect x="2" y="2" width="6" height="6" fill="#1E40AF" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" fill="#1E40AF" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" fill="#1E40AF" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" fill="#1E40AF" />
+                                    <rect x="10" y="9" width="4" height="2" fill="#1E40AF" />
+                                    <rect x="14" y="11" width="2" height="4" fill="#1E40AF" />
+                                    <rect x="10" y="15" width="4" height="2" fill="#1E40AF" />
+                                    <rect x="17" y="15" width="4" height="4" fill="#1E40AF" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">Digital QR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.id === 'DOC-CIN-03' || doc.verificationType === 'cin') {
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">MCA ROC</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">🇮🇳</div>
+                            <div class="doc-sheet-authority">GOVERNMENT OF INDIA</div>
+                            <div class="doc-sheet-sub-authority">MINISTRY OF CORPORATE AFFAIRS &bull; REGISTRAR OF COMPANIES, PUNE</div>
+                            <div class="doc-sheet-doc-name">CERTIFICATE OF INCORPORATION</div>
+                            <p style="font-size:11px; color:#64748B; margin:4px 0 0;">[Pursuant to sub-section (2) of section 7 and sub-section (1) of section 8 of the Companies Act, 2013]</p>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Corporate Identity Number (CIN)</small>
+                                <strong style="color:#0F172A; font-size:15px; letter-spacing:0.5px;">U72200PN2021PTC198765</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Company Name</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Incorporation</small>
+                                <strong>10 January 2021</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Company Category</small>
+                                <strong>Company limited by Shares</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Sub-Category</small>
+                                <strong>Non-govt Company</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Authorized Capital</small>
+                                <strong>₹ 10,00,000.00</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Registered Office Address</small>
+                                <strong>Level 4, Pentagone Tower, Cyber City, Magarpatta, Pune, Maharashtra 411014</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge" style="border-color:#D97706; color:#D97706; background:#FEF3C7;">
+                                    <span>🏛</span>
+                                    MCA
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>REGISTRAR OF COMPANIES</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Seal Affixed at Pune ROC</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#0F172A">
+                                    <rect x="2" y="2" width="6" height="6" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" />
+                                    <rect x="14" y="9" width="3" height="3" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">MCA Validated</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.id === 'DOC-UDY-04' || doc.verificationType === 'udyam') {
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">UDYAM MSME</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">🇮🇳</div>
+                            <div class="doc-sheet-authority">MINISTRY OF MICRO, SMALL &amp; MEDIUM ENTERPRISES</div>
+                            <div class="doc-sheet-sub-authority">GOVERNMENT OF INDIA</div>
+                            <div class="doc-sheet-doc-name">UDYAM REGISTRATION CERTIFICATE</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>UDYAM Registration Number</small>
+                                <strong style="color:#059669; font-size:15px; letter-spacing:0.5px;">UDYAM-MH-26-0019284</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Name of Enterprise</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Type of Enterprise</small>
+                                <strong style="color:#059669;">Small Enterprise</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Major Activity</small>
+                                <strong>Services (Cloud &amp; Vault Software)</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Incorporation</small>
+                                <strong>10/01/2021</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Udyam Registration</small>
+                                <strong>15/01/2026</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>National Industry Classification (NIC Code)</small>
+                                <strong>6201 - Computer programming, consultancy and related activities</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge">
+                                    <span>✓</span>
+                                    MSME
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>GOVT. MSME DI VERIFIED</b><br>
+                                    <span style="font-size:10px; color:#64748B;">National Portal Attestation</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#059669">
+                                    <rect x="2" y="2" width="6" height="6" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" />
+                                    <rect x="12" y="12" width="4" height="4" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">Udyam QR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.id === 'DOC-LIC-05') {
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">PMC LICENSE</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">🏢</div>
+                            <div class="doc-sheet-authority">PUNE MUNICIPAL CORPORATION</div>
+                            <div class="doc-sheet-sub-authority">DEPARTMENT OF SHOPS &amp; COMMERCIAL ESTABLISHMENTS</div>
+                            <div class="doc-sheet-doc-name">COMMERCIAL ESTABLISHMENT REGISTRATION</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Registration Certificate Number</small>
+                                <strong style="color:#0F172A; font-size:15px; letter-spacing:0.5px;">PMC/SHOP/2026/88412</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Establishment Name</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Nature of Business</small>
+                                <strong>IT Software &amp; Compliance Hub</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Employer / Authorized Signatory</small>
+                                <strong>Rahul Bawa (Director)</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Date of Issue</small>
+                                <strong>18 Feb 2026</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Valid Until</small>
+                                <strong style="color:#D97706;">18 Dec 2026</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Registered Location</small>
+                                <strong>Pentagone Tower, Cyber City, Magarpatta, Pune 411014</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge">
+                                    <span>🏢</span>
+                                    PMC
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>COMMISSIONER SEAL</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Physical &amp; Geo-tag Audited</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#0F172A">
+                                    <rect x="2" y="2" width="6" height="6" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">PMC Attest</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.id === 'DOC-TAX-06') {
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">PTRC CHALLAN</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">📋</div>
+                            <div class="doc-sheet-authority">GOVERNMENT OF MAHARASHTRA</div>
+                            <div class="doc-sheet-sub-authority">MAHARASHTRA STATE TAX ON PROFESSIONS, TRADES, CALLINGS AND EMPLOYMENTS</div>
+                            <div class="doc-sheet-doc-name">FORM MTR-6 &bull; TAX PAYMENT CHALLAN</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field">
+                                <small>Challan Receipt / GRN</small>
+                                <strong style="color:#D97706; font-size:14px;">MH-PTRC-2026-99214</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>PTRC TIN</small>
+                                <strong>27220019284P</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Taxpayer Name</small>
+                                <strong>ABC TECHNOLOGIES PRIVATE LIMITED</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Filing Period</small>
+                                <strong>FY 2025-26 &bull; Sep 2026</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Amount Remitted</small>
+                                <strong style="color:#059669; font-size:15px;">₹ 2,500.00</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Payment Mode</small>
+                                <strong>e-Treasury / Cyber Treasury NEFT</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Audit Review State</small>
+                                <strong style="color:#D97706;">● Statutory Review in Progress</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge" style="border-color:#D97706; color:#D97706; background:#FEF3C7;">
+                                    <span>⏳</span>
+                                    AUDIT
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>CHALLAN ACKNOWLEDGED</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Pending Treasury Clearing Stamp</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#D97706">
+                                    <rect x="2" y="2" width="6" height="6" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">Treasury QR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Generic / Custom Uploaded Document
+                docSheetHtml = `
+                    <div class="doc-sheet">
+                        <div class="doc-sheet-watermark">OHANA VAULT</div>
+                        <div class="doc-sheet-top">
+                            <div class="doc-sheet-emblem">${doc.icon || '📄'}</div>
+                            <div class="doc-sheet-authority">OHANA BUSINESSLOCKER EVIDENCE VAULT</div>
+                            <div class="doc-sheet-sub-authority">CRYPTOGRAPHICALLY ATTESTED EVIDENCE CERTIFICATE</div>
+                            <div class="doc-sheet-doc-name">${doc.name}</div>
+                        </div>
+                        <div class="doc-sheet-grid">
+                            <div class="doc-sheet-field">
+                                <small>Document Identifier</small>
+                                <strong style="color:#0F172A; font-size:14px;">${doc.id}</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Category</small>
+                                <strong>${doc.category}</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>Statutory Reference</small>
+                                <strong style="color:#FF2028;">${doc.ref || 'General Evidence Filing'}</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Uploaded Date</small>
+                                <strong>${doc.uploadedDate || doc.date || 'Permanent'}</strong>
+                            </div>
+                            <div class="doc-sheet-field">
+                                <small>Expiry Date</small>
+                                <strong>${doc.expiryDate || doc.validUntil || 'Permanent'}</strong>
+                            </div>
+                            <div class="doc-sheet-field" style="grid-column: span 2;">
+                                <small>File Attachment</small>
+                                <strong>${doc.fileName || (doc.name ? doc.name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '.pdf' : 'evidence_document.pdf')}</strong>
+                            </div>
+                        </div>
+                        <div class="doc-sheet-bottom">
+                            <div class="doc-sheet-seal">
+                                <div class="doc-sheet-seal-badge">
+                                    <span>🔒</span>
+                                    SECURE
+                                </div>
+                                <div style="font-size:11px; color:#475569;">
+                                    <b>OHANA VAULT VALIDATED</b><br>
+                                    <span style="font-size:10px; color:#64748B;">Tamper-proof storage block</span>
+                                </div>
+                            </div>
+                            <div class="doc-sheet-qr">
+                                <svg width="52" height="52" viewBox="0 0 24 24" fill="#0F172A">
+                                    <rect x="2" y="2" width="6" height="6" />
+                                    <rect x="3.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="16" y="2" width="6" height="6" />
+                                    <rect x="17.5" y="3.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="2" y="16" width="6" height="6" />
+                                    <rect x="3.5" y="17.5" width="3" height="3" fill="#ffffff" />
+                                    <rect x="10" y="3" width="2" height="4" />
+                                </svg>
+                                <div style="font-size:9.5px; color:#64748B; margin-top:2px;">Vault QR</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Security & Cryptographic Metadata Card
+            const securityCardHtml = `
+                <div class="doc-meta-card">
+                    <h4 class="doc-meta-card-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Security &amp; Attestation Details
+                    </h4>
+                    <div class="doc-meta-row">
+                        <span>Vault Block Ref</span>
+                        <strong>${vaultBlock}</strong>
+                    </div>
+                    <div class="doc-meta-row">
+                        <span>Verification Association</span>
+                        <strong>${doc.verificationType ? doc.verificationType.toUpperCase() : 'General Document'}</strong>
+                    </div>
+                    <div class="doc-meta-row">
+                        <span>Integrity State</span>
+                        <strong style="color:#059669;">✓ Verified &amp; Cryptographically Sealed</strong>
+                    </div>
+                    <div class="doc-meta-row">
+                        <span>Storage Format</span>
+                        <strong>PDF / A-1b Archived Evidence</strong>
+                    </div>
+                    <div style="margin-top:12px;">
+                        <small style="font-size:11px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px;">
+                            SHA-256 Cryptographic Checksum
+                        </small>
+                        <div class="doc-hash-box">
+                            <code>${sha256}</code>
+                            <button type="button" class="doc-hash-copy-btn" onclick="copyDocHash('${sha256}')" title="Copy Checksum">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            body.innerHTML = docSheetHtml + securityCardHtml;
+        }
+
+        function generateDocHash(input) {
+            let hash = 0;
+            for (let i = 0; i < input.length; i++) {
+                hash = ((hash << 5) - hash) + input.charCodeAt(i);
+                hash |= 0;
+            }
+            const hex = Math.abs(hash).toString(16).padStart(8, '0');
+            return `e8b2${hex}a91d4e73f820c561b349f7a02e1c98d${hex}`;
+        }
+
+        function copyDocHash(hash) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(hash).then(() => {
+                    showToast('SHA-256 Checksum copied to clipboard!', 'success');
+                }).catch(() => {
+                    showToast('Copied checksum: ' + hash.slice(0, 16) + '...', 'info');
+                });
+            } else {
+                showToast('Copied checksum: ' + hash.slice(0, 16) + '...', 'info');
+            }
+        }
+
+        function downloadCurrentDoc() {
+            const doc = activeSliderList[currentViewingDocIndex];
+            if (doc) downloadDoc(doc.name, doc.fileName || 'document.pdf');
+        }
+
+        function shareCurrentDoc() {
+            const doc = activeSliderList[currentViewingDocIndex];
+            if (doc) shareDoc(doc.name);
+        }
+
+        // Global Keyboard navigation for slider
+        document.addEventListener('keydown', (e) => {
+            const drawer = document.getElementById('docSliderDrawer');
+            if (!drawer || !drawer.classList.contains('open')) return;
+
+            if (e.key === 'Escape') {
+                closeDocSlider();
+            } else if (e.key === 'ArrowLeft') {
+                slideDoc(-1);
+            } else if (e.key === 'ArrowRight') {
+                slideDoc(1);
+            }
+        });
+    </script>
+</body>
+
+</html>

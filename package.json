@@ -1,0 +1,14 @@
+{
+  "name": "ohana-businesslocker-frontend",
+  "version": "1.0.0",
+  "description": "Ohana Business Locker – Business Passport frontend prototype",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx live-server --host=0.0.0.0 --port=3000",
+    "dv": "npx live-server --host=0.0.0.0 --port=3000",
+    "start": "npx serve -l 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

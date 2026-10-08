@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dashboard | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <style>
+        /* ==========================================================================
+           Dashboard Responsive Layout & Width Enhancements
+           ========================================================================== */
+        .content {
+            margin-left: 275px;
+            padding: 36px 44px 80px;
+            min-height: 100vh;
+            max-width: 1600px;
+            width: calc(100% - 275px);
+            box-sizing: border-box;
+        }
+
+        /* 1. Top Stats Cards Grid: 3 cards (Verification, Documents, Renewals) */
+        .stats {
+            display: grid;
+            grid-template-columns: minmax(290px, 1.35fr) repeat(2, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        /* Profile Completion Widget */
+        .welcome-profile-widget {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-progress-circle {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-progress-svg {
+            transform: rotate(-90deg);
+            width: 58px;
+            height: 58px;
+        }
+
+        .profile-progress-circle .circle-bg {
+            fill: none;
+            stroke: #FFE5E7;
+            stroke-width: 5;
+        }
+
+        .profile-progress-circle .circle-bar {
+            fill: none;
+            stroke: #FF2028;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 157.08;
+            stroke-dashoffset: 157.08;
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-progress-val {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #0B1F3A;
+            letter-spacing: -0.2px;
+        }
+
+        .stat {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 22px 24px;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .stat.stat-featured {
+            background: linear-gradient(135deg, #ffffff 0%, #f6fef9 60%, #eefbf3 100%);
+            border: 1.5px solid rgba(22, 163, 74, 0.35);
+            box-shadow: 0 4px 20px -2px rgba(22, 163, 74, 0.08), 0 1px 3px rgba(11, 31, 58, 0.03);
+            position: relative;
+        }
+
+        .stat.stat-featured:hover {
+            border-color: #16A34A;
+            box-shadow: 0 8px 30px -4px rgba(22, 163, 74, 0.18), 0 2px 6px rgba(11, 31, 58, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .stat b {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 8px 0 4px;
+            color: #0B1F3A;
+            letter-spacing: -0.5px;
+        }
+
+        .stat small {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #64748B;
+        }
+
+        .stat small svg {
+            flex-shrink: 0;
+        }
+
+        .stat-progress {
+            margin-top: 14px;
+            height: 7px;
+            background: #F1F5F9;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 2. Middle Row: Verification Journey & Upcoming Renewals */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+            gap: 22px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .panel {
+            min-width: 0;
+            padding: 24px 26px;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid rgba(226, 232, 240, 0.85);
+        }
+
+        /* Timeline Milestone Stepper */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+            width: 100%;
+        }
+
+        .timeline div {
+            min-width: 0;
+            border-top: 3px solid #E2E8F0;
+            padding-top: 14px;
+            position: relative;
+        }
+
+        .timeline div b {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            margin-top: 6px;
+        }
+
+        .timeline div small {
+            display: block;
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timeline .done {
+            border-top-color: #16A34A;
+            color: #16A34A;
+        }
+
+        /* Pulse Dots */
+        .pulse-dot-green {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #16A34A;
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+            animation: pulseGreen 1.8s infinite;
+        }
+
+        @keyframes pulseGreen {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        .pulse-dot-amber {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #F59E0B;
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+            animation: pulseAmber 1.8s infinite;
+        }
+
+        @keyframes pulseAmber {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        /* Notification Dropdown Styles */
+        .dash-notif-wrap {
+            position: relative;
+        }
+
+        .dash-notif-btn {
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #475569;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .dash-notif-btn:hover,
+        .dash-notif-btn.active {
+            border-color: #CBD5E1;
+            background: #F8FAFC;
+            color: #0B1F3A;
+        }
+
+        .dash-notif-indicator {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 7px;
+            height: 7px;
+            background: #FF2028;
+            border-radius: 50%;
+            border: 1.5px solid #ffffff;
+        }
+
+        .dash-notif-popover {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 340px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 12px 36px -4px rgba(11, 31, 58, 0.16), 0 4px 12px rgba(11, 31, 58, 0.06);
+            border: 1px solid #E2E8F0;
+            z-index: 100;
+            overflow: hidden;
+            animation: dashNotifPop 0.2s ease-out;
+        }
+
+        @keyframes dashNotifPop {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dash-notif-header {
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .dash-notif-pill {
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(255, 32, 40, 0.09);
+            color: #FF2028;
+            border: 1px solid rgba(255, 32, 40, 0.2);
+            padding: 2px 7px;
+            border-radius: 12px;
+        }
+
+        .dash-notif-mark {
+            background: none;
+            border: none;
+            color: #64748B;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .dash-notif-mark:hover {
+            color: #FF2028;
+        }
+
+        .dash-notif-body {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .dash-notif-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #F8FAFC;
+            transition: background 0.15s;
+        }
+
+        .dash-notif-item:hover {
+            background: #F8FAFC;
+        }
+
+        .dash-notif-item.unread {
+            background: #FAFCFE;
+        }
+
+        .dash-notif-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .notif-green { background: rgba(22, 163, 74, 0.1); color: #16A34A; }
+        .notif-amber { background: rgba(245, 158, 11, 0.12); color: #b45309; }
+        .notif-red { background: rgba(255, 32, 40, 0.1); color: #FF2028; }
+        .notif-blue { background: rgba(37, 99, 235, 0.1); color: #2563EB; }
+
+        .dash-notif-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dash-notif-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #0B1F3A;
+            line-height: 1.35;
+        }
+
+        .dash-notif-desc {
+            font-size: 11.5px;
+            color: #64748B;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        .dash-notif-time {
+            font-size: 10.5px;
+            color: #94A3B8;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .dash-notif-footer {
+            padding: 10px 18px;
+            border-top: 1px solid #F1F5F9;
+            background: #FAFCFE;
+            text-align: center;
+            font-size: 11px;
+            color: #16A34A;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                margin-left: 0;
+                width: 100%;
+                padding: 24px 20px;
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="dashOrgName">ABC Technologies</strong>
+            <span id="dashOrgBadge">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a class="active" href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                    BUSINESS PASSPORT
+                </span>
+                <h1>Dashboard</h1>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;position:relative;">
+                <div style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#16A34A;background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.22);padding:6px 14px;border-radius:30px;">
+                    <span class="pulse-dot-green"></span> Live Sync · 99.9% Secure
+                </div>
+
+                <!-- Compact Notifications Bell -->
+                <div class="dash-notif-wrap">
+                    <button type="button" class="dash-notif-btn" id="dashNotifBtn" onclick="toggleDashboardNotifs(event)" aria-label="Notifications" title="Notifications">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="dash-notif-indicator" id="dashNotifIndicator"></span>
+                    </button>
+
+                    <!-- Professional Dropdown Popover -->
+                    <div class="dash-notif-popover" id="dashNotifPopover" style="display:none;" onclick="event.stopPropagation()">
+                        <div class="dash-notif-header">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; font-size:14px; color:#0B1F3A;">Notifications</span>
+                                <span class="dash-notif-pill" id="dashNotifPill">3 New</span>
+                            </div>
+                            <button type="button" class="dash-notif-mark" onclick="markAllNotifsRead(event)">Mark all read</button>
+                        </div>
+                        <div class="dash-notif-body">
+                            <!-- 1. Verification Update -->
+                            <div class="dash-notif-item unread" data-notif-id="notif_verif" onclick="markNotificationRead('notif_verif', 'verification.html')" style="cursor:pointer;" title="Click to view verification details">
+                                <div class="dash-notif-icon notif-green">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                                </div>
+                                <div class="dash-notif-content">
+                                    <div class="dash-notif-title">L3 Enhanced Verification Confirmed</div>
+                                    <div class="dash-notif-desc">GSTIN &amp; Corporate PAN verification validated across statutory records.</div>
+                                    <div class="dash-notif-time">10m ago · Verification</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Renewal Reminder -->
+                            <div class="dash-notif-item unread" data-notif-id="notif_renewal" onclick="markNotificationRead('notif_renewal', 'renewals.html')" style="cursor:pointer;" title="Click to view renewals">
+                                <div class="dash-notif-icon notif-amber">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                                </div>
+                                <div class="dash-notif-content">
+                                    <div class="dash-notif-title">Upcoming Renewal: Corporate Domain &amp; SSL</div>
+                                    <div class="dash-notif-desc">abctechnologies.io SSL cert expires in 28 days. Auto-renew rule active.</div>
+                                    <div class="dash-notif-time">2h ago · Renewals</div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Document Expiry / Reminder -->
+                            <div class="dash-notif-item unread" data-notif-id="notif_doc" onclick="markNotificationRead('notif_doc', 'documents.html')" style="cursor:pointer;" title="Click to view documents">
+                                <div class="dash-notif-icon notif-red">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                </div>
+                                <div class="dash-notif-content">
+                                    <div class="dash-notif-title">Document Reminder: Audited Financials</div>
+                                    <div class="dash-notif-desc">FY 2024-25 balance sheet requested to complete Level 4 Assured vetting.</div>
+                                    <div class="dash-notif-time">Yesterday · Documents Vault</div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Share Room Activity -->
+                            <div class="dash-notif-item" data-notif-id="notif_share" onclick="markNotificationRead('notif_share', 'share-room.html')" style="cursor:pointer;" title="Click to view Share Room">
+                                <div class="dash-notif-icon notif-blue">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                                </div>
+                                <div class="dash-notif-content">
+                                    <div class="dash-notif-title">Share Room Accessed by Counterparty</div>
+                                    <div class="dash-notif-desc">Series-A Due Diligence room credentials viewed by verified partner.</div>
+                                    <div class="dash-notif-time">3d ago · Share Room</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dash-notif-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span>● Live compliance alerts synced</span>
+                            <a href="notifications.html" style="color:var(--primary); font-weight:700; text-decoration:none; font-size:11px;">View All →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-chip" id="dashProfileChip" onclick="window.location.href='public-profile.html'" style="cursor:pointer;" title="View Public Profile"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <div class="welcome">
+            <div>
+                <h2>Complete Your Profile</h2>
+                <p class="muted" id="dashProfileSub">Your business profile is <strong id="dashProfilePctText" style="color:#0B1F3A;">--%</strong> complete</p>
+            </div>
+            <div class="welcome-profile-widget">
+                <div class="profile-progress-circle" title="Profile completion">
+                    <svg class="profile-progress-svg" viewBox="0 0 58 58">
+                        <circle class="circle-bg" cx="29" cy="29" r="25"></circle>
+                        <circle class="circle-bar" id="dashProfileBar" cx="29" cy="29" r="25"></circle>
+                    </svg>
+                    <span class="profile-progress-val" id="dashProfileVal">0%</span>
+                </div>
+                <a class="btn" href="identity.html" id="dashUpdateProfileBtn">
+                    Update Now
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat stat-featured" onclick="window.location.href='verification.html'" style="cursor:pointer;" title="Click to view verification details">
+                <small>
+                    Verification level
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#16A34A" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                </small>
+                <b id="dashLevelNum">L3</b>
+                <span class="positive" id="dashLevelTitle"><span class="pulse-dot-green"></span> Enhanced Verified</span>
+                <div class="stat-progress"><div class="stat-progress-bar" id="dashLevelBar" style="width:75%;background:linear-gradient(90deg, #16A34A, #22c55e);"></div></div>
+            </div>
+            <div class="stat" onclick="handleDashDocsClick()" style="cursor:pointer;" title="Click to view documents or open slider">
+                <small>
+                    Documents
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span onclick="event.stopPropagation(); window.location.href='documents.html?openUpload=true';" title="Upload New Document" style="color:#FF2028; font-size:11px; font-weight:700; text-transform:none; letter-spacing:0; background:rgba(255,32,40,0.08); padding:2px 8px; border-radius:6px; cursor:pointer;">+ Upload</span>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#FF2028" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                </small>
+                <b id="dashDocsCount">6</b>
+                <span id="dashDocsSub">5 verified · 1 pending</span>
+                <div class="stat-progress"><div class="stat-progress-bar" id="dashDocsBar" style="width:83%;background:linear-gradient(90deg, #FF2028, #FF666C);"></div></div>
+            </div>
+            <div class="stat" onclick="window.location.href='renewals.html'" style="cursor:pointer;" title="Click to view upcoming renewals">
+                <small>
+                    Renewals
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#FF2028" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </small>
+                <b id="dashRenewalsCount">03</b>
+                <span class="warning" id="dashRenewalsSub"><span class="pulse-dot-amber"></span> Due soon</span>
+                <div class="stat-progress"><div class="stat-progress-bar" id="dashRenewalsBar" style="width:40%;background:linear-gradient(90deg, #FF2028, #f59e0b);"></div></div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3>Verification Journey</h3>
+                        <p style="margin:3px 0 0;font-size:12.5px;color:#64748b;" id="dashJourneySub">Enterprise statutory compliance progression</p>
+                    </div>
+                    <a href="verification.html">Details →</a>
+                </div>
+                <div class="timeline" id="dashTimeline">
+                    <div class="done" id="dashL0"><b>L0</b><small>Account</small></div>
+                    <div class="done" id="dashL1"><b>L1</b><small>Contact</small></div>
+                    <div class="done" id="dashL2"><b>L2</b><small>Business</small></div>
+                    <div class="done" id="dashL3"><b>L3</b><small>Enhanced</small></div>
+                    <div id="dashL4"><b>L4</b><small>Assured</small></div>
+                </div>
+                <div style="margin-top:18px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;font-size:12.5px;cursor:pointer;" onclick="window.location.href='verification.html'">
+                    <span style="color:#0f172a;font-weight:600;">Active Level: <strong style="color:#16A34A;" id="dashActiveLevelText">L3 Enhanced Verified</strong></span>
+                    <span style="color:#FF2028;font-weight:600;" id="dashNextPrompt">L4 Enterprise Vetting in Review →</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3>Upcoming Renewals</h3>
+                        <p style="margin:3px 0 0;font-size:12.5px;color:#64748b;">Statutory filings, certificates, and licenses</p>
+                    </div>
+                    <a href="renewals.html">View all →</a>
+                </div>
+                <div class="list" id="dashRenewalsList">
+                    <!-- Populated dynamically from ohana_renewals_data -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            syncDashboardState();
+        });
+
+        // Auto-refresh when identity or other data is updated in other tabs/pages
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'ohana_business_identity' || e.key === 'ohana_verification_state' || e.key === 'ohana_documents' || e.key === 'ohana_renewals_data') {
+                syncDashboardState();
+            }
+        });
+
+        // Auto-refresh when returning to Dashboard tab
+        window.addEventListener('focus', () => {
+            syncDashboardState();
+        });
+
+        /* Dynamic Profile Completion Calculation */
+        function computeDashboardProfileCompletion() {
+            let idData = null;
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    idData = JSON.parse(storedId);
+                }
+            } catch (e) {
+                console.error('Error reading identity data:', e);
+            }
+
+            if (!idData) {
+                const u = (typeof getCurrentOhanaUser === 'function') ? getCurrentOhanaUser() : null;
+                const org = (u && u.orgName) ? u.orgName : "Enterprise";
+                const eml = (u && u.email) ? u.email : "";
+                idData = {
+                    legalName: org,
+                    tradeName: org,
+                    entityType: "Private Limited Company",
+                    officialEmail: eml
+                };
+            }
+
+            // Evaluate statutory requirement applicability for profile fields
+            const isCinReq = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', idData)
+                : (idData.entityType !== 'Sole Proprietorship' && idData.entityType !== 'Partnership');
+            const isFssaiReq = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('fssai', idData)
+                : false;
+            const isOwnerReq = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('owner_id', idData)
+                : (idData.entityType === 'Sole Proprietorship');
+
+            const fields = [
+                { name: 'Legal Business Name', value: idData.legalName },
+                { name: 'Trade Name', value: idData.tradeName },
+                { name: 'Entity Type', value: idData.entityType },
+                { name: 'Business Type', value: idData.businessType || idData.business_type },
+                { name: 'GSTIN', value: idData.gstin },
+                { name: 'PAN', value: idData.panNumber || idData.pan },
+                { name: 'Udyam', value: idData.udyamNumber || idData.udyam },
+                { name: 'Business Description', value: idData.businessBio || idData.description },
+                { name: 'Website', value: idData.officialWebsite || idData.website },
+                { name: 'Business Email', value: idData.officialEmail || idData.email },
+                { name: 'Phone', value: idData.officialPhone || idData.phone },
+                { name: 'WhatsApp', value: idData.whatsappBusiness || idData.whatsapp },
+                { name: 'Business Address', value: idData.address1 || idData.address }
+            ];
+
+            // Only count CIN if it is applicable to the entity
+            if (isCinReq) {
+                fields.push({ name: 'CIN/LLPIN', value: idData.cinNumber || idData.cin });
+            }
+            if (isFssaiReq) {
+                fields.push({ name: 'FSSAI License', value: idData.fssai });
+            }
+            if (isOwnerReq) {
+                fields.push({ name: 'Owner Identity Proof', value: idData.ownerId });
+            }
+
+            const completedCount = fields.filter(f => Boolean(f.value && String(f.value).trim().length > 0)).length;
+            const totalFields = fields.length;
+            const pct = Math.round((completedCount / totalFields) * 100);
+
+            // Update completion text
+            const pctText = document.getElementById('dashProfilePctText');
+            if (pctText) pctText.textContent = `${pct}%`;
+
+            const valText = document.getElementById('dashProfileVal');
+            if (valText) valText.textContent = `${pct}%`;
+
+            const subText = document.getElementById('dashProfileSub');
+            if (subText) {
+                if (pct >= 100) {
+                    subText.innerHTML = `Your business profile is <strong style="color:#16A34A;">100% complete</strong> (Fully Synced)`;
+                } else {
+                    const remaining = totalFields - completedCount;
+                    subText.innerHTML = `Your business profile is <strong style="color:#0B1F3A;">${pct}%</strong> complete &bull; ${remaining} item${remaining > 1 ? 's' : ''} left`;
+                }
+            }
+
+            // Update radial SVG ring: circumference 2 * PI * 25 ~ 157.08
+            const bar = document.getElementById('dashProfileBar');
+            if (bar) {
+                const circumference = 2 * Math.PI * 25;
+                const offset = circumference - (pct / 100) * circumference;
+                bar.style.strokeDashoffset = offset;
+            }
+
+            // Update button label
+            const btn = document.getElementById('dashUpdateProfileBtn');
+            if (btn) {
+                if (pct >= 100) {
+                    btn.innerHTML = `View Profile <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+                } else {
+                    btn.innerHTML = `Update Now <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+                }
+            }
+
+            return { pct, legalName: idData.legalName || 'Enterprise' };
+        }
+
+        /* Full Sync with Verification, Documents, and Renewals */
+        function syncDashboardState() {
+            // Render user profile chip
+            if (typeof renderUserProfileChips === 'function') {
+                renderUserProfileChips();
+            }
+
+            // Sync notification read state
+            syncNotificationUI();
+
+            // Load business identity
+            let idData = {};
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) idData = JSON.parse(storedId);
+            } catch(e) {}
+
+            // 1. Profile Completion & Org Name
+            const profile = computeDashboardProfileCompletion();
+            const orgNameEl = document.getElementById('dashOrgName');
+            if (orgNameEl && profile.legalName) {
+                orgNameEl.textContent = profile.legalName.replace(/ Pvt\.? Ltd\.?/i, '').replace(/ Private Limited/i, '');
+            }
+
+            // 2. Requirement-Aware Verification State
+            try {
+                const verStored = localStorage.getItem('ohana_verification_state');
+                const ver = verStored ? JSON.parse(verStored) : { currentLevel: 'L2', levelTitle: 'Business Verified' };
+
+                // Use centralized requirement-aware level & progress engines
+                const calc = (typeof computeOhanaVerificationLevel === 'function')
+                    ? computeOhanaVerificationLevel(ver, idData)
+                    : { level: ver.currentLevel || 'L2', levelName: ver.levelTitle || 'Business Verified', nextRequirement: 'Enhanced Verification (L3)', progressPct: 60 };
+
+                const vProg = (typeof getVerificationProgress === 'function')
+                    ? getVerificationProgress(idData, ver)
+                    : { progressPct: calc.progressPct || 60, completedRequired: 3, completedOptional: 1, totalApplicable: 5, pendingRequired: 1, notApplicableCount: 1 };
+
+                const levelNum = calc.level || 'L2';
+                const levelTitle = calc.levelName || 'Business Verified';
+
+                const levelNumEl = document.getElementById('dashLevelNum');
+                const levelTitleEl = document.getElementById('dashLevelTitle');
+                const levelBarEl = document.getElementById('dashLevelBar');
+                const orgBadgeEl = document.getElementById('dashOrgBadge');
+                const activeLevelTextEl = document.getElementById('dashActiveLevelText');
+
+                if (levelNumEl) levelNumEl.textContent = levelNum;
+                if (levelTitleEl) {
+                    levelTitleEl.innerHTML = `<span class="pulse-dot-green"></span> ${levelTitle}`;
+                }
+                if (orgBadgeEl) orgBadgeEl.textContent = `✓ ${levelNum} Verified`;
+                if (activeLevelTextEl) activeLevelTextEl.textContent = `${levelNum} ${levelTitle}`;
+
+                // Level Progress Width calculated strictly over applicable requirements
+                if (levelBarEl) levelBarEl.style.width = `${vProg.progressPct}%`;
+
+                // Update Timeline Stepper
+                const levels = ['L0', 'L1', 'L2', 'L3', 'L4'];
+                const curIdx = levels.indexOf(levelNum);
+                levels.forEach((lvl, idx) => {
+                    const stepEl = document.getElementById(`dash${lvl}`);
+                    if (stepEl) {
+                        if (idx <= curIdx) {
+                            stepEl.className = 'done';
+                        } else {
+                            stepEl.className = '';
+                        }
+                    }
+                });
+
+                const nextPrompt = document.getElementById('dashNextPrompt');
+                if (nextPrompt) {
+                    if (levelNum === 'L4') {
+                        nextPrompt.textContent = 'Maximum Trust Level Achieved ✓';
+                        nextPrompt.style.color = '#16A34A';
+                    } else if (levelNum === 'L3') {
+                        nextPrompt.textContent = 'L4 Enterprise Vetting in Review →';
+                        nextPrompt.style.color = '#FF2028';
+                    } else {
+                        nextPrompt.textContent = `${calc.nextRequirement} →`;
+                        nextPrompt.style.color = '#FF2028';
+                    }
+                }
+            } catch(e) {}
+
+            // 4. Documents Summary Widget (ohana_documents)
+            try {
+                const docsStored = localStorage.getItem('ohana_documents');
+                const docs = docsStored ? JSON.parse(docsStored) : [];
+                const docsCountEl = document.getElementById('dashDocsCount');
+                const docsSubEl = document.getElementById('dashDocsSub');
+                const docsBarEl = document.getElementById('dashDocsBar');
+
+                const vProg = (typeof getVerificationProgress === 'function')
+                    ? getVerificationProgress(idData)
+                    : null;
+
+                if (docs.length === 0) {
+                    if (docsCountEl) docsCountEl.textContent = '0';
+                    if (docsSubEl) docsSubEl.innerHTML = '<span style="color:#FF2028; font-weight:600;">No docs &bull; Click to upload +</span>';
+                    if (docsBarEl) docsBarEl.style.width = '0%';
+                } else {
+                    const verifiedDocs = docs.filter(d => (d.status === 'Verified' || d.status === 'Active') || (d.verificationLevel || '').includes('Verified')).length;
+                    const inReviewDocs = docs.filter(d => d.status === 'In Review' || d.status === 'Pending Review' || (d.verificationLevel || '').includes('In Review')).length;
+
+                    if (docsCountEl) docsCountEl.textContent = String(docs.length).padStart(2, '0');
+                    if (docsSubEl) {
+                        docsSubEl.textContent = `${verifiedDocs} verified · ${inReviewDocs} in review`;
+                    }
+                    if (docsBarEl) {
+                        docsBarEl.style.width = `${Math.min(100, Math.round((verifiedDocs / docs.length) * 100))}%`;
+                    }
+                }
+            } catch(e) {}
+
+            // 5. Renewals Summary Widgets (ohana_renewals_data linked to documents)
+            try {
+                const docsStored = localStorage.getItem('ohana_documents');
+                const docs = docsStored ? JSON.parse(docsStored) : [];
+                const renewals = window.syncRenewalsWithDocuments 
+                    ? window.syncRenewalsWithDocuments(docs) 
+                    : (JSON.parse(localStorage.getItem('ohana_renewals_data') || '[]'));
+                const renCountEl = document.getElementById('dashRenewalsCount');
+                const renSubEl = document.getElementById('dashRenewalsSub');
+                const renBarEl = document.getElementById('dashRenewalsBar');
+                const renListEl = document.getElementById('dashRenewalsList');
+
+                if (renewals.length === 0) {
+                    if (renCountEl) renCountEl.textContent = '0';
+                    if (renSubEl) renSubEl.innerHTML = '<span style="color:#64748B;">No upcoming renewals</span>';
+                    if (renBarEl) renBarEl.style.width = '0%';
+                    if (renListEl) {
+                        renListEl.innerHTML = `<div style="text-align:center; padding:18px; color:#64748B; font-size:12.5px;">No upcoming renewals.</div>`;
+                    }
+                } else {
+                    const urgent = renewals.filter(r => (window.computeDaysRemaining ? window.computeDaysRemaining(r.expiry) : r.days) <= 30).length;
+                    if (renCountEl) renCountEl.textContent = String(renewals.length).padStart(2, '0');
+                    if (renSubEl) renSubEl.innerHTML = `<span class="pulse-dot-amber"></span> ${urgent > 0 ? urgent + ' due &le; 30d' : 'Active schedule'}`;
+                    if (renBarEl) renBarEl.style.width = `${Math.min(100, Math.round((urgent / renewals.length) * 100 + 20))}%`;
+
+                    if (renListEl) {
+                        const topRenewals = renewals.slice(0, 3);
+                        renListEl.innerHTML = topRenewals.map(r => {
+                            const daysLeft = window.computeDaysRemaining ? window.computeDaysRemaining(r.expiry) : r.days;
+                            return `
+                            <div onclick="window.location.href='renewals.html'" style="cursor:pointer;" title="View in Renewals">
+                                <span class="icon ${daysLeft <= 30 ? 'amber' : ''}">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="12" y1="12" x2="16" y2="14"/></svg>
+                                </span>
+                                <span><b>${r.item}</b><small>${r.sub || r.cat} · ${r.expiry}</small></span>
+                                <em style="background:${daysLeft <= 30 ? 'rgba(245,158,11,0.1)' : 'rgba(22,163,74,0.1)'}; color:${daysLeft <= 30 ? '#b45309' : '#16A34A'}; border:1px solid ${daysLeft <= 30 ? 'rgba(245,158,11,0.25)' : 'rgba(22,163,74,0.25)'};">⚡ ${daysLeft} days</em>
+                            </div>
+                        `}).join('');
+                    }
+                }
+            } catch(e) {}
+        }
+
+        /* Handler for clicking Documents Stat Card -> Opens Document Viewer Slider */
+        function handleDashDocsClick() {
+            window.location.href = 'documents.html?slider=true';
+        }
+        window.handleDashDocsClick = handleDashDocsClick;
+
+        /* Notifications Dropdown & Read State Handlers */
+        const NOTIF_STORAGE_KEY = 'ohana_read_notifications';
+
+        function getReadNotifs() {
+            try {
+                const data = localStorage.getItem(NOTIF_STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveReadNotifs(list) {
+            try {
+                localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify(list));
+            } catch (e) {}
+        }
+
+        function syncNotificationUI() {
+            const readList = getReadNotifs();
+            const items = document.querySelectorAll('.dash-notif-item[data-notif-id]');
+            let unreadCount = 0;
+
+            items.forEach(item => {
+                const id = item.getAttribute('data-notif-id');
+                if (readList.includes(id)) {
+                    item.classList.remove('unread');
+                } else {
+                    item.classList.add('unread');
+                    unreadCount++;
+                }
+            });
+
+            const indicator = document.getElementById('dashNotifIndicator');
+            const pill = document.getElementById('dashNotifPill');
+
+            if (indicator) {
+                indicator.style.display = unreadCount > 0 ? 'block' : 'none';
+            }
+            if (pill) {
+                pill.textContent = unreadCount > 0 ? `${unreadCount} New` : '0 New';
+                if (unreadCount === 0) {
+                    pill.style.background = '#f1f5f9';
+                    pill.style.color = '#64748b';
+                    pill.style.borderColor = '#e2e8f0';
+                } else {
+                    pill.style.background = 'rgba(255, 32, 40, 0.09)';
+                    pill.style.color = '#FF2028';
+                    pill.style.borderColor = 'rgba(255, 32, 40, 0.2)';
+                }
+            }
+        }
+
+        function toggleDashboardNotifs(e) {
+            if (e) e.stopPropagation();
+            const popover = document.getElementById('dashNotifPopover');
+            const btn = document.getElementById('dashNotifBtn');
+            if (!popover || !btn) return;
+            const isVisible = popover.style.display === 'block';
+            popover.style.display = isVisible ? 'none' : 'block';
+            btn.classList.toggle('active', !isVisible);
+
+            // When user clicks notification icon to open/read notifications, remove the red symbol immediately
+            if (!isVisible) {
+                markAllNotifsRead();
+            }
+        }
+
+        function markNotificationRead(notifId, targetUrl) {
+            const readList = getReadNotifs();
+            if (!readList.includes(notifId)) {
+                readList.push(notifId);
+                saveReadNotifs(readList);
+            }
+            syncNotificationUI();
+            if (targetUrl) {
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 100);
+            }
+        }
+
+        function markAllNotifsRead(e) {
+            if (e) e.stopPropagation();
+            const items = document.querySelectorAll('.dash-notif-item[data-notif-id]');
+            const allIds = Array.from(items).map(item => item.getAttribute('data-notif-id')).filter(Boolean);
+            saveReadNotifs(allIds);
+            syncNotificationUI();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrap = document.querySelector('.dash-notif-wrap');
+            const popover = document.getElementById('dashNotifPopover');
+            const btn = document.getElementById('dashNotifBtn');
+            if (popover && wrap && !wrap.contains(e.target)) {
+                popover.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

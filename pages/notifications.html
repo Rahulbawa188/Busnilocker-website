@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Notifications | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">COMMUNICATIONS</span>
+                <h1>Notifications</h1>
+                <p class="subtitle">Stay updated with important business activities.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn outline" id="markAllBtn" onclick="markAllAsRead()">✓ Mark all as read</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Notification Toolbar Filters -->
+        <div class="toolbar-bar" style="margin-bottom:16px;">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterNotifs('all', this)">All (<span id="totalNotifs">5</span>)</button>
+                <button class="filter-tab" onclick="filterNotifs('unread', this)">Unread (<span id="unreadCount">3</span>)</button>
+                <button class="filter-tab" onclick="filterNotifs('security', this)">Security</button>
+                <button class="filter-tab" onclick="filterNotifs('documents', this)">Documents</button>
+                <button class="filter-tab" onclick="filterNotifs('renewals', this)">Renewals</button>
+                <button class="filter-tab" onclick="filterNotifs('team', this)">Team</button>
+            </div>
+            <span class="muted" style="font-size:13px;">Auto-synced with Ohana Trust Engine</span>
+        </div>
+
+        <!-- Notification List -->
+        <div class="notif-list" id="notifContainer">
+            <!-- 1. Document Expiry -->
+            <div class="notif-card unread" data-category="renewals">
+                <div class="notif-icon-wrap warning">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-header">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="notif-title">Document expires in 28 days</span>
+                            <span class="badge badge-warning">Renewals</span>
+                        </div>
+                        <span class="notif-time">2 hours ago</span>
+                    </div>
+                    <p class="notif-desc">Your Primary Domain Registration (abctechnologies.io) is scheduled to expire on 14 Oct 2026. Renew early to prevent DNS suspension.</p>
+                    <div class="notif-actions">
+                        <a href="renewals.html" class="btn btn-sm">Renew Now</a>
+                        <button class="btn-action" onclick="dismissNotif(this)">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. GST Certificate Attention -->
+            <div class="notif-card unread" data-category="documents">
+                <div class="notif-icon-wrap danger">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-header">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="notif-title">GST certificate requires attention</span>
+                            <span class="badge badge-action">Documents</span>
+                        </div>
+                        <span class="notif-time">5 hours ago</span>
+                    </div>
+                    <p class="notif-desc">A periodic statutory verification is due for GSTIN 27ABCDE1234F1Z5. Please confirm your latest monthly GSTR-3B filing acknowledgement.</p>
+                    <div class="notif-actions">
+                        <a href="documents.html" class="btn btn-sm">Review Notice</a>
+                        <button class="btn-action" onclick="dismissNotif(this)">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. New team member joined -->
+            <div class="notif-card unread" data-category="team">
+                <div class="notif-icon-wrap info">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-header">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="notif-title">New team member joined</span>
+                            <span class="badge badge-info">Team</span>
+                        </div>
+                        <span class="notif-time">Yesterday</span>
+                    </div>
+                    <p class="notif-desc">Priya Sharma (priya.sharma@abctech.com) accepted your invitation and set up 2FA credentials with Admin privileges.</p>
+                    <div class="notif-actions">
+                        <a href="team.html" class="btn btn-sm">Manage Member</a>
+                        <button class="btn-action" onclick="dismissNotif(this)">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Business verification completed -->
+            <div class="notif-card" data-category="security">
+                <div class="notif-icon-wrap success">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <polyline points="9 12 11 14 15 10"></polyline>
+                    </svg>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-header">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="notif-title">Business verification completed</span>
+                            <span class="badge badge-verified">Security</span>
+                        </div>
+                        <span class="notif-time">2 days ago</span>
+                    </div>
+                    <p class="notif-desc">Congratulations! ABC Technologies has achieved <b>L3 Enhanced Verified</b> level. Your digital passport trust seals are now live for B2B partners.</p>
+                    <div class="notif-actions">
+                        <a href="verification.html" class="btn btn-sm">View Certificate</a>
+                        <button class="btn-action" onclick="dismissNotif(this)">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. New asset added -->
+            <div class="notif-card" data-category="documents">
+                <div class="notif-icon-wrap info">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="notif-content">
+                    <div class="notif-header">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="notif-title">New asset registered</span>
+                            <span class="badge badge-neutral">Assets</span>
+                        </div>
+                        <span class="notif-time">3 days ago</span>
+                    </div>
+                    <p class="notif-desc">Asset <b>Laptop-10</b> (MacBook Pro 16") was registered in the hardware inventory and assigned to Rahul Bawa.</p>
+                    <div class="notif-actions">
+                        <a href="assets.html" class="btn btn-sm">View Assets</a>
+                        <button class="btn-action" onclick="dismissNotif(this)">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function filterNotifs(category, btn) {
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('.notif-card');
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'flex';
+                } else if (category === 'unread') {
+                    card.style.display = card.classList.contains('unread') ? 'flex' : 'none';
+                } else {
+                    const cat = card.getAttribute('data-category');
+                    card.style.display = (cat === category) ? 'flex' : 'none';
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notif-card.unread').forEach(card => {
+                card.classList.remove('unread');
+            });
+            document.getElementById('unreadCount').textContent = '0';
+            try { localStorage.setItem('ohana_read_notifications', JSON.stringify(['notif_verif', 'notif_renewal', 'notif_doc', 'notif_share'])); } catch(e) {}
+            showToast('All notifications marked as read', 'success');
+        }
+
+        function dismissNotif(btn) {
+            const card = btn.closest('.notif-card');
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(-10px)';
+                card.style.transition = 'all 0.25s ease';
+                setTimeout(() => {
+                    card.remove();
+                    updateCounts();
+                    showToast('Notification dismissed', 'info');
+                }, 260);
+            }
+        }
+
+        function updateCounts() {
+            const total = document.querySelectorAll('.notif-card').length;
+            const unread = document.querySelectorAll('.notif-card.unread').length;
+            document.getElementById('totalNotifs').textContent = total;
+            document.getElementById('unreadCount').textContent = unread;
+        }
+    </script>
+</body>
+
+</html>

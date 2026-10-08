@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Security Center | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a class="active" href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ACCOUNT &amp; ACCESS</span>
+                <h1>Security Center</h1>
+                <p class="subtitle">Your account security settings are managed here.</p>
+            </div>
+            <div class="header-actions">
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Security Status Banner -->
+        <div class="security-score-banner">
+            <div class="security-score-content">
+                <h2>Security Status: Basic Protection Active</h2>
+                <p>Your account security settings are managed here.</p>
+            </div>
+            <div class="security-score-badge">
+                <b style="font-size:22px; color:#059669;">Protected</b>
+                <span>SECURITY STATUS</span>
+            </div>
+        </div>
+
+        <!-- Security Summary Stats -->
+        <div class="stats">
+            <div class="stat">
+                <small>Two-Factor Auth (2FA)</small>
+                <b style="color:#64748b;" id="stat2faVal">Not Configured</b>
+                <span class="muted" id="stat2faSub">Optional account protection</span>
+            </div>
+            <div class="stat">
+                <small>Password Status</small>
+                <b style="color:#059669;" id="statPasswordVal">Configured</b>
+                <span class="positive" id="statPasswordSub">● Active login credential</span>
+            </div>
+            <div class="stat">
+                <small>Active Sessions</small>
+                <b style="color:var(--navy);">Current Device</b>
+                <span class="positive">● Active session</span>
+            </div>
+            <div class="stat">
+                <small>Security Alerts</small>
+                <b style="color:#059669;">None</b>
+                <span class="positive">No recent security alerts.</span>
+            </div>
+        </div>
+
+        <!-- Security Settings Cards -->
+        <div class="grid-2" style="margin-bottom:24px;">
+            <!-- Authentication Settings -->
+            <section class="panel">
+                <div class="section-head">
+                    <h3 style="margin:0;">Authentication &amp; Credentials</h3>
+                    <span class="badge badge-neutral" id="badgeAuthStatus">Standard</span>
+                </div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:18px;">
+                    <!-- Two-Factor Authentication -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #f1f5f9;">
+                        <div>
+                            <b>Two-Factor Authentication (2FA)</b>
+                            <p class="muted" style="margin:2px 0 0;font-size:13px;" id="desc2fa">Add an extra verification layer to your account.</p>
+                        </div>
+                        <button type="button" class="btn-action" id="btn2faAction" onclick="open2faModal()">Set Up</button>
+                    </div>
+
+                    <!-- Account Password -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #f1f5f9;">
+                        <div>
+                            <b>Account Password</b>
+                            <p class="muted" style="margin:2px 0 0;font-size:13px;" id="descPassword">Primary credential used to access your account.</p>
+                        </div>
+                        <button type="button" class="btn-action" onclick="openPasswordModal()">Change Password</button>
+                    </div>
+
+                    <!-- Recovery Options -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <div>
+                            <b>Recovery Options</b>
+                            <p class="muted" style="margin:2px 0 0;font-size:13px;" id="descRecovery">Not configured</p>
+                        </div>
+                        <button type="button" class="btn-action" id="btnRecoveryAction" onclick="openRecoveryModal()">Set Up</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Sessions & Trusted Devices -->
+            <section class="panel">
+                <div class="section-head">
+                    <h3 style="margin:0;">Active Sessions</h3>
+                </div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px;">
+                    <!-- Current Device -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:22px;">💻</span>
+                            <div>
+                                <b style="font-size:13.5px;" id="currentDeviceTitle">Current Device</b>
+                                <p class="muted" style="margin:0;font-size:12px;" id="currentDeviceMeta">Active session · Current browser</p>
+                            </div>
+                        </div>
+                        <span class="badge badge-verified">Current</span>
+                    </div>
+
+                    <!-- Honest multi-session status -->
+                    <div style="padding:16px 14px;background:#f8fafc;border-radius:10px;border:1px dashed #cbd5e1;text-align:center;">
+                        <p class="muted" style="margin:0;font-size:12.5px;color:#64748b;line-height:1.4;">
+                            Session management will be available with backend authentication.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login History Activity Panel -->
+        <section class="panel">
+            <div class="toolbar-bar">
+                <div>
+                    <h3 style="margin:0 0 4px;">Recent Login Activity</h3>
+                    <p class="muted" style="margin:0;font-size:13px;">Sign-in events will be recorded upon user authentication</p>
+                </div>
+            </div>
+
+            <div style="padding:48px 16px;text-align:center;color:#64748b;">
+                <div style="font-size:32px;margin-bottom:8px;">📋</div>
+                <b style="font-size:14.5px;color:var(--navy);display:block;margin-bottom:4px;">No recent login activity is available.</b>
+                <p class="muted" style="margin:0;font-size:12.5px;">Sign-in records will appear here once connected to backend authentication.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal 1: Change Password -->
+    <div class="modal-overlay" id="passwordModal" style="display:none; position:fixed; inset:0; background:rgba(11,31,58,0.6); backdrop-filter:blur(4px); z-index:1300; align-items:center; justify-content:center; padding:20px;">
+        <div class="modal-box" style="background:#fff; width:min(440px, 95%); border-radius:14px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <span class="eyebrow" style="color:var(--primary); font-size:11px; font-weight:700;">ACCOUNT CREDENTIALS</span>
+                    <h3 style="margin:2px 0 0; font-size:18px; color:var(--navy);">Change Password</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closePasswordModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+
+            <form onsubmit="handlePasswordSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Current Password</label>
+                    <input type="password" id="oldPasswordInput" placeholder="Enter current password" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">New Password</label>
+                    <input type="password" id="newPasswordInput" placeholder="Minimum 8 characters" minlength="8" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Confirm New Password</label>
+                    <input type="password" id="confirmPasswordInput" placeholder="Re-enter new password" minlength="8" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                </div>
+
+                <div id="passwordError" style="display:none; color:#dc2626; font-size:12px; font-weight:600;"></div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+                    <button type="button" class="btn outline" onclick="closePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Two-Factor Authentication Setup -->
+    <div class="modal-overlay" id="twoFactorModal" style="display:none; position:fixed; inset:0; background:rgba(11,31,58,0.6); backdrop-filter:blur(4px); z-index:1300; align-items:center; justify-content:center; padding:20px;">
+        <div class="modal-box" style="background:#fff; width:min(460px, 95%); border-radius:14px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <span class="eyebrow" style="color:var(--primary); font-size:11px; font-weight:700;">ACCOUNT SECURITY</span>
+                    <h3 style="margin:2px 0 0; font-size:18px; color:var(--navy);">Two-Factor Authentication</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="close2faModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:14px;">
+                <p style="margin:0; font-size:13px; color:#475569; line-height:1.5;">
+                    Two-Factor Authentication adds an extra verification layer to protect your organization.
+                </p>
+
+                <div style="padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; font-size:12.5px; color:#64748b; line-height:1.4;">
+                    ℹ️ <b>Prototype Setting:</b> In this frontend prototype, toggling 2FA updates your local account preference. Live SMS or Authenticator App OTP enforcement will be managed once connected to backend authentication.
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:#f1f5f9; border-radius:8px;">
+                    <span style="font-size:13px; font-weight:600; color:#334155;">Status:</span>
+                    <span id="modal2faStatusText" style="font-size:13px; font-weight:700; color:#64748b;">Not Configured</span>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+                    <button type="button" class="btn outline" onclick="close2faModal()">Cancel</button>
+                    <button type="button" class="btn" id="btn2faConfirmToggle" onclick="toggle2faState()">Enable (Prototype)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Recovery Options Setup -->
+    <div class="modal-overlay" id="recoveryModal" style="display:none; position:fixed; inset:0; background:rgba(11,31,58,0.6); backdrop-filter:blur(4px); z-index:1300; align-items:center; justify-content:center; padding:20px;">
+        <div class="modal-box" style="background:#fff; width:min(440px, 95%); border-radius:14px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <span class="eyebrow" style="color:var(--primary); font-size:11px; font-weight:700;">ACCOUNT RECOVERY</span>
+                    <h3 style="margin:2px 0 0; font-size:18px; color:var(--navy);">Recovery Options</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeRecoveryModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+
+            <form onsubmit="handleRecoverySubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+                <p style="margin:0; font-size:13px; color:#475569; line-height:1.5;">
+                    Specify a designated recovery email address for emergency account verification.
+                </p>
+
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Recovery Email Address</label>
+                    <input type="email" id="recoveryEmailInput" placeholder="e.g. security-recovery@abctech.com" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+                    <button type="button" class="btn outline" onclick="closeRecoveryModal()">Cancel</button>
+                    <button type="submit" class="btn">Save Recovery Email</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Security Center Page Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initSecurityPage();
+        });
+
+        function initSecurityPage() {
+            // 1. Detect current browser and OS
+            detectCurrentDevice();
+
+            // 2. Load stored 2FA state
+            refresh2faUI();
+
+            // 3. Load stored Recovery state
+            refreshRecoveryUI();
+        }
+
+        function detectCurrentDevice() {
+            const ua = navigator.userAgent;
+            let browser = 'Current Browser';
+            let os = 'Device';
+
+            if (ua.includes('Edg/')) browser = 'Microsoft Edge';
+            else if (ua.includes('Chrome/')) browser = 'Google Chrome';
+            else if (ua.includes('Firefox/')) browser = 'Mozilla Firefox';
+            else if (ua.includes('Safari/') && !ua.includes('Chrome/')) browser = 'Apple Safari';
+
+            if (ua.includes('Windows')) os = 'Windows';
+            else if (ua.includes('Macintosh') || ua.includes('Mac OS')) os = 'macOS';
+            else if (ua.includes('Linux')) os = 'Linux';
+            else if (ua.includes('Android')) os = 'Android';
+            else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+
+            const titleEl = document.getElementById('currentDeviceTitle');
+            const metaEl = document.getElementById('currentDeviceMeta');
+
+            if (titleEl) titleEl.textContent = `${browser} on ${os} (Current)`;
+            if (metaEl) metaEl.textContent = `Active session · Current browser`;
+        }
+
+        /* ------------------ 2FA Management ------------------ */
+        function is2faEnabled() {
+            return localStorage.getItem('ohana_2fa_enabled') === 'true';
+        }
+
+        function refresh2faUI() {
+            const enabled = is2faEnabled();
+            const statVal = document.getElementById('stat2faVal');
+            const statSub = document.getElementById('stat2faSub');
+            const desc = document.getElementById('desc2fa');
+            const btn = document.getElementById('btn2faAction');
+            const badge = document.getElementById('badgeAuthStatus');
+
+            if (enabled) {
+                if (statVal) {
+                    statVal.textContent = 'Configured';
+                    statVal.style.color = '#059669';
+                }
+                if (statSub) statSub.textContent = '● Prototype 2FA active';
+                if (desc) desc.textContent = 'Configured (Prototype mode).';
+                if (btn) btn.textContent = 'Manage';
+                if (badge) {
+                    badge.textContent = 'Enhanced';
+                    badge.className = 'badge badge-verified';
+                }
+            } else {
+                if (statVal) {
+                    statVal.textContent = 'Not Configured';
+                    statVal.style.color = '#64748b';
+                }
+                if (statSub) statSub.textContent = 'Optional account protection';
+                if (desc) desc.textContent = 'Not configured · Add an extra verification layer.';
+                if (btn) btn.textContent = 'Set Up';
+                if (badge) {
+                    badge.textContent = 'Standard';
+                    badge.className = 'badge badge-neutral';
+                }
+            }
+        }
+
+        function open2faModal() {
+            const modal = document.getElementById('twoFactorModal');
+            const statusText = document.getElementById('modal2faStatusText');
+            const confirmBtn = document.getElementById('btn2faConfirmToggle');
+
+            if (modal) {
+                modal.style.display = 'flex';
+                if (is2faEnabled()) {
+                    if (statusText) {
+                        statusText.textContent = 'Configured (Prototype)';
+                        statusText.style.color = '#059669';
+                    }
+                    if (confirmBtn) {
+                        confirmBtn.textContent = 'Disable 2FA';
+                        confirmBtn.className = 'btn outline';
+                        confirmBtn.style.color = '#dc2626';
+                    }
+                } else {
+                    if (statusText) {
+                        statusText.textContent = 'Not Configured';
+                        statusText.style.color = '#64748b';
+                    }
+                    if (confirmBtn) {
+                        confirmBtn.textContent = 'Enable (Prototype)';
+                        confirmBtn.className = 'btn';
+                        confirmBtn.style.color = '';
+                    }
+                }
+            }
+        }
+
+        function close2faModal() {
+            const modal = document.getElementById('twoFactorModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function toggle2faState() {
+            const currentlyEnabled = is2faEnabled();
+            if (currentlyEnabled) {
+                localStorage.setItem('ohana_2fa_enabled', 'false');
+                showToast('Two-Factor Authentication disabled.', 'info');
+            } else {
+                localStorage.setItem('ohana_2fa_enabled', 'true');
+                showToast('Two-Factor Authentication enabled in prototype mode.', 'success');
+            }
+            refresh2faUI();
+            close2faModal();
+        }
+
+        /* ------------------ Password Management ------------------ */
+        function openPasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            const err = document.getElementById('passwordError');
+            if (err) err.style.display = 'none';
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handlePasswordSubmit(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('newPasswordInput').value;
+            const confirmPass = document.getElementById('confirmPasswordInput').value;
+            const err = document.getElementById('passwordError');
+
+            if (newPass !== confirmPass) {
+                if (err) {
+                    err.textContent = 'New passwords do not match. Please verify.';
+                    err.style.display = 'block';
+                }
+                return;
+            }
+
+            localStorage.setItem('ohana_password_configured', 'true');
+            closePasswordModal();
+            showToast('Password updated successfully for your local account.', 'success');
+        }
+
+        /* ------------------ Recovery Options ------------------ */
+        function refreshRecoveryUI() {
+            const storedEmail = localStorage.getItem('ohana_recovery_email');
+            const desc = document.getElementById('descRecovery');
+            const btn = document.getElementById('btnRecoveryAction');
+
+            if (storedEmail) {
+                if (desc) desc.textContent = `Configured (${storedEmail})`;
+                if (btn) btn.textContent = 'Manage';
+            } else {
+                if (desc) desc.textContent = 'Not configured';
+                if (btn) btn.textContent = 'Set Up';
+            }
+        }
+
+        function openRecoveryModal() {
+            const modal = document.getElementById('recoveryModal');
+            const emailInput = document.getElementById('recoveryEmailInput');
+            const stored = localStorage.getItem('ohana_recovery_email');
+            if (emailInput && stored) emailInput.value = stored;
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeRecoveryModal() {
+            const modal = document.getElementById('recoveryModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handleRecoverySubmit(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('recoveryEmailInput');
+            const email = emailInput ? emailInput.value.trim() : '';
+            if (email) {
+                localStorage.setItem('ohana_recovery_email', email);
+                refreshRecoveryUI();
+                closeRecoveryModal();
+                showToast(`Recovery email set to ${email}`, 'success');
+            }
+        }
+    </script>
+</body>
+
+</html>

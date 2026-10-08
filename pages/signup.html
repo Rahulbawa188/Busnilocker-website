@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Create Business Passport | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="auth-page-body">
+    <!-- Ambient Aurora Background Blobs -->
+    <div class="auth-ambient-canvas" aria-hidden="true">
+        <div class="auth-blob auth-blob-blue"></div>
+        <div class="auth-blob auth-blob-pink"></div>
+        <div class="auth-blob auth-blob-center"></div>
+        <div class="auth-grid-overlay"></div>
+    </div>
+
+    <!-- Main Viewport Layout -->
+    <main class="auth-page-container">
+        <!-- Two-Column Authentication Card -->
+        <div class="auth-two-col-layout">
+            <!-- ==========================================
+                 LEFT SECTION — REGISTRATION FORM
+                 ========================================== -->
+            <div class="auth-two-col-form">
+                <div>
+                    <!-- Brand Header -->
+                    <div class="auth-card-brand">
+                        <a href="../index.html" class="auth-brand-link" title="Return to Home" style="text-decoration:none;">
+                            <span class="ohana-inline-brand">
+                                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 42px;"></span>
+                                <span class="oib-text">
+                                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+
+                    <!-- Headings -->
+                    <div class="auth-card-intro">
+                        <h1 class="auth-title">Create Business Passport</h1>
+                        <p class="auth-subtitle">Register your enterprise to unlock instant verification.</p>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <form id="signupForm" onsubmit="handleSignUp(event)" novalidate>
+                        <!-- Full Name Field -->
+                        <div class="auth-field-group">
+                            <label for="fullName" class="auth-field-label">Full Name</label>
+                            <div class="auth-input-box">
+                                <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <input type="text" id="fullName" placeholder="e.g. Rahul Bawa" required>
+                            </div>
+                        </div>
+
+                        <!-- Work Email Field -->
+                        <div class="auth-field-group">
+                            <label for="businessEmail" class="auth-field-label">Work Email</label>
+                            <div class="auth-input-box">
+                                <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <input type="email" id="businessEmail" placeholder="you@company.com" autocomplete="email" required>
+                            </div>
+                        </div>
+
+                        <!-- Organization / Legal Entity Name Field -->
+                        <div class="auth-field-group">
+                            <label for="orgName" class="auth-field-label">Organization / Legal Entity Name</label>
+                            <div class="auth-input-box">
+                                <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                                <input type="text" id="orgName" placeholder="e.g. ABC Technologies Pvt Ltd" required>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="auth-field-group">
+                            <label for="accountPassword" class="auth-field-label">Password</label>
+                            <div class="auth-input-box">
+                                <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                <input type="password" id="accountPassword" placeholder="Create a secure password" autocomplete="new-password" required>
+                            </div>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="auth-row-meta">
+                            <label class="auth-remember-check">
+                                <input type="checkbox" id="agreeTerms" checked required>
+                                <span>I agree to the <a href="about.html" style="color:#2563EB; font-weight:600;">Terms of Service</a> &amp; <a href="about.html" style="color:#2563EB; font-weight:600;">Privacy Policy</a></span>
+                            </label>
+                        </div>
+
+                        <!-- Primary Submit Button -->
+                        <button type="submit" class="btn-auth-submit" id="signUpBtn">
+                            <span class="spinner-icon"></span>
+                            <span class="btn-auth-label" id="signUpBtnText">
+                                <span>CREATE BUSINESS PASSPORT →</span>
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="auth-divider">
+                        <span>OR</span>
+                    </div>
+
+                    <!-- Google Workspace OAuth Button -->
+                    <button type="button" class="btn-auth-google" onclick="handleGoogleSignIn()">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        <span>Sign up with Google Workspace</span>
+                    </button>
+                </div>
+
+                <!-- Bottom Login Link -->
+                <p class="auth-switch-link">
+                    Already have an account?
+                    <a href="login.html">Sign In</a>
+                </p>
+            </div>
+
+            <!-- ==========================================
+                 RIGHT SECTION — BUSINESS PASSPORT SHOWCASE
+                 ========================================== -->
+            <div class="auth-showcase-panel">
+                <!-- Top Badge Tag -->
+                <div class="showcase-header-tag">
+                    <span class="pulse-dot"></span>
+                    <span>L4 Enterprise Assured Passport</span>
+                </div>
+
+                <!-- Animated Interactive Stage -->
+                <div class="showcase-stage">
+                    <!-- Subtle SVG Orbit Rings -->
+                    <svg class="showcase-orbit-svg" viewBox="0 0 440 400" fill="none">
+                        <defs>
+                            <linearGradient id="orbitGradA" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FF2028" stop-opacity="0.45"/>
+                                <stop offset="50%" stop-color="#0B1F3A" stop-opacity="0.28"/>
+                                <stop offset="100%" stop-color="#FF2028" stop-opacity="0.25"/>
+                            </linearGradient>
+                            <linearGradient id="orbitGradB" x1="100%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#0B1F3A" stop-opacity="0.28"/>
+                                <stop offset="50%" stop-color="#FF2028" stop-opacity="0.42"/>
+                                <stop offset="100%" stop-color="#FF2028" stop-opacity="0.22"/>
+                            </linearGradient>
+                        </defs>
+                        <ellipse cx="220" cy="200" rx="195" ry="175" stroke="url(#orbitGradA)" stroke-width="1.2" stroke-dasharray="4 6" opacity="0.75"/>
+                        <ellipse cx="220" cy="200" rx="145" ry="128" stroke="url(#orbitGradB)" stroke-width="1.2" stroke-dasharray="5 7" opacity="0.65"/>
+                    </svg>
+
+                    <!-- Realistic Floating Business Passport Card -->
+                    <div class="showcase-passport-card">
+                        <!-- Passport Card Top Header -->
+                        <div class="passport-card-top">
+                            <div class="passport-card-brand-box">
+                                <img src="../assets/logo-icon.png" alt="Ohana Icon" class="passport-card-icon">
+                                <div class="passport-card-titles">
+                                    <span class="passport-card-brand-label">OHANA</span>
+                                    <h3 class="passport-card-main-title">BUSINESS PASSPORT</h3>
+                                </div>
+                            </div>
+                            <div class="passport-l4-badge">
+                                <span>L4 Enterprise Assured</span>
+                            </div>
+                        </div>
+
+                        <!-- Microchip, NFC & Corporate Identity Code -->
+                        <div class="passport-chip-row">
+                            <div class="passport-microchip"></div>
+                            <div class="passport-id-info">
+                                <span class="passport-id-meta">Corporate Identity</span>
+                                <span class="passport-id-num">IN-BL-2026-9824-OHANA</span>
+                            </div>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#93C5FD" stroke-width="2">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                            </svg>
+                        </div>
+
+                        <!-- 4 Verified Badges requested: GST, PAN, Udyam, Domain -->
+                        <div class="passport-verifications-grid">
+                            <div class="passport-check-pill">
+                                <svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>GST Verified</span>
+                            </div>
+                            <div class="passport-check-pill">
+                                <svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>PAN Verified</span>
+                            </div>
+                            <div class="passport-check-pill">
+                                <svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Udyam Verified</span>
+                            </div>
+                            <div class="passport-check-pill">
+                                <svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Domain Verified</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Bottom: Corporate Identity & Verified Business -->
+                        <div class="passport-card-bottom">
+                            <span class="passport-status-tag">● Verified Business</span>
+                            <span>Corporate Identity</span>
+                        </div>
+                    </div>
+
+                    <!-- 8 Subtle Floating Orbit Elements -->
+                    <!-- 1. Identity -->
+                    <div class="floating-node node-pos-1">
+                        <div class="node-icon navy">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Identity</span>
+                            <span class="node-sub">Verified Corp</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Verification -->
+                    <div class="floating-node node-pos-2">
+                        <div class="node-icon blue">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Verification</span>
+                            <span class="node-sub">Govt Validated</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Credentials -->
+                    <div class="floating-node node-pos-3">
+                        <div class="node-icon pink">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Credentials</span>
+                            <span class="node-sub">Cryptographic</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Trust -->
+                    <div class="floating-node node-pos-4">
+                        <div class="node-icon green">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Trust</span>
+                            <span class="node-sub">L4 Enterprise</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. Documents -->
+                    <div class="floating-node node-pos-5">
+                        <div class="node-icon navy">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Documents</span>
+                            <span class="node-sub">Statutory Vault</span>
+                        </div>
+                    </div>
+
+                    <!-- 6. Renewals -->
+                    <div class="floating-node node-pos-6">
+                        <div class="node-icon pink">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Renewals</span>
+                            <span class="node-sub">Automated</span>
+                        </div>
+                    </div>
+
+                    <!-- 7. Share Room -->
+                    <div class="floating-node node-pos-7">
+                        <div class="node-icon blue">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Share Room</span>
+                            <span class="node-sub">Encrypted Access</span>
+                        </div>
+                    </div>
+
+                    <!-- 8. Network -->
+                    <div class="floating-node node-pos-8">
+                        <div class="node-icon green">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <div class="node-meta">
+                            <span class="node-label">Network</span>
+                            <span class="node-sub">Global Resolvable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Showcase Bottom Trust Note -->
+                <div class="showcase-bottom-trust">
+                    <span>Identity Verified</span>
+                    <span class="dot-sep">•</span>
+                    <span>Enterprise Assured</span>
+                    <span class="dot-sep">•</span>
+                    <span>Decentralized Trust</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Client-Side Form Interactivity & Validation Script -->
+    <script>
+        function handleSignUp(event) {
+            event.preventDefault();
+            const fullNameInput = document.getElementById('fullName');
+            const emailInput = document.getElementById('businessEmail');
+            const orgNameInput = document.getElementById('orgName');
+            const passwordInput = document.getElementById('accountPassword');
+            const termsInput = document.getElementById('agreeTerms');
+            const btn = document.getElementById('signUpBtn');
+            const btnText = document.getElementById('signUpBtnText');
+
+            if (!fullNameInput.value.trim()) {
+                showToast('Please enter your full name.', 'error');
+                fullNameInput.focus();
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
+                showToast('Please enter a valid work email address.', 'error');
+                emailInput.focus();
+                return;
+            }
+
+            if (!orgNameInput.value.trim()) {
+                showToast('Please enter your legal entity or organization name.', 'error');
+                orgNameInput.focus();
+                return;
+            }
+
+            if (!passwordInput.value || passwordInput.value.length < 6) {
+                showToast('Password must be at least 6 characters.', 'error');
+                passwordInput.focus();
+                return;
+            }
+
+            if (!termsInput.checked) {
+                showToast('Please accept the Terms of Service & Privacy Policy.', 'error');
+                return;
+            }
+
+            btn.classList.add('loading');
+            btnText.innerHTML = '<span>Creating Passport...</span>';
+
+            setTimeout(() => {
+                const fullName = fullNameInput.value.trim();
+                const email = emailInput.value.trim().toLowerCase();
+                const orgName = orgNameInput.value.trim();
+                const password = passwordInput.value;
+
+                let initials = 'U';
+                if (typeof computeInitials === 'function') {
+                    initials = computeInitials(fullName);
+                } else {
+                    const parts = fullName.split(/\s+/).filter(Boolean);
+                    initials = parts.length === 1 ? parts[0].substring(0, 2).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+                }
+
+                const newUser = {
+                    id: 'usr_' + Date.now(),
+                    email: email,
+                    fullName: fullName,
+                    firstName: fullName.split(' ')[0] || 'User',
+                    lastName: fullName.split(' ').slice(1).join(' ') || '',
+                    initials: initials,
+                    orgName: orgName,
+                    password: password,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Add to registered accounts
+                try {
+                    let accounts = [];
+                    if (typeof getRegisteredAccounts === 'function') {
+                        accounts = getRegisteredAccounts();
+                    } else {
+                        accounts = JSON.parse(localStorage.getItem('ohana_registered_accounts') || '[]');
+                    }
+                    const idx = accounts.findIndex(a => (a.email || '').toLowerCase() === email);
+                    if (idx >= 0) {
+                        accounts[idx] = newUser;
+                    } else {
+                        accounts.push(newUser);
+                    }
+                    localStorage.setItem('ohana_registered_accounts', JSON.stringify(accounts));
+                } catch(e) {}
+
+                // Hydrate active session
+                if (typeof hydrateActiveSession === 'function') {
+                    hydrateActiveSession(newUser);
+                } else {
+                    localStorage.setItem('ohana_current_user', JSON.stringify(newUser));
+                    localStorage.setItem('ohana_user_logged_in', 'true');
+                }
+
+                try {
+                    const existingOnboard = JSON.parse(localStorage.getItem('ohana_onboarding') || '{}');
+                    existingOnboard.legalName = orgName;
+                    existingOnboard.tradeName = orgName;
+                    existingOnboard.businessEmail = email;
+                    localStorage.setItem('ohana_onboarding', JSON.stringify(existingOnboard));
+                } catch(e) {}
+
+                if (typeof persistCurrentAccountData === 'function') {
+                    persistCurrentAccountData();
+                }
+
+                showToast(`Welcome, ${fullName}! Launching onboarding wizard...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'onboarding.html';
+                }, 600);
+            }, 600);
+        }
+
+        function handleGoogleSignIn() {
+            showToast('Connecting to Google Workspace identity provider...', 'info');
+            setTimeout(() => {
+                showToast('Google workspace account connected successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'onboarding.html';
+                }, 900);
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

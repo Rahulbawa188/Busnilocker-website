@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Business Passport Onboarding | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <style>
+        :root {
+            --primary: #FF2028;
+            --primary-hover: #E01820;
+            --primary-light: #FFF7F8;
+            --primary-badge: #FFE5E7;
+            --navy: #0B1F3A;
+            --navy-light: #162C4E;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16A34A;
+            --success-light: #DCFCE7;
+            --warning: #D97706;
+            --warning-light: #FEF3C7;
+        }
+
+        body.onboarding-page {
+            background: linear-gradient(135deg, #F8FAFC 0%, #FFF7F8 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .onboard-top-nav {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .onboard-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .onboard-badge {
+            background: var(--primary-badge);
+            color: var(--primary);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .onboard-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 32px auto 60px;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Stepper Navigation */
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 32px;
+            background: #FFFFFF;
+            padding: 20px 28px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 14px rgba(11, 31, 58, 0.04);
+        }
+
+        .stepper-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13.5px;
+            background: #F1F5F9;
+            color: var(--text-muted);
+            border: 2px solid #CBD5E1;
+            transition: all 0.25s ease;
+        }
+
+        .stepper-step.active .step-circle {
+            background: var(--primary);
+            color: #FFFFFF;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 32, 40, 0.16);
+        }
+
+        .stepper-step.completed .step-circle {
+            background: var(--navy);
+            color: #FFFFFF;
+            border-color: var(--navy);
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .stepper-step.active .step-label {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .stepper-step.completed .step-label {
+            color: var(--navy);
+        }
+
+        .stepper-connector {
+            position: absolute;
+            top: 38px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: #E2E8F0;
+            z-index: 1;
+        }
+
+        .stepper-connector-fill {
+            height: 100%;
+            background: var(--navy);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Wizard Panel */
+        .wizard-panel {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px rgba(11, 31, 58, 0.05);
+            padding: 36px;
+        }
+
+        .wizard-header {
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .wizard-header h2 {
+            margin: 0 0 6px;
+            font-size: 22px;
+            color: var(--navy);
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .wizard-header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        .btn-fill-demo {
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            color: #475569;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-fill-demo:hover {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border-color: #93C5FD;
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 24px;
+        }
+
+        .form-grid.single-col {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1E293B;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label .req {
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #CBD5E1;
+            font-size: 14px;
+            background: #FFFFFF;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 32, 40, 0.12);
+        }
+
+        .form-hint {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Evidence Uploader */
+        .evidence-uploader-box {
+            border: 2px dashed #CBD5E1;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            background: #F8FAFC;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .evidence-uploader-box:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .evidence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .evidence-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .evidence-row:hover {
+            background: #F1F5F9;
+        }
+
+        .evidence-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .evidence-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #E2E8F0;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* Review Summary Cards */
+        .review-card {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .review-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0 0 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 8px;
+        }
+
+        .review-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 20px;
+            font-size: 13px;
+        }
+
+        .review-meta-item small {
+            display: block;
+            color: var(--text-muted);
+            font-size: 11.5px;
+            margin-bottom: 2px;
+        }
+
+        .review-meta-item b {
+            color: #0F172A;
+            font-weight: 600;
+        }
+
+        /* Wizard Footer Controls */
+        .wizard-actions {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-prev {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-prev:hover {
+            background: #F1F5F9;
+            color: #0F172A;
+        }
+
+        .btn-next {
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            color: #FFFFFF;
+            padding: 11px 26px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(255, 32, 40, 0.22);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-next:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Success Modal */
+        .success-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 31, 58, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .success-modal {
+            background: #FFFFFF;
+            max-width: 520px;
+            width: 100%;
+            border-radius: 18px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(11, 31, 58, 0.2);
+            position: relative;
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .seal-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #DCFCE7;
+            color: #16A34A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .stepper-bar {
+                padding: 14px 10px;
+            }
+            .step-label {
+                display: none;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.span-2 {
+                grid-column: span 1;
+            }
+            .review-meta-grid {
+                grid-template-columns: 1fr;
+            }
+            .wizard-panel {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body class="onboarding-page">
+
+    <!-- Top Navigation Header -->
+    <header class="onboard-top-nav">
+        <a class="onboard-brand" href="../index.html">
+            <span class="ohana-inline-brand">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="../assets/ohana-brand-logo.png" alt="Ohana Logo" class="oib-brand-img" style="height: 32px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; ONBOARDING</span>
+                </span>
+            </span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <span class="onboard-badge">V1 Setup Wizard</span>
+            <a href="dashboard.html" style="font-size: 13px; color: var(--text-muted); text-decoration: none;">Skip to Dashboard →</a>
+        </div>
+    </header>
+
+    <main class="onboard-container">
+        <!-- 5-Step Progress Bar -->
+        <nav class="stepper-bar" aria-label="Onboarding Steps">
+            <div class="stepper-connector">
+                <div class="stepper-connector-fill" id="stepperFill" style="width: 0%;"></div>
+            </div>
+
+            <button type="button" class="stepper-step active" id="stepIndicator1" onclick="jumpToStep(1)">
+                <span class="step-circle">1</span>
+                <span class="step-label">Business Basics</span>
+            </button>
+            <button type="button" class="stepper-step" id="stepIndicator2" onclick="jumpToStep(2)">
+                <span class="step-circle">2</span>
+                <span class="step-label">Statutory IDs</span>
+            </button>
+            <button type="button" class="stepper-step" id="stepIndicator3" onclick="jumpToStep(3)">
+                <span class="step-circle">3</span>
+                <span class="step-label">Contact & Address</span>
+            </button>
+            <button type="button" class="stepper-step" id="stepIndicator4" onclick="jumpToStep(4)">
+                <span class="step-circle">4</span>
+                <span class="step-label">Evidence Vault</span>
+            </button>
+            <button type="button" class="stepper-step" id="stepIndicator5" onclick="jumpToStep(5)">
+                <span class="step-circle">5</span>
+                <span class="step-label">Passport Review</span>
+            </button>
+        </nav>
+
+        <!-- Main Wizard Container -->
+        <div class="wizard-panel">
+            <!-- STEP 1: Business Basics -->
+            <section id="stepSection1">
+                <div class="wizard-header">
+                    <div>
+                        <h2>Step 1: Business Basics</h2>
+                        <p>Provide the foundational corporate profile of your legal entity</p>
+                    </div>
+                    <button type="button" class="btn-fill-demo" onclick="fillStep1Demo()">⚡ Pre-fill Demo Data</button>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group span-2">
+                        <label for="legalName">Legal Business Name <span class="req">*</span></label>
+                        <input type="text" id="legalName" placeholder="e.g. ABC Technologies Private Limited" required>
+                        <span class="form-hint">Exactly as registered with the Ministry of Corporate Affairs or Registrar</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tradeName">Trade Name / DBA</label>
+                        <input type="text" id="tradeName" placeholder="e.g. ABC Technologies">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entityType">Entity Type <span class="req">*</span></label>
+                        <select id="entityType" required onchange="handleBusinessTypeOrEntityChange()">
+                            <option value="Sole Proprietorship">Sole Proprietorship</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="LLP">LLP</option>
+                            <option value="Private Limited">Private Limited</option>
+                            <option value="Public Limited">Public Limited</option>
+                            <option value="Trust / Society">Trust / Society</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="form-hint">Legal organizational constitution</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="businessType">Business Type <span class="req">*</span></label>
+                        <select id="businessType" required onchange="handleBusinessTypeOrEntityChange()">
+                            <option value="Food & Restaurant">Food & Restaurant</option>
+                            <option value="Retail Shop">Retail Shop</option>
+                            <option value="Service Business">Service Business</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Professional">Professional</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="form-hint">Determines applicable industry licenses (e.g. FSSAI, Trade License)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incDate">Date of Registration / Inception <span class="req">*</span></label>
+                        <input type="date" id="incDate" value="2021-01-15" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="industry">Primary Industry Sector</label>
+                        <select id="industry">
+                            <option value="Food & Beverage Services">Food & Beverage Services</option>
+                            <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                            <option value="Information Technology & Software">Information Technology & Software</option>
+                            <option value="Financial Services & Fintech">Financial Services & Fintech</option>
+                            <option value="Manufacturing & Industrial">Manufacturing & Industrial</option>
+                            <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                            <option value="Consulting & Professional Services">Consulting & Professional Services</option>
+                            <option value="Other">Other Enterprise Sector</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="description">Business Description</label>
+                        <textarea id="description" rows="3" placeholder="Brief summary of core products, operational scope, and services..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 2: Registration & Statutory Details -->
+            <section id="stepSection2" style="display: none;">
+                <div class="wizard-header">
+                    <div>
+                        <h2>Step 2: Statutory Tax & Entity Identifiers</h2>
+                        <p>Dynamic statutory credentials tailored to your Entity &amp; Business Type</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-fill-demo" onclick="fillStep2FoodDemo()" id="btnFoodDemo">⚡ Food Stall Demo</button>
+                        <button type="button" class="btn-fill-demo" onclick="fillStep2Demo()">⚡ Pvt Ltd Demo</button>
+                    </div>
+                </div>
+
+                <div id="step2ReqNotice" style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:10px 16px; margin-bottom:18px; font-size:12.5px; color:#166534; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span>📋</span>
+                        <span id="step2ReqNoticeText">Dynamic requirements calculated for your business.</span>
+                    </div>
+                    <span id="step2ProfileBadge" style="font-weight:700; background:#DCFCE7; color:#15803D; padding:2px 8px; border-radius:12px; font-size:11px;">Sole Prop · Food</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group" id="cinGroup">
+                        <label for="cinNumber" id="cinLabel">CIN / LLPIN <span class="req" id="cinReqStar">*</span></label>
+                        <input type="text" id="cinNumber" placeholder="e.g. U72200PN2021PTC198765" style="text-transform: uppercase;">
+                        <span class="form-hint" id="cinHint">Corporate Identification Number or LLPIN (Required for Pvt Ltd / LLP)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="panNumber">Permanent Account Number (PAN) <span class="req">*</span></label>
+                        <input type="text" id="panNumber" placeholder="e.g. ABCDE1234F" style="text-transform: uppercase;" required>
+                        <span class="form-hint">Entity or Proprietor 10-digit Income Tax PAN</span>
+                    </div>
+
+                    <div class="form-group" id="gstGroup">
+                        <label for="gstin" id="gstLabel">GSTIN <span class="req" id="gstReqStar">*</span></label>
+                        <input type="text" id="gstin" placeholder="e.g. 27ABCDE1234F1Z5" style="text-transform: uppercase;">
+                        <span class="form-hint" id="gstHint">15-digit State Goods &amp; Services Tax Identification</span>
+                    </div>
+
+                    <!-- Dynamic FSSAI for Food businesses -->
+                    <div class="form-group" id="fssaiGroup">
+                        <label for="fssaiReg">FSSAI Food Safety License <span class="req" id="fssaiReqStar">*</span></label>
+                        <input type="text" id="fssaiReg" placeholder="e.g. 11521019000123" maxlength="14">
+                        <span class="form-hint">Mandatory 14-digit Food Safety Authority license/registration</span>
+                    </div>
+
+                    <!-- Dynamic Owner ID for Sole Proprietors -->
+                    <div class="form-group" id="ownerIdGroup">
+                        <label for="ownerIdReg">Owner / Proprietor Aadhaar / Voter ID <span class="req" id="ownerReqStar">*</span></label>
+                        <input type="text" id="ownerIdReg" placeholder="e.g. 5489 1234 5678">
+                        <span class="form-hint">Statutory individual identity proof for Sole Proprietorship</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="udyamReg">Udyam MSME Registration</label>
+                        <input type="text" id="udyamReg" placeholder="e.g. UDYAM-MH-26-0019284" style="text-transform: uppercase;">
+                        <span class="form-hint">Optional for MSME priority compliance &amp; credit benefits</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 3: Contact & Digital Identity -->
+            <section id="stepSection3" style="display: none;">
+                <div class="wizard-header">
+                    <div>
+                        <h2>Step 3: Contact & Digital Identity</h2>
+                        <p>Corporate domain, primary communication channels, and physical office</p>
+                    </div>
+                    <button type="button" class="btn-fill-demo" onclick="fillStep3Demo()">⚡ Pre-fill Demo Data</button>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="website">Official Corporate Website <span class="req">*</span></label>
+                        <input type="url" id="website" placeholder="https://abctechnologies.io" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="businessEmail">Official Business Email <span class="req">*</span></label>
+                        <input type="email" id="businessEmail" placeholder="compliance@abctechnologies.io" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Primary Business Phone <span class="req">*</span></label>
+                        <input type="tel" id="phone" placeholder="+91 20 6712 3400" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="whatsapp">WhatsApp Business</label>
+                        <input type="tel" id="whatsapp" placeholder="+91 98230 11223">
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="address">Registered Office Street Address <span class="req">*</span></label>
+                        <input type="text" id="address" placeholder="Unit 402, 4th Floor, Tech Park One, Airport Road, Yerawada" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City <span class="req">*</span></label>
+                        <input type="text" id="city" placeholder="Pune" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State <span class="req">*</span></label>
+                        <select id="state" required>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Delhi">Delhi NCR</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Other">Other State</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pincode">PIN / Postal Code <span class="req">*</span></label>
+                        <input type="text" id="pincode" placeholder="411006" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="googleMaps">Google Maps Business Listing URL</label>
+                        <input type="url" id="googleMaps" placeholder="https://maps.google.com/?q=ABC+Technologies">
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 4: Business Evidence -->
+            <section id="stepSection4" style="display: none;">
+                <div class="wizard-header">
+                    <div>
+                        <h2>Step 4: Business Evidence Vault</h2>
+                        <p>Store important business documents in your digital locker (PAN, Trade License, FSSAI, GST, Bank Proof, etc.)</p>
+                    </div>
+                    <button type="button" class="btn-fill-demo" onclick="addSampleEvidence()">⚡ Add Applicable Evidence Set</button>
+                </div>
+
+                <div class="evidence-uploader-box" onclick="triggerMockUpload()">
+                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#FF2028" stroke-width="2" style="margin: 0 auto 10px; display:block;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <b style="font-size:15px; color:var(--navy); display:block; margin-bottom:4px;">Click to Select or Drag &amp; Drop Evidence Documents</b>
+                    <span style="font-size:12.5px; color:var(--text-muted);">Supports PDF, PNG, JPG up to 10MB (Applicable statutory proofs &amp; licenses)</span>
+                </div>
+
+                <div style="margin-bottom:12px; font-size:13px; font-weight:700; color:var(--navy);">
+                    Attached Documents (<span id="evidenceCount">0</span>):
+                </div>
+
+                <div class="evidence-list" id="evidenceList">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- STEP 5: Review & Create Business Passport -->
+            <section id="stepSection5" style="display: none;">
+                <div class="wizard-header">
+                    <div>
+                        <h2>Step 5: Review &amp; Create Business Passport</h2>
+                        <p>Confirm the details of your organization before publishing your Business Passport</p>
+                    </div>
+                    <span class="badge" style="background:#FEF3C7; color:#B45309; font-weight:700; padding:6px 12px; border-radius:20px;">
+                        ● Initial Status: L0 — Claimed
+                    </span>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-card-title">
+                        <span>Corporate Legal Identity</span>
+                        <a href="javascript:void(0)" onclick="jumpToStep(1)" style="font-size:12px; color:var(--primary); text-decoration:none;">Edit ✎</a>
+                    </div>
+                    <div class="review-meta-grid">
+                        <div class="review-meta-item">
+                            <small>Legal Entity Name</small>
+                            <b id="revLegalName">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Entity Type</small>
+                            <b id="revEntityType">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Business Type</small>
+                            <b id="revBusinessType" style="color:var(--primary);">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Trade Name / DBA</small>
+                            <b id="revTradeName">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Registration Date</small>
+                            <b id="revIncDate">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Requirement Status</small>
+                            <b id="revReqBadge" style="color:#16A34A;">● Customized Matrix</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-card-title">
+                        <span>Statutory Registrations &amp; Identifiers</span>
+                        <a href="javascript:void(0)" onclick="jumpToStep(2)" style="font-size:12px; color:var(--primary); text-decoration:none;">Edit ✎</a>
+                    </div>
+                    <div class="review-meta-grid">
+                        <div class="review-meta-item" id="revCinBox">
+                            <small>CIN / LLPIN</small>
+                            <b id="revCin" style="font-family:monospace;">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>PAN</small>
+                            <b id="revPan" style="font-family:monospace;">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>GSTIN</small>
+                            <b id="revGstin" style="font-family:monospace;">—</b>
+                        </div>
+                        <div class="review-meta-item" id="revFssaiBox">
+                            <small>FSSAI License</small>
+                            <b id="revFssai" style="font-family:monospace;">—</b>
+                        </div>
+                        <div class="review-meta-item" id="revOwnerBox">
+                            <small>Proprietor ID</small>
+                            <b id="revOwner" style="font-family:monospace;">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Udyam Registration</small>
+                            <b id="revUdyam" style="font-family:monospace;">—</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-card-title">
+                        <span>Contact, Channels &amp; Office</span>
+                        <a href="javascript:void(0)" onclick="jumpToStep(3)" style="font-size:12px; color:var(--primary); text-decoration:none;">Edit ✎</a>
+                    </div>
+                    <div class="review-meta-grid">
+                        <div class="review-meta-item">
+                            <small>Corporate Website</small>
+                            <b id="revWebsite">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Official Email</small>
+                            <b id="revEmail">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Registered Office</small>
+                            <b id="revAddress">—</b>
+                        </div>
+                        <div class="review-meta-item">
+                            <small>Evidence Items Attached</small>
+                            <b id="revEvidenceCount" style="color:var(--success);">0 Files</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:var(--primary-light); border:1px solid var(--primary-badge); border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:14px;">
+                    <div style="font-size:24px;">🛡</div>
+                    <div>
+                        <div style="font-weight:700; color:var(--navy); font-size:13.5px;">Statutory Attestation Notice</div>
+                        <p style="margin:2px 0 0; font-size:12px; color:var(--text-muted); line-height:1.4;">
+                            Upon creation, your profile will be registered as <strong>L0 (Claimed)</strong>. You may subsequently request reviewer verification or connect registry proofs to unlock <strong>L1 through L4 Enterprise Assured</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Controls -->
+            <div class="wizard-actions">
+                <button type="button" class="btn-prev" id="btnPrev" onclick="navigateStep(-1)" style="visibility: hidden;">
+                    ← Back
+                </button>
+                <button type="button" class="btn-next" id="btnNext" onclick="navigateStep(1)">
+                    <span>Continue to Step 2 →</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Celebration / Success Modal -->
+    <div class="success-overlay" id="successModal">
+        <div class="success-modal">
+            <div class="seal-icon-circle">✓</div>
+            <h2 style="margin:0 0 8px; font-size:24px; color:var(--navy);">Business Passport Created!</h2>
+            <p style="color:var(--text-muted); font-size:14px; margin:0 0 20px; line-height:1.5;">
+                Congratulations! <strong><span id="createdOrgName">Your Business</span></strong> has successfully registered its digital Business Passport on the Ohana Trust Network.
+            </p>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:16px; margin-bottom:24px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                    <span class="muted">Assurance Level:</span>
+                    <span style="font-weight:700; color:#B45309;">L0 — Claimed</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                    <span class="muted">Passport Token:</span>
+                    <span style="font-family:monospace; font-weight:700; color:var(--navy);">OHANA-BP-2026-9041</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:13px;">
+                    <span class="muted">Status:</span>
+                    <span style="color:var(--success); font-weight:700;">Active in Locker</span>
+                </div>
+            </div>
+
+            <button type="button" class="btn-next" style="width:100%; justify-content:center; padding:14px; margin-bottom:10px;" onclick="goToDashboard()">
+                Continue to Dashboard →
+            </button>
+            <div>
+                <a href="login.html" style="font-size:13px; color:#64748B; font-weight:600; text-decoration:none;">Or Sign in to existing account →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Engine for Onboarding Wizard -->
+    <script>
+        let currentStep = 1;
+        const TOTAL_STEPS = 5;
+
+        // Evidence list state
+        let uploadedEvidence = [
+            { id: "ev_inc", name: "MCA_Certificate_of_Incorporation.pdf", type: "PDF", size: "1.4 MB", status: "Uploaded" },
+            { id: "ev_gst", name: "GST_REG06_Registration.pdf", type: "PDF", size: "820 KB", status: "Uploaded" },
+            { id: "ev_pan", name: "Company_PAN_Card.png", type: "PNG", size: "450 KB", status: "Uploaded" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load pre-existing state if available
+            loadSavedOnboardingState();
+            renderEvidenceList();
+            updateStepView();
+            handleBusinessTypeOrEntityChange();
+        });
+
+        function getActiveIdentityInput() {
+            return {
+                legalName: document.getElementById('legalName')?.value?.trim() || '',
+                tradeName: document.getElementById('tradeName')?.value?.trim() || '',
+                entityType: document.getElementById('entityType')?.value || 'Sole Proprietorship',
+                businessType: document.getElementById('businessType')?.value || 'Food & Restaurant'
+            };
+        }
+
+        function handleBusinessTypeOrEntityChange() {
+            const currentIdentity = getActiveIdentityInput();
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(currentIdentity)
+                : { normalizedEntity: currentIdentity.entityType, normalizedBusiness: currentIdentity.businessType, requirements: [] };
+
+            const isCinApp = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', currentIdentity)
+                : (profile.normalizedEntity === 'Private Limited' || profile.normalizedEntity === 'Public Limited' || profile.normalizedEntity === 'LLP');
+
+            const isFood = (profile.normalizedBusiness === 'Food & Restaurant');
+            const isSoleProp = (profile.normalizedEntity === 'Sole Proprietorship');
+
+            // 1. Update Step 2 CIN field behavior
+            const cinInput = document.getElementById('cinNumber');
+            const cinReqStar = document.getElementById('cinReqStar');
+            const cinHint = document.getElementById('cinHint');
+            const cinLabel = document.getElementById('cinLabel');
+
+            if (cinInput) {
+                if (!isCinApp) {
+                    cinInput.disabled = true;
+                    cinInput.value = '';
+                    cinInput.placeholder = `Not Applicable for ${profile.normalizedEntity}`;
+                    if (cinReqStar) cinReqStar.style.display = 'none';
+                    if (cinHint) {
+                        cinHint.textContent = `⊘ Not Applicable for ${profile.normalizedEntity} (No corporate CIN required)`;
+                        cinHint.style.color = '#15803D';
+                        cinHint.style.fontWeight = '600';
+                    }
+                    if (cinLabel) cinLabel.style.color = '#64748B';
+                } else {
+                    cinInput.disabled = false;
+                    cinInput.placeholder = 'e.g. U72200PN2021PTC198765';
+                    if (cinReqStar) cinReqStar.style.display = 'inline';
+                    if (cinHint) {
+                        cinHint.textContent = '21-character Corporate Identification Number or LLPIN';
+                        cinHint.style.color = '#64748B';
+                        cinHint.style.fontWeight = 'normal';
+                    }
+                    if (cinLabel) cinLabel.style.color = '#0F172A';
+                }
+            }
+
+            // 2. Step 2 FSSAI Field
+            const fssaiGroup = document.getElementById('fssaiGroup');
+            if (fssaiGroup) {
+                fssaiGroup.style.display = isFood ? 'block' : 'none';
+            }
+
+            // 3. Step 2 Owner ID Field
+            const ownerIdGroup = document.getElementById('ownerIdGroup');
+            if (ownerIdGroup) {
+                ownerIdGroup.style.display = isSoleProp ? 'block' : 'none';
+            }
+
+            // 4. Update Step 2 Notice & Badges
+            const badgeEl = document.getElementById('step2ProfileBadge');
+            const noticeText = document.getElementById('step2ReqNoticeText');
+            if (badgeEl) badgeEl.textContent = `${profile.normalizedEntity} · ${profile.normalizedBusiness}`;
+            if (noticeText) {
+                noticeText.innerHTML = isSoleProp
+                    ? `<strong>Exemption Active:</strong> CIN is exempt for Sole Proprietorships. Verified via Proprietor PAN &amp; Address.`
+                    : `<strong>Corporate Matrix:</strong> MCA CIN and Statutory Identifiers required for ${profile.normalizedEntity}.`;
+            }
+
+            // Step 4 is a clean document locker uploader
+        }
+
+        
+        function loadSavedOnboardingState() {
+            try {
+                const saved = localStorage.getItem('ohana_onboarding');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.legalName) document.getElementById('legalName').value = data.legalName;
+                    if (data.tradeName) document.getElementById('tradeName').value = data.tradeName;
+                    if (data.entityType) document.getElementById('entityType').value = data.entityType;
+                    if (data.businessType) document.getElementById('businessType').value = data.businessType;
+                    if (data.incDate) document.getElementById('incDate').value = data.incDate;
+                    if (data.industry) document.getElementById('industry').value = data.industry;
+                    if (data.description) document.getElementById('description').value = data.description;
+
+                    if (data.cinNumber) document.getElementById('cinNumber').value = data.cinNumber;
+                    if (data.gstin) document.getElementById('gstin').value = data.gstin;
+                    if (data.panNumber) document.getElementById('panNumber').value = data.panNumber;
+                    if (data.udyamReg) document.getElementById('udyamReg').value = data.udyamReg;
+                    if (data.fssaiReg && document.getElementById('fssaiReg')) document.getElementById('fssaiReg').value = data.fssaiReg;
+                    if (data.ownerIdReg && document.getElementById('ownerIdReg')) document.getElementById('ownerIdReg').value = data.ownerIdReg;
+
+                    if (data.website) document.getElementById('website').value = data.website;
+                    if (data.businessEmail) document.getElementById('businessEmail').value = data.businessEmail;
+                    if (data.phone) document.getElementById('phone').value = data.phone;
+                    if (data.whatsapp) document.getElementById('whatsapp').value = data.whatsapp;
+                    if (data.address) document.getElementById('address').value = data.address;
+                    if (data.city) document.getElementById('city').value = data.city;
+                    if (data.state) document.getElementById('state').value = data.state;
+                    if (data.pincode) document.getElementById('pincode').value = data.pincode;
+                    if (data.googleMaps) document.getElementById('googleMaps').value = data.googleMaps;
+
+                    if (Array.isArray(data.evidence) && data.evidence.length > 0) {
+                        uploadedEvidence = data.evidence;
+                    }
+                } else {
+                    // Check if business_identity exists
+                    const rawId = localStorage.getItem('ohana_business_identity');
+                    if (rawId) {
+                        const idObj = JSON.parse(rawId);
+                        if (idObj.legalName) document.getElementById('legalName').value = idObj.legalName;
+                        if (idObj.tradeName) document.getElementById('tradeName').value = idObj.tradeName;
+                        if (idObj.entityType) document.getElementById('entityType').value = idObj.entityType;
+                        if (idObj.businessType) document.getElementById('businessType').value = idObj.businessType;
+                        if (idObj.pan) document.getElementById('panNumber').value = idObj.pan;
+                    } else {
+                        fillStep1Demo();
+                        fillStep2Demo();
+                        fillStep3Demo();
+                    }
+                }
+            } catch(e) {
+                console.error("Error reading saved onboarding state", e);
+            }
+        }
+
+        function updateStepView() {
+            for (let i = 1; i <= TOTAL_STEPS; i++) {
+                const section = document.getElementById(`stepSection${i}`);
+                const indicator = document.getElementById(`stepIndicator${i}`);
+                if (section) section.style.display = (i === currentStep) ? 'block' : 'none';
+                if (indicator) {
+                    indicator.classList.remove('active', 'completed');
+                    if (i === currentStep) {
+                        indicator.classList.add('active');
+                    } else if (i < currentStep) {
+                        indicator.classList.add('completed');
+                    }
+                }
+            }
+
+            // Update Progress Connector line
+            const fillPct = ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
+            document.getElementById('stepperFill').style.width = `${fillPct}%`;
+
+            // Back button visibility
+            const btnPrev = document.getElementById('btnPrev');
+            btnPrev.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+
+            // Next button text
+            const btnNext = document.getElementById('btnNext');
+            if (currentStep === TOTAL_STEPS) {
+                btnNext.innerHTML = `<span>Create Business Passport ★</span>`;
+            } else {
+                btnNext.innerHTML = `<span>Continue to Step ${currentStep + 1} →</span>`;
+            }
+
+            // Dynamic Step triggers
+            if (currentStep === 2) {
+                handleBusinessTypeOrEntityChange();
+            } else if (currentStep === 4) {
+                handleBusinessTypeOrEntityChange();
+            } else if (currentStep === 5) {
+                populateReviewData();
+            }
+
+            window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+
+        function navigateStep(delta) {
+            // Check if final submission on Step 5
+            if (currentStep === TOTAL_STEPS && delta > 0) {
+                if (!validateCurrentStep()) {
+                    return;
+                }
+                saveCurrentState();
+                finalizePassportCreation();
+                return;
+            }
+
+            const target = currentStep + delta;
+            if (target < 1 || target > TOTAL_STEPS) return;
+
+            // Validate current step if moving forward
+            if (delta > 0 && !validateCurrentStep()) {
+                return;
+            }
+
+            // Save progress
+            saveCurrentState();
+
+            currentStep = target;
+            updateStepView();
+        }
+
+        function jumpToStep(step) {
+            if (step > currentStep && !validateCurrentStep()) {
+                return;
+            }
+            saveCurrentState();
+            currentStep = step;
+            updateStepView();
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const name = document.getElementById('legalName').value.trim();
+                if (!name) {
+                    showToast('Please enter your Legal Business Name', 'error');
+                    document.getElementById('legalName').focus();
+                    return false;
+                }
+            } else if (currentStep === 2) {
+                const curId = getActiveIdentityInput();
+                const isCinApp = (typeof isRequirementApplicable === 'function')
+                    ? isRequirementApplicable('cin', curId)
+                    : (curId.entityType === 'Private Limited' || curId.entityType === 'Public Limited');
+
+                const cin = document.getElementById('cinNumber').value.trim();
+                const gstin = document.getElementById('gstin').value.trim();
+                const pan = document.getElementById('panNumber').value.trim();
+
+                // CIN only required when applicable
+                if (isCinApp && !cin) {
+                    showToast('Please enter your CIN or LLPIN', 'error');
+                    document.getElementById('cinNumber').focus();
+                    return false;
+                }
+                if (!pan) {
+                    showToast('Please enter your PAN', 'error');
+                    document.getElementById('panNumber').focus();
+                    return false;
+                }
+                // GST only strictly mandatory for corporate
+                if (isCinApp && !gstin) {
+                    showToast('Please enter your GSTIN for corporate registration', 'error');
+                    document.getElementById('gstin').focus();
+                    return false;
+                }
+            } else if (currentStep === 3) {
+                const email = document.getElementById('businessEmail').value.trim();
+                const address = document.getElementById('address').value.trim();
+                if (!email) {
+                    showToast('Please enter an official business email', 'error');
+                    document.getElementById('businessEmail').focus();
+                    return false;
+                }
+                if (!address) {
+                    showToast('Please enter registered office address', 'error');
+                    document.getElementById('address').focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function saveCurrentState() {
+            const data = {
+                legalName: document.getElementById('legalName').value.trim(),
+                tradeName: document.getElementById('tradeName').value.trim(),
+                entityType: document.getElementById('entityType').value,
+                businessType: document.getElementById('businessType').value,
+                incDate: document.getElementById('incDate').value,
+                industry: document.getElementById('industry').value,
+                description: document.getElementById('description').value.trim(),
+
+                cinNumber: document.getElementById('cinNumber').value.trim().toUpperCase(),
+                gstin: document.getElementById('gstin').value.trim().toUpperCase(),
+                panNumber: document.getElementById('panNumber').value.trim().toUpperCase(),
+                udyamReg: document.getElementById('udyamReg').value.trim().toUpperCase(),
+                fssaiReg: document.getElementById('fssaiReg') ? document.getElementById('fssaiReg').value.trim() : '',
+                ownerIdReg: document.getElementById('ownerIdReg') ? document.getElementById('ownerIdReg').value.trim() : '',
+
+                website: document.getElementById('website').value.trim(),
+                businessEmail: document.getElementById('businessEmail').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                whatsapp: document.getElementById('whatsapp').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value,
+                pincode: document.getElementById('pincode').value.trim(),
+                googleMaps: document.getElementById('googleMaps').value.trim(),
+                evidence: uploadedEvidence,
+                updatedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('ohana_onboarding', JSON.stringify(data));
+        }
+
+        // Demo Fill Helpers
+        function fillStep1Demo() {
+            document.getElementById('legalName').value = 'ABC Technologies Private Limited';
+            document.getElementById('tradeName').value = 'ABC Technologies';
+            document.getElementById('entityType').value = 'Private Limited';
+            document.getElementById('businessType').value = 'Service Business';
+            document.getElementById('incDate').value = '2021-01-15';
+            document.getElementById('industry').value = 'Information Technology & Software';
+            document.getElementById('description').value = 'Enterprise SaaS, cloud locker infrastructure and identity assurance technologies.';
+            handleBusinessTypeOrEntityChange();
+            showToast('Pvt Ltd basics pre-filled!', 'info');
+        }
+
+        function fillStep2Demo() {
+            document.getElementById('cinNumber').value = 'U72200PN2021PTC198765';
+            document.getElementById('gstin').value = '27ABCDE1234F1Z5';
+            document.getElementById('panNumber').value = 'ABCDE1234F';
+            document.getElementById('udyamReg').value = 'UDYAM-MH-26-0019284';
+            handleBusinessTypeOrEntityChange();
+            showToast('Corporate statutory IDs pre-filled!', 'info');
+        }
+
+        function fillStep2FoodDemo() {
+            document.getElementById('legalName').value = 'Aapla Vadapav Centre';
+            document.getElementById('tradeName').value = 'Aapla Vadapav';
+            document.getElementById('entityType').value = 'Sole Proprietorship';
+            document.getElementById('businessType').value = 'Food & Restaurant';
+            document.getElementById('panNumber').value = 'AKLPP9821M';
+            document.getElementById('cinNumber').value = '';
+            document.getElementById('gstin').value = '27AKLPP9821M1Z8';
+            document.getElementById('udyamReg').value = 'UDYAM-MH-26-0098124';
+            if (document.getElementById('fssaiReg')) document.getElementById('fssaiReg').value = '11521019000123';
+            if (document.getElementById('ownerIdReg')) document.getElementById('ownerIdReg').value = '5489 1234 5678';
+            handleBusinessTypeOrEntityChange();
+            showToast('Sole Proprietor Food Stall demo data filled (CIN Exempt)!', 'success');
+        }
+
+        function fillStep3Demo() {
+            document.getElementById('website').value = 'https://abctechnologies.io';
+            document.getElementById('businessEmail').value = 'compliance@abctechnologies.io';
+            document.getElementById('phone').value = '+91 20 6712 3400';
+            document.getElementById('whatsapp').value = '+91 98230 11223';
+            document.getElementById('address').value = 'Unit 402, 4th Floor, Tech Park One, Airport Road, Yerawada';
+            document.getElementById('city').value = 'Pune';
+            document.getElementById('state').value = 'Maharashtra';
+            document.getElementById('pincode').value = '411006';
+            document.getElementById('googleMaps').value = 'https://maps.google.com/?q=ABC+Technologies+Tech+Park+One+Pune';
+            showToast('Contact and address pre-filled!', 'info');
+        }
+
+        // Step 4 Evidence Vault functions
+        function triggerMockUpload() {
+            const curId = getActiveIdentityInput();
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(curId)
+                : { normalizedBusiness: 'Food & Restaurant', normalizedEntity: 'Sole Proprietorship' };
+
+            let docTypes = [
+                { name: "Bank_Proof_Cancelled_Cheque.pdf", type: "PDF", size: "640 KB" },
+                { name: "Commercial_Utility_Electricity_Bill.pdf", type: "PDF", size: "520 KB" }
+            ];
+
+            if (profile.normalizedBusiness === 'Food & Restaurant') {
+                docTypes.unshift({ name: "FSSAI_Food_Safety_License.pdf", type: "PDF", size: "780 KB" });
+                docTypes.push({ name: "Shop_Establishment_Gumasta_License.pdf", type: "PDF", size: "910 KB" });
+            } else {
+                docTypes.unshift({ name: "MCA_Certificate_of_Incorporation.pdf", type: "PDF", size: "1.4 MB" });
+            }
+
+            const randomDoc = docTypes[Math.floor(Math.random() * docTypes.length)];
+            const newDoc = {
+                id: "ev_" + Date.now(),
+                name: randomDoc.name,
+                type: randomDoc.type,
+                size: randomDoc.size,
+                status: "Uploaded"
+            };
+            uploadedEvidence.push(newDoc);
+            renderEvidenceList();
+            showToast(`Attached ${newDoc.name} to evidence vault`, 'success');
+        }
+
+        function addSampleEvidence() {
+            const curId = getActiveIdentityInput();
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(curId)
+                : { normalizedBusiness: 'Food & Restaurant', normalizedEntity: 'Sole Proprietorship' };
+
+            if (profile.normalizedEntity === 'Sole Proprietorship' && profile.normalizedBusiness === 'Food & Restaurant') {
+                uploadedEvidence = [
+                    { id: "ev_pan", name: "Proprietor_PAN_Card.png", type: "PNG", size: "450 KB", status: "Uploaded" },
+                    { id: "ev_fssai", name: "FSSAI_Food_Safety_License.pdf", type: "PDF", size: "780 KB", status: "Uploaded" },
+                    { id: "ev_shop", name: "Shop_Establishment_Trade_License.pdf", type: "PDF", size: "910 KB", status: "Uploaded" },
+                    { id: "ev_owner", name: "Proprietor_Aadhaar_Card.pdf", type: "PDF", size: "620 KB", status: "Uploaded" },
+                    { id: "ev_bank", name: "Bank_Current_Account_Cheque.pdf", type: "PDF", size: "540 KB", status: "Uploaded" }
+                ];
+                showToast('Added Food Stall statutory evidence set (FSSAI, Shop License, PAN, Owner ID, Bank)!', 'success');
+            } else {
+                uploadedEvidence = [
+                    { id: "ev_inc", name: "MCA_Certificate_of_Incorporation.pdf", type: "PDF", size: "1.4 MB", status: "Uploaded" },
+                    { id: "ev_gst", name: "GST_REG06_Registration.pdf", type: "PDF", size: "820 KB", status: "Uploaded" },
+                    { id: "ev_pan", name: "Company_PAN_Card.png", type: "PNG", size: "450 KB", status: "Uploaded" },
+                    { id: "ev_udy", name: "Udyam_Registration_Certificate.pdf", type: "PDF", size: "1.1 MB", status: "Uploaded" },
+                    { id: "ev_add", name: "Electricity_Commercial_Bill.pdf", type: "PDF", size: "540 KB", status: "Uploaded" }
+                ];
+                showToast('Added standard corporate evidence set!', 'success');
+            }
+            renderEvidenceList();
+        }
+
+        function removeEvidence(id) {
+            uploadedEvidence = uploadedEvidence.filter(e => e.id !== id);
+            renderEvidenceList();
+            showToast('Evidence document removed', 'info');
+        }
+
+        function renderEvidenceList() {
+            const list = document.getElementById('evidenceList');
+            const countBadge = document.getElementById('evidenceCount');
+            if (countBadge) countBadge.textContent = uploadedEvidence.length;
+            if (!list) return;
+
+            if (uploadedEvidence.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:13px;">No documents attached yet. Click the box above or use sample set.</div>`;
+                return;
+            }
+
+            list.innerHTML = uploadedEvidence.map(item => `
+                <div class="evidence-row">
+                    <div class="evidence-info">
+                        <div class="evidence-icon">${item.type}</div>
+                        <div>
+                            <div style="font-weight:600; font-size:13.5px; color:var(--navy);">${item.name}</div>
+                            <small style="color:var(--text-muted); font-size:11.5px;">${item.size} • <span style="color:var(--success); font-weight:600;">✓ Ready for Review</span></small>
+                        </div>
+                    </div>
+                    <button type="button" style="background:none; border:none; color:#EF4444; font-size:13px; font-weight:600; cursor:pointer;" onclick="removeEvidence('${item.id}')">
+                        ✕ Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function populateReviewData() {
+            const curId = getActiveIdentityInput();
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(curId)
+                : { normalizedEntity: curId.entityType, normalizedBusiness: curId.businessType };
+
+            document.getElementById('revLegalName').textContent = document.getElementById('legalName').value || 'Business Entity';
+            document.getElementById('revTradeName').textContent = document.getElementById('tradeName').value || document.getElementById('legalName').value;
+            document.getElementById('revEntityType').textContent = document.getElementById('entityType').value;
+            if (document.getElementById('revBusinessType')) {
+                document.getElementById('revBusinessType').textContent = document.getElementById('businessType').value;
+            }
+            document.getElementById('revIncDate').textContent = document.getElementById('incDate').value || '15 Jan 2021';
+
+            const cinVal = document.getElementById('cinNumber').value;
+            const isCinApp = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', curId)
+                : (profile.normalizedEntity === 'Private Limited' || profile.normalizedEntity === 'Public Limited');
+
+            const cinBox = document.getElementById('revCinBox');
+            if (cinBox) {
+                if (!isCinApp) {
+                    document.getElementById('revCin').innerHTML = `<span style="color:#16A34A; font-weight:700;">⊘ Not Applicable (${profile.normalizedEntity})</span>`;
+                } else {
+                    document.getElementById('revCin').textContent = cinVal || 'U72200PN2021PTC198765';
+                }
+            }
+
+            document.getElementById('revGstin').textContent = document.getElementById('gstin').value || '—';
+            document.getElementById('revPan').textContent = document.getElementById('panNumber').value || 'ABCDE1234F';
+            document.getElementById('revUdyam').textContent = document.getElementById('udyamReg').value || '—';
+
+            const fssaiBox = document.getElementById('revFssaiBox');
+            if (fssaiBox) {
+                const fssaiVal = document.getElementById('fssaiReg') ? document.getElementById('fssaiReg').value : '';
+                if (profile.normalizedBusiness === 'Food & Restaurant') {
+                    fssaiBox.style.display = 'block';
+                    document.getElementById('revFssai').textContent = fssaiVal || '11521019000123';
+                } else {
+                    fssaiBox.style.display = 'none';
+                }
+            }
+
+            const ownerBox = document.getElementById('revOwnerBox');
+            if (ownerBox) {
+                const ownerVal = document.getElementById('ownerIdReg') ? document.getElementById('ownerIdReg').value : '';
+                if (profile.normalizedEntity === 'Sole Proprietorship') {
+                    ownerBox.style.display = 'block';
+                    document.getElementById('revOwner').textContent = ownerVal || 'Aadhaar / Voter ID Verified';
+                } else {
+                    ownerBox.style.display = 'none';
+                }
+            }
+
+            document.getElementById('revWebsite').textContent = document.getElementById('website').value || 'https://abctechnologies.io';
+            document.getElementById('revEmail').textContent = document.getElementById('businessEmail').value || 'compliance@abctechnologies.io';
+            document.getElementById('revAddress').textContent = `${document.getElementById('city').value || 'Pune'}, ${document.getElementById('state').value}`;
+            document.getElementById('revEvidenceCount').textContent = `${uploadedEvidence.length} Document${uploadedEvidence.length === 1 ? '' : 's'}`;
+        }
+
+        function finalizePassportCreation() {
+            saveCurrentState();
+
+            const btnNext = document.getElementById('btnNext');
+            if (btnNext) {
+                btnNext.disabled = true;
+                btnNext.innerHTML = `<span>Creating Business Passport... ⏳</span>`;
+            }
+
+            // Save business identity state in the exact schema used across the app
+            const identityState = {
+                legalName: document.getElementById('legalName')?.value?.trim() || 'Aapla Vadapav Centre',
+                tradeName: document.getElementById('tradeName')?.value?.trim() || 'Aapla Vadapav',
+                entityType: document.getElementById('entityType')?.value || 'Sole Proprietorship',
+                businessType: document.getElementById('businessType')?.value || 'Food & Restaurant',
+                cin: document.getElementById('cinNumber')?.value?.trim()?.toUpperCase() || '',
+                cinNumber: document.getElementById('cinNumber')?.value?.trim()?.toUpperCase() || '',
+                incDate: document.getElementById('incDate')?.value || '2021-01-15',
+                gstin: document.getElementById('gstin')?.value?.trim()?.toUpperCase() || '',
+                pan: document.getElementById('panNumber')?.value?.trim()?.toUpperCase() || 'ABCDE1234F',
+                panNumber: document.getElementById('panNumber')?.value?.trim()?.toUpperCase() || 'ABCDE1234F',
+                udyam: document.getElementById('udyamReg')?.value?.trim()?.toUpperCase() || '',
+                udyamNumber: document.getElementById('udyamReg')?.value?.trim()?.toUpperCase() || '',
+                fssai: document.getElementById('fssaiReg')?.value?.trim() || '',
+                ownerId: document.getElementById('ownerIdReg')?.value?.trim() || '',
+                industry: document.getElementById('industry')?.value || 'Food & Beverage Services',
+                description: document.getElementById('description')?.value?.trim() || 'Authentic regional street food & food services.',
+                website: document.getElementById('website')?.value?.trim() || 'https://aaplavadapav.in',
+                email: document.getElementById('businessEmail')?.value?.trim() || 'hello@aaplavadapav.in',
+                phone: document.getElementById('phone')?.value?.trim() || '+91 98200 11223',
+                whatsapp: document.getElementById('whatsapp')?.value?.trim() || '+91 98200 11223',
+                address: document.getElementById('address')?.value?.trim() || 'Shop 12, Station Road, Dadar West',
+                city: document.getElementById('city')?.value?.trim() || 'Mumbai',
+                state: document.getElementById('state')?.value || 'Maharashtra',
+                pincode: document.getElementById('pincode')?.value?.trim() || '400028',
+                googleMaps: document.getElementById('googleMaps')?.value?.trim() || 'https://maps.google.com/?q=Aapla+Vadapav',
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('ohana_business_identity', JSON.stringify(identityState));
+
+            // Sync verification state for new entity
+            let vState = null;
+            try {
+                const rawV = localStorage.getItem('ohana_verification_state');
+                if (rawV) vState = JSON.parse(rawV);
+            } catch(e) {}
+            if (!vState) vState = {};
+
+            const isSolePropFood = (identityState.entityType === 'Sole Proprietorship' && identityState.businessType === 'Food & Restaurant');
+            if (isSolePropFood) {
+                vState.cinVerified = false; // CIN is N/A!
+                vState.panVerified = true;
+                vState.fssaiVerified = Boolean(identityState.fssai);
+                vState.ownerVerified = Boolean(identityState.ownerId || identityState.pan);
+                vState.shopLicenseVerified = true;
+                vState.addressVerified = true;
+                vState.bankVerified = true;
+                vState.currentLevel = "L2";
+                vState.levelName = "Business Verified";
+            }
+            localStorage.setItem('ohana_verification_state', JSON.stringify(vState));
+
+            // Save passport info
+            const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+            let existingBp = null;
+            try {
+                const storedBp = localStorage.getItem('ohana_business_passport');
+                if (storedBp) existingBp = JSON.parse(storedBp);
+            } catch(e) {}
+
+            const passportData = {
+                id: (existingBp && existingBp.id) ? existingBp.id : `OHANA-BP-2026-${randomSuffix}`,
+                orgName: identityState.legalName,
+                level: vState.currentLevel || "L0",
+                levelName: vState.levelName || "Claimed",
+                healthScore: 620,
+                status: "Active",
+                evidenceCount: uploadedEvidence.length,
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('ohana_business_passport', JSON.stringify(passportData));
+            localStorage.setItem('ohana_onboarding_completed', 'true');
+            localStorage.setItem('ohana_user_logged_in', 'true');
+            localStorage.setItem('ohana_session', JSON.stringify({
+                loggedIn: true,
+                email: identityState.email,
+                orgName: identityState.legalName,
+                loginTime: new Date().toISOString()
+            }));
+
+            if (typeof persistCurrentAccountData === 'function') {
+                persistCurrentAccountData();
+            }
+
+            if (typeof showToast === 'function') {
+                showToast('Business Passport created successfully! Logging into locker...', 'success');
+            }
+
+            // Show success modal
+            const orgNameEl = document.getElementById('createdOrgName');
+            if (orgNameEl) orgNameEl.textContent = identityState.legalName;
+            
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            } else {
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 800);
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

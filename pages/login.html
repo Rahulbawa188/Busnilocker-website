@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sign In | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="auth-page-body">
+    <!-- Ambient Aurora Background Blobs with Soft Lavender Glow -->
+    <div class="auth-ambient-canvas" aria-hidden="true">
+        <div class="auth-blob auth-blob-blue"></div>
+        <div class="auth-blob auth-blob-pink"></div>
+        <div class="auth-blob auth-blob-lavender"></div>
+        <div class="auth-blob auth-blob-center"></div>
+        <div class="auth-grid-overlay"></div>
+    </div>
+
+    <!-- Floating Business Passport Constellation Background -->
+    <div class="login-bg-constellation" aria-hidden="true">
+        <!-- Subtle Dotted Curved Connection Lines -->
+        <svg class="login-bg-lines-svg" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="bgLineGradTop" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FF2028" stop-opacity="0.32"/>
+                    <stop offset="50%" stop-color="#0B1F3A" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#FF2028" stop-opacity="0.32"/>
+                </linearGradient>
+                <linearGradient id="bgLineGradLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FF2028" stop-opacity="0.3"/>
+                    <stop offset="50%" stop-color="#FF2028" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#0B1F3A" stop-opacity="0.22"/>
+                </linearGradient>
+                <linearGradient id="bgLineGradRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#0B1F3A" stop-opacity="0.22"/>
+                    <stop offset="50%" stop-color="#FF2028" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#FF2028" stop-opacity="0.2"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Arcing upper connection between top nodes -->
+            <path d="M 170 90 Q 720 20 1270 95" stroke="url(#bgLineGradTop)" stroke-width="1.2" stroke-dasharray="4 6"/>
+            <!-- Left constellation connection -->
+            <path d="M 150 95 C 260 210 100 370 120 440" stroke="url(#bgLineGradLeft)" stroke-width="1.2" stroke-dasharray="4 6"/>
+            <path d="M 120 440 C 130 540 250 640 180 770" stroke="url(#bgLineGradLeft)" stroke-width="1.2" stroke-dasharray="4 6"/>
+            <!-- Right constellation connection -->
+            <path d="M 1270 95 C 1170 215 1320 360 1280 435" stroke="url(#bgLineGradRight)" stroke-width="1.2" stroke-dasharray="4 6"/>
+            <path d="M 1280 435 C 1260 550 1190 670 1260 760" stroke="url(#bgLineGradRight)" stroke-width="1.2" stroke-dasharray="4 6"/>
+        </svg>
+
+        <!-- Tiny Floating Ambient Particles -->
+        <div class="bg-particle p1"></div>
+        <div class="bg-particle p2"></div>
+        <div class="bg-particle p3"></div>
+        <div class="bg-particle p4"></div>
+        <div class="bg-particle p5"></div>
+        <div class="bg-particle p6"></div>
+        <div class="bg-particle p7"></div>
+        <div class="bg-particle p8"></div>
+
+        <!-- 9 Floating Business Passport Concepts -->
+        <!-- 1. Identity (User/person verification icon - Top-Left) -->
+        <div class="login-floating-symbol login-sym-1">
+            <div class="login-symbol-icon navy">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Identity</span>
+                <span class="login-symbol-meta">Verified Corp</span>
+            </div>
+        </div>
+
+        <!-- 2. Business Passport (Small passport/document icon - Top-Left inner) -->
+        <div class="login-floating-symbol login-sym-2">
+            <div class="login-symbol-icon blue">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+                    <line x1="7" y1="8" x2="13" y2="8"></line>
+                    <line x1="7" y1="12" x2="17" y2="12"></line>
+                    <line x1="7" y1="16" x2="11" y2="16"></line>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Business Passport</span>
+                <span class="login-symbol-meta">L4 Verified</span>
+            </div>
+        </div>
+
+        <!-- 3. Verification (Shield + check icon - Top-Right) -->
+        <div class="login-floating-symbol login-sym-3">
+            <div class="login-symbol-icon green">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Verification</span>
+                <span class="login-symbol-meta">Govt Assured</span>
+            </div>
+        </div>
+
+        <!-- 4. Credentials (Digital certificate/card icon - Top-Right inner) -->
+        <div class="login-floating-symbol login-sym-4">
+            <div class="login-symbol-icon lavender">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Credentials</span>
+                <span class="login-symbol-meta">Cryptographic</span>
+            </div>
+        </div>
+
+        <!-- 5. Security (Lock icon - Middle-Left) -->
+        <div class="login-floating-symbol login-sym-5">
+            <div class="login-symbol-icon navy">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Security</span>
+                <span class="login-symbol-meta">256-bit AES</span>
+            </div>
+        </div>
+
+        <!-- 6. Trust (Shield/check or trust badge - Middle-Right) -->
+        <div class="login-floating-symbol login-sym-6">
+            <div class="login-symbol-icon pink">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="6"></circle>
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Trust</span>
+                <span class="login-symbol-meta">Decentralized</span>
+            </div>
+        </div>
+
+        <!-- 7. Renewals (Circular refresh icon - Bottom-Left inner) -->
+        <div class="login-floating-symbol login-sym-7">
+            <div class="login-symbol-icon blue">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Renewals</span>
+                <span class="login-symbol-meta">Automated Sync</span>
+            </div>
+        </div>
+
+        <!-- 8. Documents (Document/file icon - Bottom-Left) -->
+        <div class="login-floating-symbol login-sym-8">
+            <div class="login-symbol-icon lavender">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Documents</span>
+                <span class="login-symbol-meta">Statutory Vault</span>
+            </div>
+        </div>
+
+        <!-- 9. Share Room (Secure sharing/network icon - Bottom-Right) -->
+        <div class="login-floating-symbol login-sym-9">
+            <div class="login-symbol-icon green">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+            </div>
+            <div class="login-symbol-text">
+                <span class="login-symbol-title">Share Room</span>
+                <span class="login-symbol-meta">Encrypted Link</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Centered Login Page Viewport -->
+    <main class="auth-page-container">
+        <!-- Premium White Enterprise Login Card -->
+        <div class="auth-card login-card">
+            <!-- Brand Logo Header -->
+            <div class="auth-card-brand">
+                <a href="../index.html" class="auth-brand-link" title="Return to Home" style="text-decoration:none;">
+                    <span class="ohana-inline-brand">
+                        <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 42px;"></span>
+                        <span class="oib-text">
+                            <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                            <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                        </span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Welcome Title & Subtitle -->
+            <div class="auth-card-intro">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your Business Passport</p>
+            </div>
+
+            <!-- Authentication Form -->
+            <form id="loginForm" onsubmit="handleSignIn(event)" novalidate>
+                <!-- Username / Email Field -->
+                <div class="auth-field-group">
+                    <label for="businessEmail" class="auth-field-label">Username / Email</label>
+                    <div class="auth-input-box">
+                        <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <input type="email" id="businessEmail" placeholder="Username / Email" autocomplete="email" required>
+                    </div>
+                </div>
+
+                <!-- Password Field with Visibility Toggle -->
+                <div class="auth-field-group">
+                    <label for="accountPassword" class="auth-field-label">Password</label>
+                    <div class="auth-input-box">
+                        <svg class="auth-input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <input type="password" id="accountPassword" placeholder="Password" autocomplete="current-password" required>
+                        <button type="button" class="auth-eye-btn" id="passwordToggle" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                            <svg id="eyeIconOpen" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg id="eyeIconClosed" style="display:none;" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember me & Forgot Password Row -->
+                <div class="auth-row-meta">
+                    <label class="auth-remember-check">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <span>Remember me</span>
+                    </label>
+                    <a class="auth-link-forgot" href="javascript:void(0)" onclick="handleForgotPassword()">Forgot password?</a>
+                </div>
+
+                <!-- Primary Login Submit Button (Deep Navy to Royal Blue with subtle hover lift) -->
+                <button type="submit" class="btn-auth-submit" id="signInBtn">
+                    <span class="spinner-icon"></span>
+                    <span class="btn-auth-label" id="signInBtnText">
+                        <span>Login</span>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <!-- Alternative / Google Sign In -->
+            <button type="button" class="btn-auth-google" onclick="handleGoogleSignIn()">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <!-- Quick Demo Account Switcher -->
+            <div class="auth-demo-accounts" style="margin-top: 18px; padding: 12px 14px; background: rgba(248, 250, 252, 0.95); border: 1.5px solid #E2E8F0; border-radius: 12px; text-align: left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                    <span style="font-size: 11px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px;">
+                        Quick Switch Accounts (Demo)
+                    </span>
+                    <span style="font-size: 10px; color: #16A34A; font-weight: 700;">● Isolated Sessions</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button type="button" onclick="loginDemoAccount('rahul.bawa@abctech.com')" class="btn outline" style="font-size: 12px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; text-align: left; background: #ffffff; border: 1px solid #CBD5E1; border-radius: 8px; cursor: pointer;">
+                        <span class="avatar" style="width: 26px; height: 26px; min-width: 26px; font-size: 11px; background: #0B1F3A; color: #ffffff; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800;">RB</span>
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.2;">
+                            <b style="display: block; font-size: 12px; color: #0B1F3A;">Rahul Bawa</b>
+                            <small style="color: #64748B; font-size: 10px;">ABC Tech · L3</small>
+                        </span>
+                    </button>
+                    <button type="button" onclick="loginDemoAccount('vikram@techcorp.com')" class="btn outline" style="font-size: 12px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; text-align: left; background: #ffffff; border: 1px solid #CBD5E1; border-radius: 8px; cursor: pointer;">
+                        <span class="avatar" style="width: 26px; height: 26px; min-width: 26px; font-size: 11px; background: #FF2028; color: #ffffff; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800;">VM</span>
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.2;">
+                            <b style="display: block; font-size: 12px; color: #0B1F3A;">Vikram Malhotra</b>
+                            <small style="color: #64748B; font-size: 10px;">TechCorp · L2</small>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Create Organization Link -->
+            <p class="auth-switch-link">
+                Don’t have an account?
+                <a href="signup.html">Create Organization</a>
+            </p>
+
+            <!-- Trust Footer -->
+            <div class="auth-trust-footer">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                </svg>
+                <span>256-bit AES Encryption • Enterprise Verified</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Client-Side Form Interactivity & Validation Script -->
+    <script>
+        // 1. Password Visibility Toggle
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('accountPassword');
+            const eyeOpen = document.getElementById('eyeIconOpen');
+            const eyeClosed = document.getElementById('eyeIconClosed');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeOpen.style.display = 'none';
+                eyeClosed.style.display = 'block';
+            } else {
+                passwordInput.type = 'password';
+                eyeOpen.style.display = 'block';
+                eyeClosed.style.display = 'none';
+            }
+        }
+
+        function getLoginRedirectTarget() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const redir = params.get('redirect');
+                if (redir) {
+                    const clean = decodeURIComponent(redir).replace(/^[/\\]+/, '');
+                    const allowedPages = [
+                        'dashboard.html',
+                        'identity.html',
+                        'documents.html',
+                        'business-passport.html',
+                        'assets.html',
+                        'renewals.html',
+                        'share-room.html',
+                        'compliance.html',
+                        'verification.html',
+                        'analytics.html',
+                        'activity.html',
+                        'billing.html',
+                        'support.html',
+                        'team.html',
+                        'trust-center.html',
+                        'public-profile.html',
+                        'onboarding.html'
+                    ];
+                    if (allowedPages.includes(clean)) {
+                        return clean;
+                    }
+                }
+            } catch(e) {}
+            return 'dashboard.html';
+        }
+
+        // Show friendly toast if redirected from protected page
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('redirect')) {
+                setTimeout(() => {
+                    showToast('Please sign in to access your Business Locker.', 'info');
+                }, 300);
+            }
+        });
+
+        // 2. Sign In Form Handler & Validation
+        function handleSignIn(event) {
+            event.preventDefault();
+
+            const emailInput = document.getElementById('businessEmail');
+            const passwordInput = document.getElementById('accountPassword');
+            const signInBtn = document.getElementById('signInBtn');
+            const signInBtnText = document.getElementById('signInBtnText');
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showToast('Please enter a valid work email or username.', 'error');
+                emailInput.focus();
+                return;
+            }
+
+            // Password length check
+            if (!password || password.length < 6) {
+                showToast('Password must be at least 6 characters.', 'error');
+                passwordInput.focus();
+                return;
+            }
+
+            // Show loading state
+            signInBtn.classList.add('loading');
+            signInBtnText.innerHTML = '<span>Authenticating...</span>';
+
+            setTimeout(() => {
+                let loggedInUser = null;
+                if (typeof switchOhanaAccount === 'function') {
+                    loggedInUser = switchOhanaAccount(email);
+                    showToast(`Welcome back, ${loggedInUser.fullName}! Loading your account...`, 'success');
+                } else {
+                    showToast('Authentication successful! Loading your Business Locker...', 'success');
+                }
+
+                setTimeout(() => {
+                    window.location.href = getLoginRedirectTarget();
+                }, 600);
+            }, 600);
+        }
+
+        // 3. One-Click Demo Account Quick Login
+        function loginDemoAccount(email) {
+            const emailInput = document.getElementById('businessEmail');
+            const passwordInput = document.getElementById('accountPassword');
+            if (emailInput) emailInput.value = email;
+            if (passwordInput) passwordInput.value = 'password123';
+
+            const signInBtn = document.getElementById('signInBtn');
+            const signInBtnText = document.getElementById('signInBtnText');
+            if (signInBtn) signInBtn.classList.add('loading');
+            if (signInBtnText) signInBtnText.innerHTML = '<span>Switching account...</span>';
+
+            setTimeout(() => {
+                let user = null;
+                if (typeof switchOhanaAccount === 'function') {
+                    user = switchOhanaAccount(email);
+                    showToast(`Active account switched to ${user.fullName} (${user.orgName})`, 'success');
+                }
+                window.location.href = getLoginRedirectTarget();
+            }, 300);
+        }
+
+        // 4. Google OAuth Handler Demo
+        function handleGoogleSignIn() {
+            showToast('Connecting to Google Workspace identity provider...', 'info');
+            setTimeout(() => {
+                let user = null;
+                if (typeof switchOhanaAccount === 'function') {
+                    user = switchOhanaAccount('vikram@techcorp.com');
+                    showToast(`Google Workspace authenticated! Welcome, ${user.fullName}.`, 'success');
+                } else {
+                    showToast('Google account verified! Welcome back.', 'success');
+                }
+                setTimeout(() => {
+                    window.location.href = getLoginRedirectTarget();
+                }, 600);
+            }, 700);
+        }
+
+        // 5. Forgot Password Handler
+        function handleForgotPassword() {
+            const emailInput = document.getElementById('businessEmail');
+            const email = emailInput.value.trim();
+
+            if (email && email.includes('@')) {
+                showToast(`Password reset link dispatched to ${email}`, 'success');
+            } else {
+                showToast('Please enter your email above to receive a reset link.', 'info');
+                emailInput.focus();
+            }
+        }
+    </script>
+</body>
+
+</html>

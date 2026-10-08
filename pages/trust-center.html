@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Trust Centre | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ASSURANCE &amp; AUDIT INFRASTRUCTURE</span>
+                <h1>Trust Centre</h1>
+                <p class="subtitle">Cryptographic proof of verified attributes, verification methods, evidence references, and re-verification policies.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn outline" onclick="openReverifyModal()">Request Re-check</button>
+                <button type="button" class="btn" onclick="downloadTrustCertificate()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Trust Certificate
+                </button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Trust Executive Hero Banner -->
+        <div class="welcome" style="margin-bottom:24px; background:linear-gradient(135deg,#ffffff 0%,#f0fdf4 60%,#dcfce7 100%); border-color:#bbf7d0;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span class="badge badge-verified" id="tcHeroBadge" style="font-size:13px; padding:5px 12px;">Active Assurance Level: L3 Enhanced Verified</span>
+                    <span class="badge badge-neutral" style="font-size:12px;">Evidence Ref: EV-TRUST-2026-9824</span>
+                </div>
+                <h2 style="font-size:24px; color:#064e3b; margin:0 0 6px;" id="tcHeroScore">Trust Health Score: 850 / 900 (Tier 1 Verified)</h2>
+                <p style="color:#047857; margin:0; font-size:14px; max-width:760px;" id="tcHeroDesc">
+                    ABC Technologies has verified statutory incorporation, tax registrations, DNS domain ownership, executive KYC, and physical location under the Ohana Trust Protocol.
+                </p>
+            </div>
+            <div style="text-align:right; min-width:140px;">
+                <div style="font-size:44px; font-weight:800; color:#059669; line-height:1; letter-spacing:-1px;" id="tcHeroLevel">L3</div>
+                <span style="font-size:12px; font-weight:700; color:#047857; display:inline-flex; align-items:center; gap:6px; margin-top:4px;" id="tcHeroTag">
+                    <span class="pulse-dot-green"></span> Enterprise Verified
+                </span>
+            </div>
+        </div>
+
+        <!-- 4-Column Trust Metrics -->
+        <div class="stats" style="grid-template-columns: repeat(4, 1fr); margin-bottom:24px;">
+            <div class="stat">
+                <small>Assurance Tier</small>
+                <b>L3</b>
+                <span class="positive">● Enhanced Verified</span>
+                <div class="stat-progress"><div class="stat-progress-bar" style="width:75%; background:linear-gradient(90deg,#059669,#10b981);"></div></div>
+            </div>
+            <div class="stat">
+                <small>Verified Claims</small>
+                <b>08 <small style="font-size:18px; color:#64748b; font-weight:600;">/ 08</small></b>
+                <span class="positive">100% Statutory Attested</span>
+                <div class="stat-progress"><div class="stat-progress-bar" style="width:100%; background:linear-gradient(90deg,#059669,#10b981);"></div></div>
+            </div>
+            <div class="stat">
+                <small>Evidence Freshness</small>
+                <b>100%</b>
+                <span>Zero Expired Documents</span>
+                <div class="stat-progress"><div class="stat-progress-bar" style="width:96%; background:linear-gradient(90deg,#059669,#10b981);"></div></div>
+            </div>
+            <div class="stat">
+                <small>Next Re-verification</small>
+                <b>14 Oct</b>
+                <span class="warning"><span class="pulse-dot-amber"></span> Domain (28 days)</span>
+                <div class="stat-progress"><div class="stat-progress-bar" style="width:35%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+            </div>
+        </div>
+
+        <!-- Trust Levels Tier Cards (L0 - L4) -->
+        <section class="panel" style="margin-bottom:24px;">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">The 5 Progressive Assurance Tiers</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Standardized trust levels separating claimed, contact-verified, and enterprise-assured states</p>
+                </div>
+                <span class="badge badge-info">Framework v1.2</span>
+            </div>
+
+            <div class="page-grid" style="grid-template-columns: repeat(5, 1fr); gap:14px;" id="trustTiersGrid">
+                <!-- L0 -->
+                <article class="page-card" style="padding:18px; border-color:#bbf7d0; background:#f0fdf4;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <i style="width:30px; height:30px; font-size:12px; background:#dcfce7; color:#059669;">L0</i>
+                        <span class="badge badge-verified" style="font-size:11px;">✓ Claimed</span>
+                    </div>
+                    <h4 style="margin:6px 0 4px; font-size:15px; color:#0f172a;">Account Claimed</h4>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.4;">Business identity entered by company representative.</p>
+                    <small style="font-size:11.5px; color:#059669; font-weight:700; margin-top:auto;">Draft Profile</small>
+                </article>
+
+                <!-- L1 -->
+                <article class="page-card" style="padding:18px; border-color:#bbf7d0; background:#f0fdf4;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <i style="width:30px; height:30px; font-size:12px; background:#dcfce7; color:#059669;">L1</i>
+                        <span class="badge badge-verified" style="font-size:11px;">✓ Verified</span>
+                    </div>
+                    <h4 style="margin:6px 0 4px; font-size:15px; color:#0f172a;">Contact Verified</h4>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.4;">Corporate domain DNS, work email, and phone OTP checked.</p>
+                    <small style="font-size:11.5px; color:#059669; font-weight:700; margin-top:auto;">Basic B2B Sharing</small>
+                </article>
+
+                <!-- L2 -->
+                <article class="page-card" style="padding:18px; border-color:#bbf7d0; background:#f0fdf4;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <i style="width:30px; height:30px; font-size:12px; background:#dcfce7; color:#059669;">L2</i>
+                        <span class="badge badge-verified" style="font-size:11px;">✓ Verified</span>
+                    </div>
+                    <h4 style="margin:6px 0 4px; font-size:15px; color:#0f172a;">Business Verified</h4>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.4;">Core entity documents checked (MCA CIN &amp; Company PAN).</p>
+                    <small style="font-size:11.5px; color:#059669; font-weight:700; margin-top:auto;">Vendor Due Diligence</small>
+                </article>
+
+                <!-- L3 -->
+                <article class="page-card" style="padding:18px; border-color:#059669; background:#ffffff; box-shadow:0 0 0 2px rgba(5,150,105,0.25);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <i style="width:30px; height:30px; font-size:12px; background:#059669; color:#ffffff;">L3</i>
+                        <span class="badge badge-verified" style="font-size:11px; background:#059669; color:#ffffff;">● Current Level</span>
+                    </div>
+                    <h4 style="margin:6px 0 4px; font-size:15px; color:#0f172a;">Enhanced Verified</h4>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.4;">Active GSTIN, Udyam MSME, physical premise, and bank confirmed.</p>
+                    <small style="font-size:11.5px; color:#059669; font-weight:700; margin-top:auto;">Enterprise Onboarding</small>
+                </article>
+
+                <!-- L4 -->
+                <article class="page-card" style="padding:18px; border-color:#e2e8f0; background:#f8fafc;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <i style="width:30px; height:30px; font-size:12px; background:#f1f5f9; color:#64748b;">L4</i>
+                        <span class="badge badge-pending" style="font-size:11px;">In Review</span>
+                    </div>
+                    <h4 style="margin:6px 0 4px; font-size:15px; color:#0f172a;">Enterprise Assured</h4>
+                    <p style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.4;">Audited balance sheet, executive director KYC, and recurring checks.</p>
+                    <small style="font-size:11.5px; color:#92400e; font-weight:700; margin-top:auto;">Supply Chain Critical</small>
+                </article>
+            </div>
+        </section>
+
+        <!-- Verification Evidence Table -->
+        <section class="panel" style="margin-bottom:24px;">
+            <div class="toolbar-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="evidenceSearch" placeholder="Search attributes, methods, evidence refs..." onkeyup="filterEvidenceTable()">
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="setEvidenceFilter('all', this)">All Attributes (8)</button>
+                    <button class="filter-tab" onclick="setEvidenceFilter('Legal', this)">Legal &amp; Tax</button>
+                    <button class="filter-tab" onclick="setEvidenceFilter('Channel', this)">Digital Channels</button>
+                    <button class="filter-tab" onclick="setEvidenceFilter('Premise', this)">Physical &amp; Banking</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none; border:none;">
+                <table class="saas-table" id="evidenceTable">
+                    <thead>
+                        <tr>
+                            <th>Attribute / Fact</th>
+                            <th>Verification Method</th>
+                            <th>Status</th>
+                            <th>Verified Date</th>
+                            <th>Evidence Reference</th>
+                            <th>Reviewer</th>
+                            <th>Re-verification Due</th>
+                            <th style="text-align:right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="evidenceTableBody">
+                        <!-- Populated dynamically via JS from localStorage or default seed -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Verification Timeline & Audit Trail Section -->
+        <div class="grid-2">
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3 style="margin:0;">Verification Milestone Timeline</h3>
+                        <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Chronological attestation history on Ohana Network</p>
+                    </div>
+                    <span class="badge badge-verified">Immutable Ledger</span>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:16px; margin-top:12px;">
+                    <div style="display:flex; gap:14px; align-items:flex-start;">
+                        <span style="width:28px; height:28px; border-radius:50%; background:#dcfce7; color:#059669; display:grid; place-items:center; font-weight:800; font-size:12px; flex-shrink:0;">✓</span>
+                        <div>
+                            <b style="font-size:13.5px; color:#0f172a;">L3 Enhanced Verification Granted</b>
+                            <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Active GSTIN filing history, Udyam MSME, and physical office verified.</p>
+                            <small style="color:#059669; font-weight:600; font-size:11.5px;">18 Feb 2026 · Reviewed by analyst_priya_s</small>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:14px; align-items:flex-start;">
+                        <span style="width:28px; height:28px; border-radius:50%; background:#dcfce7; color:#059669; display:grid; place-items:center; font-weight:800; font-size:12px; flex-shrink:0;">✓</span>
+                        <div>
+                            <b style="font-size:13.5px; color:#0f172a;">L2 Business Verification Completed</b>
+                            <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Ministry of Corporate Affairs CIN U72200PN2021PTC198765 and Company PAN validated.</p>
+                            <small style="color:#64748b; font-size:11.5px;">15 Jan 2026 · Automated MCA Registry Check</small>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:14px; align-items:flex-start;">
+                        <span style="width:28px; height:28px; border-radius:50%; background:#dcfce7; color:#059669; display:grid; place-items:center; font-weight:800; font-size:12px; flex-shrink:0;">✓</span>
+                        <div>
+                            <b style="font-size:13.5px; color:#0f172a;">L1 Contact &amp; Domain Ownership Verified</b>
+                            <p class="muted" style="margin:2px 0 0; font-size:12.5px;">DNS TXT token validated on abctechnologies.io; primary phone OTP confirmed.</p>
+                            <small style="color:#64748b; font-size:11.5px;">12 Jan 2026 · DOMAIN_DNS_TXT Validator</small>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:14px; align-items:flex-start;">
+                        <span style="width:28px; height:28px; border-radius:50%; background:#dcfce7; color:#059669; display:grid; place-items:center; font-weight:800; font-size:12px; flex-shrink:0;">✓</span>
+                        <div>
+                            <b style="font-size:13.5px; color:#0f172a;">L0 Account Registration &amp; Setup</b>
+                            <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Account created by Rahul Bawa (Owner) with 2FA credential initialization.</p>
+                            <small style="color:#64748b; font-size:11.5px;">10 Jan 2026 · System Init</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trust Policy & Legal Disclosures Section -->
+            <section class="panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <div class="section-head">
+                        <div>
+                            <h3 style="margin:0;">Legal &amp; Trust Positioning</h3>
+                            <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Blueprint Section 20 Compliance Standard</p>
+                        </div>
+                        <span class="badge badge-neutral">Private Trust Layer</span>
+                    </div>
+
+                    <div style="background:#f8fafc; border-left:4px solid #FF2028; padding:14px 16px; border-radius:8px; margin-bottom:16px;">
+                        <p style="margin:0; font-size:13px; color:#334155; line-height:1.5;">
+                            <b>Precise Verification Disclosure:</b> Ohana operates as a private verification and trust infrastructure service. Verification confirms facts against authentic submitted evidence and government records on the specified date; it does not guarantee future business solvency or commercial performance.
+                        </p>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
+                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f1f5f9;">
+                            <span class="muted">Verification Methodology</span>
+                            <b>Evidence Attestation v1.0</b>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f1f5f9;">
+                            <span class="muted">Evidence Storage Hash</span>
+                            <span style="font-family:monospace; font-size:12px; color:#0f172a;">sha256:9f8a12e84...</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f1f5f9;">
+                            <span class="muted">Audit Dispute Resolution</span>
+                            <span style="color:#059669; font-weight:600;">Standard SLA (&lt; 24h)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; padding-top:14px; border-top:1px solid var(--border);">
+                    <button class="btn outline" style="width:100%; justify-content:center;" onclick="showToast('Verification Reviewer SOP &amp; Policy document loaded', 'info')">
+                        Read Verification Policy &amp; Reviewer SOP
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Client-Side Engine for Trust Center -->
+    <script>
+        const DEFAULT_EVIDENCE = [
+            {
+                id: "ev_01",
+                fact: "Ministry of Corporate Affairs (MCA)",
+                details: "CIN: U72200PN2021PTC198765",
+                cat: "Legal",
+                method: "MCA_REGISTRY",
+                status: "Verified",
+                verifiedDate: "15 Jan 2026",
+                ref: "ev_mca_9824",
+                reviewer: "system",
+                reVerifyDue: "15 Jan 2027"
+            },
+            {
+                id: "ev_02",
+                fact: "GSTIN Tax Registration",
+                details: "27ABCDE1234F1Z5 · REG-06 Active",
+                cat: "Legal",
+                method: "GSTN_PORTAL",
+                status: "Verified",
+                verifiedDate: "18 Feb 2026",
+                ref: "ev_gst_2741",
+                reviewer: "analyst_priya_s",
+                reVerifyDue: "30 Oct 2026"
+            },
+            {
+                id: "ev_03",
+                fact: "Permanent Account Number (PAN)",
+                details: "ABCDE1234F · NSDL Validated",
+                cat: "Legal",
+                method: "NSDL_API",
+                status: "Verified",
+                verifiedDate: "15 Jan 2026",
+                ref: "ev_pan_8819",
+                reviewer: "system",
+                reVerifyDue: "Permanent"
+            },
+            {
+                id: "ev_04",
+                fact: "Udyam MSME Certificate",
+                details: "UDYAM-MH-26-0019284",
+                cat: "Legal",
+                method: "UDYAM_MSME",
+                status: "Verified",
+                verifiedDate: "20 Jan 2026",
+                ref: "ev_udy_4412",
+                reviewer: "analyst_vikram_m",
+                reVerifyDue: "Permanent"
+            },
+            {
+                id: "ev_05",
+                fact: "Corporate Domain Ownership",
+                details: "abctechnologies.io (DNS TXT Token)",
+                cat: "Channel",
+                method: "DOMAIN_DNS_TXT",
+                status: "Verified",
+                verifiedDate: "12 Jan 2026",
+                ref: "ev_dns_01829",
+                reviewer: "system",
+                reVerifyDue: "14 Oct 2026"
+            },
+            {
+                id: "ev_06",
+                fact: "Official Business Mailbox",
+                details: "info@abctechnologies.io",
+                cat: "Channel",
+                method: "EMAIL_OTP",
+                status: "Verified",
+                verifiedDate: "12 Jan 2026",
+                ref: "ev_eml_1042",
+                reviewer: "system",
+                reVerifyDue: "12 Jan 2027"
+            },
+            {
+                id: "ev_07",
+                fact: "Physical Commercial Office",
+                details: "Tech Park One, Yerawada, Pune",
+                cat: "Premise",
+                method: "GEO_TAG_INSPECTION",
+                status: "Verified",
+                verifiedDate: "18 Feb 2026",
+                ref: "ev_geo_9011",
+                reviewer: "analyst_priya_s",
+                reVerifyDue: "18 Feb 2027"
+            },
+            {
+                id: "ev_08",
+                fact: "Corporate Bank Account",
+                details: "HDFC Bank · IFSC HDFC0001234",
+                cat: "Premise",
+                method: "PENNY_DROP_IFSC",
+                status: "Verified",
+                verifiedDate: "18 Feb 2026",
+                ref: "ev_bnk_7721",
+                reviewer: "system",
+                reVerifyDue: "18 Feb 2027"
+            }
+        ];
+
+        let currentEvidence = [];
+
+        function loadEvidenceData() {
+            try {
+                const stored = localStorage.getItem('ohana_trust_evidence');
+                if (stored) {
+                    currentEvidence = JSON.parse(stored);
+                } else {
+                    currentEvidence = DEFAULT_EVIDENCE;
+                    localStorage.setItem('ohana_trust_evidence', JSON.stringify(currentEvidence));
+                }
+            } catch (e) {
+                currentEvidence = DEFAULT_EVIDENCE;
+            }
+            renderEvidenceTable(currentEvidence);
+        }
+
+        function renderEvidenceTable(items) {
+            const tbody = document.getElementById('evidenceTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            items.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-cat', item.cat);
+
+                const statusBadge = item.status === 'Verified' 
+                    ? '<span class="badge badge-verified">✓ Verified</span>' 
+                    : '<span class="badge badge-warning">⚠ Review Due</span>';
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight:700; color:#0B1F3A;">${item.fact}</div>
+                        <small class="muted" style="font-size:12px; font-family:monospace;">${item.details}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-neutral" style="font-family:monospace; font-size:11.5px; font-weight:700;">
+                            ${item.method}
+                        </span>
+                    </td>
+                    <td>${statusBadge}</td>
+                    <td>${item.verifiedDate}</td>
+                    <td><code style="font-size:12px; background:#f1f5f9; padding:3px 6px; border-radius:4px;">${item.ref}</code></td>
+                    <td><span style="font-size:12.5px; color:#475569;">${item.reviewer}</span></td>
+                    <td><span style="font-size:12.5px; font-weight:600; color:${item.reVerifyDue.includes('Oct 2026') ? '#d97706' : '#059669'};">${item.reVerifyDue}</span></td>
+                    <td style="text-align:right;">
+                        <button type="button" class="btn-action" onclick="viewEvidenceDetail('${item.id}')">View</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterEvidenceTable() {
+            const query = document.getElementById('evidenceSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#evidenceTableBody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function setEvidenceFilter(cat, btn) {
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const rows = document.querySelectorAll('#evidenceTableBody tr');
+            rows.forEach(r => {
+                if (cat === 'all') {
+                    r.style.display = '';
+                } else {
+                    const rowCat = r.getAttribute('data-cat');
+                    r.style.display = (rowCat === cat) ? '' : 'none';
+                }
+            });
+        }
+
+        function viewEvidenceDetail(id) {
+            const item = currentEvidence.find(e => e.id === id);
+            if (!item) return;
+
+            alert(
+                `VERIFICATION EVIDENCE OBJECT\n------------------------------------\n` +
+                `Attribute: ${item.fact}\n` +
+                `Details: ${item.details}\n` +
+                `Method: ${item.method}\n` +
+                `Status: ${item.status}\n` +
+                `Evidence Ref: ${item.ref}\n` +
+                `Verified On: ${item.verifiedDate}\n` +
+                `Reviewer: ${item.reviewer}\n` +
+                `Re-verification Policy: Annual recheck (Due: ${item.reVerifyDue})\n` +
+                `Trust Scope: Verified by Ohana against submitted evidence and official records.`
+            );
+        }
+
+        function openReverifyModal() {
+            showToast('Initiating re-check across government registries and DNS...', 'info');
+            setTimeout(() => {
+                showToast('All 8 verified attributes confirmed active & fresh!', 'success');
+            }, 1200);
+        }
+
+        function downloadTrustCertificate() {
+            showToast('Generating official Ohana Trust Attestation Certificate...', 'info');
+            setTimeout(() => {
+                const certLines = [
+                    '<!DOCTYPE html>',
+                    '<html>',
+                    '<head>',
+                    '<title>Ohana Trust Certificate - ABC Technologies</title>',
+                    '<style>',
+                    'body { font-family: sans-serif; padding: 40px; color: #0B1F3A; background: #fff; max-width: 800px; margin: 0 auto; border: 8px double #059669; }',
+                    'h1 { color: #059669; margin: 0 0 4px; }',
+                    '.badge { display: inline-block; padding: 4px 12px; background: #ecfdf5; color: #059669; font-weight: bold; border-radius: 20px; }',
+                    'hr { border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0; }',
+                    'table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }',
+                    'th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }',
+                    'th { background: #f8fafc; }',
+                    '.footer { margin-top: 30px; font-size: 11px; color: #64748b; }',
+                    '</style>',
+                    '<' + '/head>',
+                    '<body>',
+                    '<div style="text-align:center;">',
+                    '    <h1>OHANA BUSINESS PASSPORT</h1>',
+                    '    <h3>OFFICIAL CERTIFICATE OF STATUTORY VERIFICATION</h3>',
+                    '    <div class="badge">L3 ENHANCED VERIFIED</div>',
+                    '</div>',
+                    '<hr>',
+                    '<p>This certifies that <strong>ABC Technologies Pvt. Ltd.</strong> (CIN: U72200PN2021PTC198765) has successfully validated its statutory entity records, official digital presence, and operational credibility on the Ohana Trust Network.</p>',
+                    '<table>',
+                    '<tr><th>Attribute</th><th>Identifier / Scope</th><th>Method</th><th>Evidence Ref</th><th>Status</th></tr>',
+                    '<tr><td>MCA Incorporation</td><td>U72200PN2021PTC198765</td><td>MCA_REGISTRY</td><td>ev_mca_9824</td><td>VERIFIED</td></tr>',
+                    '<tr><td>Goods & Services Tax</td><td>GSTIN 27ABCDE1234F1Z5</td><td>GSTN_PORTAL</td><td>ev_gst_2741</td><td>VERIFIED</td></tr>',
+                    '<tr><td>Income Tax PAN</td><td>PAN ABCDE1234F</td><td>NSDL_API</td><td>ev_pan_8819</td><td>VERIFIED</td></tr>',
+                    '<tr><td>Udyam MSME</td><td>UDYAM-MH-26-0019284</td><td>UDYAM_MSME</td><td>ev_udy_4412</td><td>VERIFIED</td></tr>',
+                    '<tr><td>Corporate Domain</td><td>abctechnologies.io</td><td>DOMAIN_DNS_TXT</td><td>ev_dns_01829</td><td>VERIFIED</td></tr>',
+                    '<tr><td>Commercial Office</td><td>Tech Park One, Pune</td><td>GEO_TAG_INSPECTION</td><td>ev_geo_9011</td><td>VERIFIED</td></tr>',
+                    '</table>',
+                    '<div class="footer">',
+                    '<p>Issued by: Ohana Trust Infrastructure Platform • Verified on: 18 Feb 2026 • Valid through: 14 Oct 2026</p>',
+                    '<p>Disclosure: Verified against official registries and submitted evidence. Independent validation record: EV-TRUST-2026-9824.</p>',
+                    '</div>',
+                    '<' + '/body>',
+                    '<' + '/html>'
+                ];
+                const certContent = certLines.join('\n');
+
+                const blob = new Blob([certContent], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'OHANA-Trust-Certificate-ABC-Technologies.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast('Trust Certificate downloaded successfully!', 'success');
+            }, 800);
+        }
+
+        function syncTrustCenterState() {
+            // Identity
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    const idObj = JSON.parse(storedId);
+                    const org = idObj.tradeName || idObj.legalName;
+                    if (org) {
+                        const nameEl = document.getElementById('sidebarOrgName');
+                        if (nameEl) nameEl.textContent = org;
+                    }
+                }
+            } catch(e) {}
+
+            // Verification State
+            try {
+                const storedV = localStorage.getItem('ohana_verification_state');
+                const v = storedV ? JSON.parse(storedV) : {};
+                const calc = typeof computeOhanaVerificationLevel === 'function'
+                    ? computeOhanaVerificationLevel(v)
+                    : { level: v.currentLevel || "L3", levelName: v.levelName || "Enhanced Verified" };
+
+                const level = calc.level;
+                const levelName = calc.levelName;
+
+                const badge = document.getElementById('tcHeroBadge');
+                if (badge) badge.textContent = `Active Assurance Level: ${level} ${levelName}`;
+
+                const levelEl = document.getElementById('tcHeroLevel');
+                if (levelEl) levelEl.textContent = level;
+
+                const sideBadge = document.getElementById('sidebarTierBadge');
+                if (sideBadge) sideBadge.textContent = `✓ ${level} Verified`;
+
+                const scoreEl = document.getElementById('tcHeroScore');
+                let score = 850;
+                if (level === 'L0') score = 250;
+                else if (level === 'L1') score = 480;
+                else if (level === 'L2') score = 720;
+                else if (level === 'L3') score = 850;
+                else if (level === 'L4') score = 980;
+                if (scoreEl) scoreEl.textContent = `Trust Health Score: ${score} / 900 (Tier 1 Verified)`;
+            } catch(e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEvidenceData();
+            syncTrustCenterState();
+        });
+    </script>
+</body>
+
+</html>
