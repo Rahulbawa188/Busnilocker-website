@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Billing & Subscription | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <style>
+        .pricing-toggle-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0 28px;
+        }
+
+        .pricing-toggle {
+            background: #E2E8F0;
+            border-radius: 30px;
+            padding: 4px;
+            display: inline-flex;
+            position: relative;
+        }
+
+        .pricing-toggle button {
+            background: transparent;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748B;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pricing-toggle button.active {
+            background: #0B1F3A;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(11, 31, 58, 0.15);
+        }
+
+        .discount-pill {
+            background: #DCFCE7;
+            color: #16A34A;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .plan-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .plan-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .plan-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 10px 25px rgba(11, 31, 58, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--primary);
+            box-shadow: 0 12px 30px rgba(255, 32, 40, 0.09);
+        }
+
+        .plan-card.current-active {
+            border: 2px solid #0B1F3A;
+            background: #FAFBFD;
+        }
+
+        .plan-ribbon {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #FFFFFF;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .plan-price-block {
+            margin: 16px 0 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .plan-price-val {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+
+        .plan-price-cycle {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .plan-feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 12.5px;
+            color: #334155;
+            flex: 1;
+        }
+
+        .plan-feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .plan-feature-list li span.check {
+            color: #16A34A;
+            font-weight: 800;
+        }
+
+        .btn-plan-action {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-plan-action.primary {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+        .btn-plan-action.primary:hover {
+            background: #E01820;
+        }
+
+        .btn-plan-action.secondary {
+            background: #0B1F3A;
+            color: #FFFFFF;
+        }
+        .btn-plan-action.secondary:hover {
+            background: #1E293B;
+        }
+
+        .btn-plan-action.disabled {
+            background: #E2E8F0;
+            color: #64748B;
+            cursor: default;
+        }
+
+        /* Payment Card Item */
+        .payment-card-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .payment-card-icon {
+            width: 44px;
+            height: 30px;
+            border-radius: 6px;
+            background: #0B1F3A;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Checkout Modal */
+        .checkout-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 31, 58, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .checkout-modal-card {
+            background: #FFFFFF;
+            max-width: 580px;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(11, 31, 58, 0.25);
+            animation: modalFade 0.25s ease;
+        }
+
+        .checkout-head {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFC;
+        }
+
+        .checkout-body {
+            padding: 24px;
+        }
+
+        .checkout-summary-box {
+            background: #FFF7F8;
+            border: 1px solid #FFE5E7;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .plan-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .plan-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="../assets/ohana-brand-logo.png" alt="Ohana Logo" class="oib-brand-img" style="height: 36px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a class="active" href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">SUBSCRIPTION &amp; LICENSING</span>
+                <h1>Billing &amp; Payments</h1>
+                <p class="subtitle">Manage Business Passport tiers, active subscription lifecycle, payment methods, and GST tax invoices.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn outline" onclick="scrollToPlans()">Change Plan</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- 1. Current Plan Overview Hero Banner -->
+        <section class="welcome" style="margin-bottom:28px; background:linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #EFF6FF 100%); border-color:#DBEAFE;">
+            <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span class="badge badge-verified" id="heroPlanBadge" style="font-size:12.5px; padding:4px 12px;">Active Plan: Verified</span>
+                    <span class="badge badge-neutral" id="heroBillingCycleBadge" style="font-size:12px;">Annual Billing</span>
+                </div>
+                <h2 style="font-size:22px; color:var(--navy); margin:0 0 6px;" id="heroPlanTitle">Ohana Verified Business Passport</h2>
+                <p style="color:#475569; margin:0 0 14px; font-size:13.5px; max-width:680px;" id="heroPlanDesc">
+                    Includes statutory entity verification, public business profile, statutory compliance attestation, and unlimited B2B Share Room links.
+                </p>
+                <div style="display:flex; gap:20px; font-size:13px; color:#334155; flex-wrap:wrap;">
+                    <div>📅 Next Renewal: <strong id="heroNextRenewal">15 Oct 2026</strong></div>
+                    <div>💳 Payment: <strong>Visa ending 4242</strong></div>
+                    <div>🛡 Assurance Status: <strong style="color:#16A34A;">● Active &amp; Valid</strong></div>
+                </div>
+            </div>
+            <div style="text-align:right; min-width:180px;">
+                <div style="font-size:36px; font-weight:800; color:var(--navy); line-height:1;" id="heroPlanPrice">₹1,499<small style="font-size:14px; color:#64748B;">/mo</small></div>
+                <span style="font-size:12px; color:#64748B; display:block; margin:6px 0 12px;">Billed Annually (Save 20%)</span>
+                <button type="button" class="btn" style="padding:8px 16px; font-size:12.5px;" onclick="scrollToPlans()">Upgrade to Pro →</button>
+            </div>
+        </section>
+
+        <!-- 2. Available Plans Grid -->
+        <section class="panel" id="plansSection" style="margin-bottom:28px;">
+            <div class="section-head" style="margin-bottom:12px;">
+                <div>
+                    <h3 style="margin:0;">Select Business Passport Plan</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Choose the tier that matches your corporate due diligence, team size, and assurance requirements</p>
+                </div>
+            </div>
+
+            <!-- Billing Toggle -->
+            <div class="pricing-toggle-wrap">
+                <span style="font-size:13px; font-weight:600; color:#475569;">Monthly</span>
+                <div class="pricing-toggle">
+                    <button type="button" id="btnCycleMonthly" onclick="setBillingCycle('monthly')">Monthly</button>
+                    <button type="button" id="btnCycleAnnual" class="active" onclick="setBillingCycle('annual')">Annual</button>
+                </div>
+                <span style="font-size:13px; font-weight:600; color:#0F172A;">Annual</span>
+                <span class="discount-pill">⚡ Save 20%</span>
+            </div>
+
+            <div class="plan-cards-grid">
+                <!-- Free Plan -->
+                <div class="plan-card" id="cardPlanFree">
+                    <div style="font-weight:700; font-size:16px; color:var(--navy);">Free</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">Basic profile for early-stage companies and sole proprietors.</p>
+                    <div class="plan-price-block">
+                        <div class="plan-price-val">₹0</div>
+                        <div class="plan-price-cycle">Free Forever</div>
+                    </div>
+                    <ul class="plan-feature-list">
+                        <li><span class="check">✓</span> Business profile &amp; claimed identity</li>
+                        <li><span class="check">✓</span> 5 Document uploads in vault</li>
+                        <li><span class="check">✓</span> Basic Share Room link</li>
+                        <li><span class="check">✓</span> Community support</li>
+                    </ul>
+                    <button type="button" class="btn-plan-action secondary" id="btnActionFree" onclick="openCheckout('Free')">Select Free</button>
+                </div>
+
+                <!-- Verified Plan -->
+                <div class="plan-card current-active" id="cardPlanVerified">
+                    <div class="plan-ribbon" style="background:#0B1F3A;">Current Plan</div>
+                    <div style="font-weight:700; font-size:16px; color:var(--navy);">Verified</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">Essential trust attestation and verified statutory identity.</p>
+                    <div class="plan-price-block">
+                        <div class="plan-price-val" id="priceVerified">₹1,499</div>
+                        <div class="plan-price-cycle" id="cycleVerified">per month (billed annually)</div>
+                    </div>
+                    <ul class="plan-feature-list">
+                        <li><span class="check">✓</span> Everything in Free</li>
+                        <li><span class="check">✓</span> Statutory Entity Verification (L1-L2)</li>
+                        <li><span class="check">✓</span> Public Verified Business Passport</li>
+                        <li><span class="check">✓</span> Compliance &amp; Evidence Attestation</li>
+                        <li><span class="check">✓</span> 50 Document capacity</li>
+                        <li><span class="check">✓</span> Downloadable Trust Certificate</li>
+                    </ul>
+                    <button type="button" class="btn-plan-action disabled" id="btnActionVerified" disabled>Current Active Plan</button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="plan-card featured" id="cardPlanPro">
+                    <div class="plan-ribbon">Most Popular</div>
+                    <div style="font-weight:700; font-size:16px; color:var(--navy);">Pro</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">Comprehensive compliance lifecycle, team access &amp; renewals.</p>
+                    <div class="plan-price-block">
+                        <div class="plan-price-val" id="pricePro">₹4,999</div>
+                        <div class="plan-price-cycle" id="cyclePro">per month (billed annually)</div>
+                    </div>
+                    <ul class="plan-feature-list">
+                        <li><span class="check">✓</span> Everything in Verified</li>
+                        <li><span class="check">✓</span> Enhanced Verification (L3 Ready)</li>
+                        <li><span class="check">✓</span> Automated Renewals Engine &amp; Calendar</li>
+                        <li><span class="check">✓</span> Unlimited Watermarked Share Rooms</li>
+                        <li><span class="check">✓</span> Up to 10 Team Member Seats</li>
+                        <li><span class="check">✓</span> Priority Review &amp; Analytics SLA</li>
+                    </ul>
+                    <button type="button" class="btn-plan-action primary" id="btnActionPro" onclick="openCheckout('Pro')">Upgrade to Pro ★</button>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="plan-card" id="cardPlanEnterprise">
+                    <div style="font-weight:700; font-size:16px; color:var(--navy);">Enterprise</div>
+                    <p style="font-size:12px; color:var(--text-muted); margin:4px 0 0;">Complete assurance, custom integrations &amp; dedicated support.</p>
+                    <div class="plan-price-block">
+                        <div class="plan-price-val" id="priceEnterprise">₹14,999</div>
+                        <div class="plan-price-cycle" id="cycleEnterprise">per month (billed annually)</div>
+                    </div>
+                    <ul class="plan-feature-list">
+                        <li><span class="check">✓</span> Everything in Pro</li>
+                        <li><span class="check">✓</span> L4 Enterprise Assured Vetting</li>
+                        <li><span class="check">✓</span> Unlimited Team Seats &amp; Custom Roles</li>
+                        <li><span class="check">✓</span> Custom API / Webhook Integrations</li>
+                        <li><span class="check">✓</span> Dedicated Compliance Account Manager</li>
+                        <li><span class="check">✓</span> 99.9% Uptime SLA &amp; 24/7 Phone Support</li>
+                    </ul>
+                    <button type="button" class="btn-plan-action secondary" id="btnActionEnterprise" onclick="openCheckout('Enterprise')">Select Enterprise</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Billing Info & Payment Method (Two-Column Layout) -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
+            <!-- Billing Information Form -->
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3 style="margin:0;">Billing Information</h3>
+                        <p class="muted" style="margin:2px 0 0; font-size:12px;">Appears on your official GST compliance invoices</p>
+                    </div>
+                </div>
+
+                <form id="billingInfoForm" onsubmit="saveBillingInfo(event)">
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:4px;">Billing Entity Name</label>
+                            <input type="text" id="billingName" class="auth-input" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;" value="ABC Technologies Private Limited" required>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:4px;">Billing Email (for Invoices)</label>
+                            <input type="email" id="billingEmail" class="auth-input" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;" value="accounts@abctechnologies.io" required>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:4px;">Billing Street Address</label>
+                            <input type="text" id="billingAddress" class="auth-input" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;" value="Unit 402, 4th Floor, Tech Park One, Yerawada, Pune 411006" required>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div>
+                                <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:4px;">GSTIN (Input Tax Credit)</label>
+                                <input type="text" id="billingGstin" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px; text-transform:uppercase;" value="27ABCDE1234F1Z5">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:4px;">State / Jurisdiction</label>
+                                <input type="text" id="billingState" style="width:100%; box-sizing:border-box; padding:8px 12px; border:1px solid #CBD5E1; border-radius:6px; font-size:13px;" value="Maharashtra (Code 27)">
+                            </div>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            <button type="submit" class="btn" style="padding:9px 18px; font-size:13px;">Save Billing Details</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Payment Methods -->
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3 style="margin:0;">Payment Methods</h3>
+                        <p class="muted" style="margin:2px 0 0; font-size:12px;">Default card used for automated recurring renewals</p>
+                    </div>
+                    <button type="button" class="btn-action" style="background:#0B1F3A; color:#FFF;" onclick="openAddCardModal()">+ Add Card</button>
+                </div>
+
+                <div id="paymentMethodsList">
+                    <!-- Visa Primary Card -->
+                    <div class="payment-card-box">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="payment-card-icon">VISA</div>
+                            <div>
+                                <div style="font-weight:700; font-size:13.5px; color:var(--navy);">Visa ending in •••• 4242</div>
+                                <small style="color:var(--text-muted); font-size:11.5px;">Expires 08/2028 • <span style="color:#16A34A; font-weight:700;">Default Method</span></small>
+                            </div>
+                        </div>
+                        <span class="badge badge-verified" style="font-size:11px;">Primary</span>
+                    </div>
+
+                    <!-- Mastercard Backup -->
+                    <div class="payment-card-box">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="payment-card-icon" style="background:#C2410C;">MC</div>
+                            <div>
+                                <div style="font-weight:700; font-size:13.5px; color:var(--navy);">Mastercard ending in •••• 8819</div>
+                                <small style="color:var(--text-muted); font-size:11.5px;">Expires 11/2027 • Backup</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-action" onclick="showToast('Set Mastercard as default payment method', 'success')">Make Default</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:16px; padding:12px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-size:12px; color:#475569; display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:18px;">🔒</span>
+                    <span>All payments processed via 256-bit encrypted banking rails with RBI e-mandate tokenization compliant standards.</span>
+                </div>
+            </section>
+        </div>
+
+        <!-- 4. Invoice History Table -->
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">Invoice History &amp; Receipts</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Official GST-compliant tax invoices with breakdown</p>
+                </div>
+                <button type="button" class="btn outline" onclick="showToast('Exporting complete financial statement as CSV...', 'info')">Export CSV</button>
+            </div>
+
+            <div class="table-wrap">
+                <table class="saas-table" id="invoicesTable">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Billing Date</th>
+                            <th>Subscription Plan</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Tax Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesTableBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- 5. Mock Checkout Modal -->
+    <div class="checkout-modal-backdrop" id="checkoutModal">
+        <div class="checkout-modal-card">
+            <div class="checkout-head">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; border-radius:8px; background:#FFE5E7; color:var(--primary); font-weight:800; display:flex; align-items:center; justify-content:center; font-size:16px;">
+                        ★
+                    </div>
+                    <div>
+                        <h3 style="margin:0; font-size:16px; color:var(--navy);">Upgrade Plan Checkout</h3>
+                        <small style="color:var(--text-muted); font-size:11.5px;">Secure Client-Side Prototype Checkout</small>
+                    </div>
+                </div>
+                <button type="button" style="background:none; border:none; font-size:20px; cursor:pointer; color:#64748B;" onclick="closeCheckout()">✕</button>
+            </div>
+
+            <div class="checkout-body">
+                <div class="checkout-summary-box">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-weight:700; font-size:15px; color:var(--navy);" id="modalPlanName">Ohana Pro Plan</span>
+                        <span class="badge badge-info" id="modalPlanCycle">Annual Billing (20% Off)</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#475569; margin-bottom:4px;">
+                        <span>Base Subscription:</span>
+                        <span id="modalBasePrice">₹47,990.00</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:13px; color:#475569; margin-bottom:8px;">
+                        <span>GST (18% IGST):</span>
+                        <span id="modalTaxPrice">₹8,638.20</span>
+                    </div>
+                    <div style="border-top:1px dashed #CBD5E1; padding-top:8px; display:flex; justify-content:space-between; font-size:15px; font-weight:800; color:var(--navy);">
+                        <span>Total Payable:</span>
+                        <span id="modalTotalPrice" style="color:var(--primary);">₹56,628.20</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:18px;">
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#1E293B; margin-bottom:6px;">Select Payment Card</label>
+                    <div style="padding:12px; border:1px solid #CBD5E1; border-radius:8px; display:flex; justify-content:space-between; align-items:center; background:#F8FAFC;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-weight:800; font-size:12px; background:#0B1F3A; color:#FFF; padding:2px 8px; border-radius:4px;">VISA</span>
+                            <span style="font-size:13px; font-weight:600; color:var(--navy);">•••• 4242 (Expires 08/28)</span>
+                        </div>
+                        <span style="font-size:11.5px; color:#16A34A; font-weight:700;">Verified</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px; font-size:12px; color:var(--text-muted); line-height:1.4;">
+                    By confirming, your organization subscribes to the selected tier. An invoice receipt will be appended to your account records.
+                </div>
+
+                <div style="display:flex; gap:12px;">
+                    <button type="button" class="btn outline" style="flex:1; justify-content:center;" onclick="closeCheckout()">Cancel</button>
+                    <button type="button" class="btn" style="flex:2; justify-content:center;" id="btnConfirmSubscribe" onclick="processMockPayment()">
+                        Confirm &amp; Subscribe Now →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Engine for Billing & Subscription -->
+    <script>
+        let currentCycle = 'annual'; // 'monthly' | 'annual'
+        let currentPlan = 'Verified';
+        let pendingCheckoutPlan = null;
+
+        const DEFAULT_INVOICES = [
+            {
+                id: "INV-2026-0819",
+                date: "15 Jan 2026",
+                plan: "Ohana Verified (Annual)",
+                amount: "₹14,990.00",
+                tax: "₹2,698.20",
+                total: "₹17,688.20",
+                status: "Paid",
+                pdfName: "Ohana_Tax_Invoice_INV-2026-0819.html"
+            },
+            {
+                id: "INV-2025-0142",
+                date: "15 Jan 2025",
+                plan: "Ohana Verified (Annual)",
+                amount: "₹14,990.00",
+                tax: "₹2,698.20",
+                total: "₹17,688.20",
+                status: "Paid",
+                pdfName: "Ohana_Tax_Invoice_INV-2025-0142.html"
+            }
+        ];
+
+        let invoiceList = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSubscriptionData();
+            loadBillingInfo();
+            loadInvoiceData();
+        });
+
+        function loadSubscriptionData() {
+            try {
+                const storedSub = localStorage.getItem('ohana_subscription');
+                if (storedSub) {
+                    const sub = JSON.parse(storedSub);
+                    currentPlan = sub.plan || 'Verified';
+                    currentCycle = sub.cycle || 'annual';
+                }
+            } catch(e) {}
+
+            updatePlanCardsUI();
+        }
+
+        function setBillingCycle(cycle) {
+            currentCycle = cycle;
+            document.getElementById('btnCycleMonthly').classList.toggle('active', cycle === 'monthly');
+            document.getElementById('btnCycleAnnual').classList.toggle('active', cycle === 'annual');
+
+            // Price updates
+            if (cycle === 'monthly') {
+                document.getElementById('priceVerified').textContent = '₹1,899';
+                document.getElementById('cycleVerified').textContent = 'per month (billed monthly)';
+                document.getElementById('pricePro').textContent = '₹5,999';
+                document.getElementById('cyclePro').textContent = 'per month (billed monthly)';
+                document.getElementById('priceEnterprise').textContent = '₹17,999';
+                document.getElementById('cycleEnterprise').textContent = 'per month (billed monthly)';
+            } else {
+                document.getElementById('priceVerified').textContent = '₹1,499';
+                document.getElementById('cycleVerified').textContent = 'per month (billed annually)';
+                document.getElementById('pricePro').textContent = '₹4,999';
+                document.getElementById('cyclePro').textContent = 'per month (billed annually)';
+                document.getElementById('priceEnterprise').textContent = '₹14,999';
+                document.getElementById('cycleEnterprise').textContent = 'per month (billed annually)';
+            }
+
+            updatePlanCardsUI();
+        }
+
+        function updatePlanCardsUI() {
+            // Hero updates
+            document.getElementById('heroPlanBadge').textContent = `Active Plan: ${currentPlan}`;
+            document.getElementById('heroBillingCycleBadge').textContent = currentCycle === 'annual' ? 'Annual Billing (20% Off)' : 'Monthly Billing';
+            document.getElementById('heroPlanTitle').textContent = `Ohana ${currentPlan} Business Passport`;
+
+            let priceText = '₹0';
+            if (currentPlan === 'Verified') priceText = currentCycle === 'annual' ? '₹1,499' : '₹1,899';
+            if (currentPlan === 'Pro') priceText = currentCycle === 'annual' ? '₹4,999' : '₹5,999';
+            if (currentPlan === 'Enterprise') priceText = currentCycle === 'annual' ? '₹14,999' : '₹17,999';
+
+            document.getElementById('heroPlanPrice').innerHTML = `${priceText}<small style="font-size:14px; color:#64748B;">/mo</small>`;
+
+            // Cards highlight
+            const plans = ['Free', 'Verified', 'Pro', 'Enterprise'];
+            plans.forEach(p => {
+                const card = document.getElementById(`cardPlan${p}`);
+                const btn = document.getElementById(`btnAction${p}`);
+                if (!card || !btn) return;
+
+                if (p === currentPlan) {
+                    card.classList.add('current-active');
+                    btn.className = 'btn-plan-action disabled';
+                    btn.disabled = true;
+                    btn.textContent = 'Current Active Plan';
+                } else {
+                    card.classList.remove('current-active');
+                    btn.disabled = false;
+                    if (p === 'Pro') {
+                        btn.className = 'btn-plan-action primary';
+                        btn.textContent = 'Upgrade to Pro ★';
+                    } else {
+                        btn.className = 'btn-plan-action secondary';
+                        btn.textContent = `Select ${p}`;
+                    }
+                }
+            });
+        }
+
+        function scrollToPlans() {
+            document.getElementById('plansSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openCheckout(planName) {
+            pendingCheckoutPlan = planName;
+            document.getElementById('modalPlanName').textContent = `Ohana ${planName} Business Passport`;
+            document.getElementById('modalPlanCycle').textContent = currentCycle === 'annual' ? 'Annual Billing (Save 20%)' : 'Monthly Billing';
+
+            let baseNum = 0;
+            if (planName === 'Free') baseNum = 0;
+            else if (planName === 'Verified') baseNum = (currentCycle === 'annual' ? 14990 : 1899);
+            else if (planName === 'Pro') baseNum = (currentCycle === 'annual' ? 47990 : 5999);
+            else if (planName === 'Enterprise') baseNum = (currentCycle === 'annual' ? 143990 : 17999);
+
+            const taxNum = baseNum * 0.18;
+            const totalNum = baseNum + taxNum;
+
+            document.getElementById('modalBasePrice').textContent = `₹${baseNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('modalTaxPrice').textContent = `₹${taxNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById('modalTotalPrice').textContent = `₹${totalNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').style.display = 'none';
+            pendingCheckoutPlan = null;
+        }
+
+        function processMockPayment() {
+            if (!pendingCheckoutPlan) return;
+
+            const btn = document.getElementById('btnConfirmSubscribe');
+            btn.textContent = 'Authorizing Payment...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                currentPlan = pendingCheckoutPlan;
+
+                // Save to localStorage
+                const subData = {
+                    plan: currentPlan,
+                    cycle: currentCycle,
+                    status: 'Active',
+                    updatedAt: new Date().toISOString()
+                };
+                localStorage.setItem('ohana_subscription', JSON.stringify(subData));
+
+                // Append new invoice
+                const newInvId = `INV-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+                const baseNum = (currentPlan === 'Verified' ? 14990 : (currentPlan === 'Pro' ? 47990 : (currentPlan === 'Enterprise' ? 143990 : 0)));
+                const taxNum = baseNum * 0.18;
+                const totalNum = baseNum + taxNum;
+
+                const newInvoice = {
+                    id: newInvId,
+                    date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    plan: `Ohana ${currentPlan} (${currentCycle === 'annual' ? 'Annual' : 'Monthly'})`,
+                    amount: `₹${baseNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                    tax: `₹${taxNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                    total: `₹${totalNum.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                    status: "Paid",
+                    pdfName: `Ohana_Tax_Invoice_${newInvId}.html`
+                };
+
+                invoiceList.unshift(newInvoice);
+                localStorage.setItem('ohana_invoices', JSON.stringify(invoiceList));
+
+                btn.textContent = 'Confirm & Subscribe Now →';
+                btn.disabled = false;
+                closeCheckout();
+
+                updatePlanCardsUI();
+                renderInvoicesTable();
+                showToast(`Successfully subscribed to Ohana ${currentPlan} tier!`, 'success');
+            }, 900);
+        }
+
+        // Invoices Management
+        function loadInvoiceData() {
+            try {
+                const stored = localStorage.getItem('ohana_invoices');
+                if (stored) {
+                    invoiceList = JSON.parse(stored);
+                } else {
+                    invoiceList = DEFAULT_INVOICES;
+                    localStorage.setItem('ohana_invoices', JSON.stringify(invoiceList));
+                }
+            } catch(e) {
+                invoiceList = DEFAULT_INVOICES;
+            }
+            renderInvoicesTable();
+        }
+
+        function renderInvoicesTable() {
+            const tbody = document.getElementById('invoicesTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            invoiceList.forEach(inv => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <strong style="color:var(--navy); font-family:monospace;">${inv.id}</strong>
+                    </td>
+                    <td><span style="font-size:12.5px; color:#475569;">${inv.date}</span></td>
+                    <td><span style="font-weight:600; font-size:13px; color:#1E293B;">${inv.plan}</span></td>
+                    <td><strong style="color:var(--navy);">${inv.total}</strong> <small class="muted" style="font-size:11px;">(incl. GST)</small></td>
+                    <td><span class="badge badge-verified">✓ ${inv.status}</span></td>
+                    <td style="text-align:right;">
+                        <button type="button" class="btn-action" onclick="downloadInvoice('${inv.id}')">
+                            ⤓ Download PDF
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function downloadInvoice(id) {
+            const inv = invoiceList.find(i => i.id === id) || invoiceList[0];
+            showToast(`Generating official GST Tax Invoice ${inv.id}...`, 'info');
+
+            setTimeout(() => {
+                const htmlLines = [
+                    '<!DOCTYPE html>',
+                    '<html>',
+                    '<head>',
+                    '<title>Tax Invoice - ' + inv.id + '</title>',
+                    '<style>',
+                    'body { font-family: sans-serif; padding: 40px; color: #0B1F3A; background: #FFF; max-width: 800px; margin: 0 auto; border: 1px solid #CBD5E1; }',
+                    '.head { display: flex; justify-content: space-between; border-bottom: 2px solid #0B1F3A; padding-bottom: 16px; margin-bottom: 20px; }',
+                    'table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }',
+                    'th, td { border: 1px solid #E2E8F0; padding: 10px; text-align: left; }',
+                    'th { background: #F8FAFC; }',
+                    '.total-row { font-weight: bold; background: #F1F5F9; font-size: 14px; }',
+                    '</style>',
+                    '<' + '/head>',
+                    '<body>',
+                    '<div class="head">',
+                    '    <div>',
+                    '        <h1 style="margin:0; color:#FF2028; font-size:24px;">OHANA BUSINESS LOCKER</h1>',
+                    '        <p style="margin:4px 0 0; font-size:12px; color:#64748B;">Statutory Business Passport Platform • GSTIN: 27AABCO0001Z1Z0</p>',
+                    '    </div>',
+                    '    <div style="text-align:right;">',
+                    '        <h3 style="margin:0;">TAX INVOICE</h3>',
+                    '        <p style="margin:4px 0 0; font-size:12px;"><strong>' + inv.id + '</strong><br>Date: ' + inv.date + '</p>',
+                    '    </div>',
+                    '</div>',
+                    '<div style="margin-bottom:20px; font-size:13px; display:flex; justify-content:space-between;">',
+                    '    <div><strong>Billed To:</strong><br>ABC Technologies Private Limited<br>GSTIN: 27ABCDE1234F1Z5<br>Pune, Maharashtra 411006</div>',
+                    '    <div style="text-align:right;"><strong>Payment Method:</strong><br>Visa ending 4242<br>Status: <span style="color:#16A34A; font-weight:bold;">PAID</span></div>',
+                    '</div>',
+                    '<table>',
+                    '<tr><th>Description</th><th>SAC Code</th><th>Base Amount</th><th>IGST (18%)</th><th>Total</th></tr>',
+                    '<tr><td>' + inv.plan + '</td><td>998313</td><td>' + inv.amount + '</td><td>' + inv.tax + '</td><td>' + inv.total + '</td></tr>',
+                    '<tr class="total-row"><td colspan="4" style="text-align:right;">Total Amount Paid:</td><td>' + inv.total + '</td></tr>',
+                    '</table>',
+                    '<p style="font-size:11px; color:#64748B; margin-top:30px;">This is a computer-generated tax invoice issued by Ohana Business Identity Network. Valid without physical signature under Rule 48 of CGST Rules 2017.</p>',
+                    '<' + '/body>',
+                    '<' + '/html>'
+                ];
+
+                const blob = new Blob([htmlLines.join('\n')], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `Ohana-Invoice-${inv.id}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast(`Invoice ${inv.id} downloaded successfully!`, 'success');
+            }, 600);
+        }
+
+        // Billing Info Save
+        function loadBillingInfo() {
+            try {
+                const stored = localStorage.getItem('ohana_billing');
+                if (stored) {
+                    const b = JSON.parse(stored);
+                    if (b.name) document.getElementById('billingName').value = b.name;
+                    if (b.email) document.getElementById('billingEmail').value = b.email;
+                    if (b.address) document.getElementById('billingAddress').value = b.address;
+                    if (b.gstin) document.getElementById('billingGstin').value = b.gstin;
+                    if (b.state) document.getElementById('billingState').value = b.state;
+                }
+            } catch(e) {}
+        }
+
+        function saveBillingInfo(event) {
+            event.preventDefault();
+            const bData = {
+                name: document.getElementById('billingName').value.trim(),
+                email: document.getElementById('billingEmail').value.trim(),
+                address: document.getElementById('billingAddress').value.trim(),
+                gstin: document.getElementById('billingGstin').value.trim().toUpperCase(),
+                state: document.getElementById('billingState').value.trim(),
+                updatedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('ohana_billing', JSON.stringify(bData));
+            showToast('Billing details saved for tax invoicing!', 'success');
+        }
+
+        function openAddCardModal() {
+            const cardNum = prompt("Enter 16-digit Card Number (Demo Simulation):", "4111 2222 3333 4242");
+            if (cardNum) {
+                showToast("New card added and tokenized via RBI-compliant token vault!", "success");
+            }
+        }
+    </script>
+</body>
+
+</html>

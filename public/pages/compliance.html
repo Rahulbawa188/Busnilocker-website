@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Compliance | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ENTERPRISE GOVERNANCE</span>
+                <h1>Compliance</h1>
+                <p class="subtitle">Monitor your business compliance and required documents.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn outline" onclick="showToast('Exporting audit compliance checklist...', 'info')">Export Audit Report</button>
+                <button class="btn" onclick="showToast('Select document to upload for compliance check', 'info')">+ Upload Document</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Compliance Overview Cards -->
+        <div class="stats">
+            <div class="stat">
+                <small>Overall Compliance Status</small>
+                <b>88%</b>
+                <span class="positive">● Fully Compliant · Low Risk</span>
+            </div>
+            <div class="stat">
+                <small>Completed Requirements</small>
+                <b>14 / 16</b>
+                <span>All core statutory filings verified</span>
+            </div>
+            <div class="stat">
+                <small>Pending Requirements</small>
+                <b>02</b>
+                <span class="warning">Action required within 14 days</span>
+            </div>
+            <div class="stat">
+                <small>Expiring Soon</small>
+                <b>01</b>
+                <span class="warning">Domain expires in 28 days</span>
+            </div>
+        </div>
+
+        <!-- Main Grid: Checklist & Health Card -->
+        <div class="grid-3" style="grid-template-columns: 2fr 1fr; align-items: start;">
+            <!-- Compliance Checklist -->
+            <section class="panel">
+                <div class="toolbar-bar">
+                    <div>
+                        <h3 style="margin:0 0 4px;">Compliance Checklist</h3>
+                        <p class="muted" style="margin:0;font-size:13px;">Statutory and organizational regulatory requirements</p>
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="showToast('Showing all compliance items', 'info')">All (7)</button>
+                        <button class="filter-tab" onclick="showToast('Filtered by Pending/Action', 'info')">Needs Action (2)</button>
+                        <button class="filter-tab" onclick="showToast('Filtered by Verified', 'info')">Verified (4)</button>
+                    </div>
+                </div>
+
+                <div class="table-container" style="box-shadow:none;border:none;">
+                    <table class="saas-table">
+                        <thead>
+                            <tr>
+                                <th>Requirement / Document</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Expiry / Due</th>
+                                <th style="text-align:right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">GST Certificate</div>
+                                    <small class="muted">GSTIN: 27ABCDE1234F1Z5</small>
+                                </td>
+                                <td><span class="badge badge-neutral">Tax Filing</span></td>
+                                <td><span class="badge badge-verified">✓ Verified</span></td>
+                                <td>30 Oct 2026</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action" onclick="showToast('Viewing verified GST Certificate', 'success')">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Business Registration (MCA)</div>
+                                    <small class="muted">CIN: U72200PN2021PTC198765</small>
+                                </td>
+                                <td><span class="badge badge-neutral">Incorporation</span></td>
+                                <td><span class="badge badge-verified">✓ Verified</span></td>
+                                <td>Permanent</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action" onclick="showToast('Viewing MCA Incorporation Document', 'success')">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Permanent Account Number (PAN)</div>
+                                    <small class="muted">PAN: ABCDE1234F · NSDL Verified</small>
+                                </td>
+                                <td><span class="badge badge-neutral">Statutory ID</span></td>
+                                <td><span class="badge badge-verified">✓ Verified</span></td>
+                                <td>Permanent</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action" onclick="showToast('Viewing Company PAN validation', 'success')">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Domain Verification</div>
+                                    <small class="muted">abctechnologies.io · DNS record verified</small>
+                                </td>
+                                <td><span class="badge badge-neutral">Digital Asset</span></td>
+                                <td><span class="badge badge-expiring">⚠ Expiring Soon</span></td>
+                                <td>14 Oct 2026</td>
+                                <td style="text-align:right;">
+                                    <a class="btn-action resolve" href="renewals.html">Resolve</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Shop & Establishment Certificate</div>
+                                    <small class="muted">Municipal Corporation of Pune</small>
+                                </td>
+                                <td><span class="badge badge-neutral">State License</span></td>
+                                <td><span class="badge badge-verified">✓ Verified</span></td>
+                                <td>18 Dec 2026</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action" onclick="showToast('Viewing Shop License certificate', 'success')">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Professional Tax Registration (PTRC)</div>
+                                    <small class="muted">Annual declaration awaiting confirmation</small>
+                                </td>
+                                <td><span class="badge badge-neutral">State Tax</span></td>
+                                <td><span class="badge badge-pending">● Pending Review</span></td>
+                                <td>31 Oct 2026</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action upload" onclick="showToast('Upload revised PTRC challan', 'info')">Upload</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight:700;">Annual Audited Financial Statements</div>
+                                    <small class="muted">FY 2025-26 Balance Sheet & P&L</small>
+                                </td>
+                                <td><span class="badge badge-neutral">Financial Audit</span></td>
+                                <td><span class="badge badge-action">✕ Action Required</span></td>
+                                <td>Due in 14 days</td>
+                                <td style="text-align:right;">
+                                    <button class="btn-action resolve" onclick="showToast('Submitting audit clearance request', 'info')">Resolve</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Compliance Health Card -->
+            <div style="display:flex;flex-direction:column;gap:20px;">
+                <section class="panel compliance-health-card">
+                    <h3 style="margin:0;">Compliance Health</h3>
+                    <p class="muted" style="margin:4px 0 0;font-size:13px;">Real-time statutory audit score</p>
+
+                    <div class="health-gauge-wrap">
+                        <svg viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#059669" />
+                                    <stop offset="100%" stop-color="#10b981" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="health-gauge-circle-bg" cx="50" cy="50" r="40" />
+                            <circle class="health-gauge-circle" cx="50" cy="50" r="40" stroke-dasharray="221 251" />
+                        </svg>
+                        <div class="health-gauge-text">
+                            <b>88%</b>
+                            <span>EXCELLENT</span>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;text-align:left;display:flex;flex-direction:column;gap:10px;">
+                        <div style="display:flex;justify-content:space-between;font-size:13px;">
+                            <span class="muted">Corporate Governance</span>
+                            <b style="color:#059669;">100%</b>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:13px;">
+                            <span class="muted">Tax & GST Compliance</span>
+                            <b style="color:#059669;">94%</b>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:13px;">
+                            <span class="muted">Asset & Domain Health</span>
+                            <b style="color:#d97706;">75%</b>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:13px;">
+                            <span class="muted">Annual Financial Audit</span>
+                            <b style="color:#dc2626;">60%</b>
+                        </div>
+                    </div>
+
+                    <div style="width:100%;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+                        <button class="btn btn-sm" style="width:100%;" onclick="showToast('Scheduling automated statutory check...', 'success')">Run Compliance Scan</button>
+                    </div>
+                </section>
+
+                <section class="panel" style="padding:18px 20px;">
+                    <h4 style="margin:0 0 8px;font-size:15px;color:var(--text-main);">🛡 Trust Shield Active</h4>
+                    <p class="muted" style="margin:0 0 12px;font-size:12.5px;line-height:1.5;">Your business passport is protected by continuous verification. No critical infractions detected.</p>
+                    <a href="verification.html" class="btn outline btn-sm" style="width:100%;text-align:center;display:block;">Review Assurance Level</a>
+                </section>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

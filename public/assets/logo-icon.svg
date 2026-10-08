@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <!-- Primary Red Gradient -->
+    <linearGradient id="primaryRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3840" />
+      <stop offset="100%" stop-color="#DE0C14" />
+    </linearGradient>
+
+    <!-- Deep Navy Contrast Gradient -->
+    <linearGradient id="deepNavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#142B4E" />
+      <stop offset="100%" stop-color="#0B1F3A" />
+    </linearGradient>
+
+    <!-- Subtle Orbit Gradient (Red swooping into Deep Navy) -->
+    <linearGradient id="twoToneOrbit" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF2028" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#FFA4A8" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0B1F3A" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Soft Depth Shadow -->
+    <filter id="markShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#0B1F3A" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <!-- 1. Dynamic Two-Tone Orbit Ring (Loops around the Passport) -->
+  <path d="M 8 68 C 4 88 38 98 62 92 C 84 86 98 70 96 54 C 94 42 82 38 72 43" 
+        stroke="url(#twoToneOrbit)" stroke-width="5.5" stroke-linecap="round" fill="none" />
+
+  <!-- 2. Back Leaf: Deep Navy #0B1F3A Technology Core Card -->
+  <rect x="32" y="12" width="52" height="44" rx="10" 
+        transform="rotate(9 58 34)" fill="url(#deepNavyGrad)" />
+  <rect x="32" y="12" width="52" height="44" rx="10" 
+        transform="rotate(9 58 34)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.2" fill="none" />
+
+  <!-- 3. Mid Leaf: Soft Crimson Accent Leaf -->
+  <rect x="25" y="18" width="55" height="46" rx="11" 
+        transform="rotate(4 52 41)" fill="#C81018" opacity="0.9" />
+
+  <!-- 4. Front Main Vault / Business Passport in Vibrant Primary Red #FF2028 -->
+  <rect x="15" y="27" width="65" height="52" rx="12" 
+        fill="url(#primaryRed)" filter="url(#markShadow)" />
+
+  <!-- Crisp Upper Highlight Sheen -->
+  <path d="M 18 36 Q 47 34 77 36" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" fill="none" />
+
+  <!-- 5. Latch Clasp in Deep Navy #0B1F3A with Metallic Pin -->
+  <path d="M 61 43 H 80 C 83.5 43 86 45.5 86 49 V 57 C 86 60.5 83.5 63 80 63 H 61 V 43 Z" 
+        fill="url(#deepNavyGrad)" />
+  <circle cx="73" cy="53" r="2.8" fill="#FFFFFF" />
+
+  <!-- 6. Central Enterprise Security Padlock Emblem -->
+  <g transform="translate(35, 43)">
+    <!-- Shackle -->
+    <path d="M 6 10 V 6 C 6 2.7 8.7 0 12 0 C 15.3 0 18 2.7 18 6 V 10" 
+          stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" fill="none" />
+    <!-- Lock Body in Pure White -->
+    <rect x="2" y="9" width="20" height="17" rx="4.5" fill="#FFFFFF" />
+    <!-- Keyhole in Deep Navy #0B1F3A for Sharp Contrast -->
+    <circle cx="12" cy="15.5" r="2.2" fill="#0B1F3A" />
+    <path d="M 11 16.5 L 10.3 21.5 H 13.7 L 13 16.5 Z" fill="#0B1F3A" />
+  </g>
+</svg>

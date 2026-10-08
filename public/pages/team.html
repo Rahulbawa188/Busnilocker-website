@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Team & Roles | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ORGANIZATION ACCESS</span>
+                <h1>Team & Roles</h1>
+                <p class="subtitle">Manage your organization members and permissions.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn" onclick="openInviteModal()">+ Invite Member</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats">
+            <div class="stat">
+                <small>Total Members</small>
+                <b>12</b>
+                <span>Full organization roster</span>
+            </div>
+            <div class="stat">
+                <small>Active Members</small>
+                <b>10</b>
+                <span class="positive">● Verified active logins</span>
+            </div>
+            <div class="stat">
+                <small>Pending Invitations</small>
+                <b>02</b>
+                <span class="warning">Awaiting email confirmation</span>
+            </div>
+            <div class="stat">
+                <small>Admins</small>
+                <b>03</b>
+                <span>With elevated permissions</span>
+            </div>
+        </div>
+
+        <!-- Team Members Section -->
+        <section class="panel" style="margin-bottom:24px;">
+            <div class="toolbar-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="memberSearch" placeholder="Search by name, email or role..." onkeyup="filterTeamMembers()">
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="setRoleFilter('all', this)">All (12)</button>
+                    <button class="filter-tab" onclick="setRoleFilter('admin', this)">Admins (3)</button>
+                    <button class="filter-tab" onclick="setRoleFilter('manager', this)">Managers (4)</button>
+                    <button class="filter-tab" onclick="setRoleFilter('staff', this)">Staff (5)</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none;border:none;">
+                <table class="saas-table" id="teamTable">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Active</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-role="owner">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0B1F3A,#FF2028);">RB</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Rahul Bawa (You)</span>
+                                        <span class="user-email">rahul.bawa@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge owner">Owner</span></td>
+                            <td><span class="badge badge-verified">✓ Active</span></td>
+                            <td>Just now</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Owner account permissions are fixed', 'info')">Manage</button>
+                            </td>
+                        </tr>
+                        <tr data-role="admin">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#1e293b,#475569);">PS</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Priya Sharma</span>
+                                        <span class="user-email">priya.sharma@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge admin">Admin</span></td>
+                            <td><span class="badge badge-verified">✓ Active</span></td>
+                            <td>12 mins ago</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Editing Priya Sharma permissions', 'info')">Edit</button>
+                            </td>
+                        </tr>
+                        <tr data-role="admin">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0B1F3A,#1e3a8a);">AK</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Amit Kulkarni</span>
+                                        <span class="user-email">amit.k@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge admin">Admin</span></td>
+                            <td><span class="badge badge-verified">✓ Active</span></td>
+                            <td>2 hours ago</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Editing Amit Kulkarni permissions', 'info')">Edit</button>
+                            </td>
+                        </tr>
+                        <tr data-role="manager">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#d97706,#f59e0b);">SJ</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Sneha Joshi</span>
+                                        <span class="user-email">sneha.joshi@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge manager">Manager</span></td>
+                            <td><span class="badge badge-verified">✓ Active</span></td>
+                            <td>Yesterday</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Editing Sneha Joshi permissions', 'info')">Edit</button>
+                            </td>
+                        </tr>
+                        <tr data-role="manager">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#10B981);">VM</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Vikram Mehta</span>
+                                        <span class="user-email">vikram.mehta@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge manager">Manager</span></td>
+                            <td><span class="badge badge-pending">● Invited</span></td>
+                            <td>Pending invite</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Resending invitation email to Vikram Mehta', 'success')">Resend</button>
+                            </td>
+                        </tr>
+                        <tr data-role="staff">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#475569,#64748b);">NG</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Neha Gupta</span>
+                                        <span class="user-email">neha.g@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge staff">Staff</span></td>
+                            <td><span class="badge badge-verified">✓ Active</span></td>
+                            <td>3 days ago</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Editing Neha Gupta permissions', 'info')">Edit</button>
+                            </td>
+                        </tr>
+                        <tr data-role="staff">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0B1F3A,#FF2028);">RP</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Rohan Patil</span>
+                                        <span class="user-email">rohan.patil@abctech.com</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge staff">Staff</span></td>
+                            <td><span class="badge badge-pending">● Invited</span></td>
+                            <td>Pending invite</td>
+                            <td style="text-align:right;">
+                                <button class="btn-action" onclick="showToast('Resending invitation email to Rohan Patil', 'success')">Resend</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Permission Management Matrix -->
+        <section class="panel">
+            <div style="margin-bottom:18px;">
+                <h3 style="margin:0 0 4px;">Role & Permission Matrix</h3>
+                <p class="muted" style="margin:0;font-size:13px;">Overview of granular access privileges across the organization</p>
+            </div>
+            <div class="table-container" style="box-shadow:none;border:none;">
+                <table class="saas-table">
+                    <thead>
+                        <tr>
+                            <th>Permission Module</th>
+                            <th>Owner</th>
+                            <th>Admin</th>
+                            <th>Manager</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>Organization Identity & Profile</b></td>
+                            <td><span class="badge badge-verified">✓ Full Access</span></td>
+                            <td><span class="badge badge-verified">✓ Edit Access</span></td>
+                            <td><span class="badge badge-info">View Only</span></td>
+                            <td><span class="badge badge-info">View Only</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Statutory & Document Vault</b></td>
+                            <td><span class="badge badge-verified">✓ Full Access</span></td>
+                            <td><span class="badge badge-verified">✓ Upload & Share</span></td>
+                            <td><span class="badge badge-verified">✓ Upload Only</span></td>
+                            <td><span class="badge badge-info">View Only</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>L0–L4 Verification & KYC</b></td>
+                            <td><span class="badge badge-verified">✓ Manage</span></td>
+                            <td><span class="badge badge-verified">✓ Manage</span></td>
+                            <td><span class="badge badge-neutral">— No Access</span></td>
+                            <td><span class="badge badge-neutral">— No Access</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Business Assets & Devices</b></td>
+                            <td><span class="badge badge-verified">✓ Full Access</span></td>
+                            <td><span class="badge badge-verified">✓ Full Access</span></td>
+                            <td><span class="badge badge-verified">✓ Assign Assets</span></td>
+                            <td><span class="badge badge-info">My Assets</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Team Invitations & Billing</b></td>
+                            <td><span class="badge badge-verified">✓ Full Access</span></td>
+                            <td><span class="badge badge-verified">✓ Invite Members</span></td>
+                            <td><span class="badge badge-neutral">— No Access</span></td>
+                            <td><span class="badge badge-neutral">— No Access</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function filterTeamMembers() {
+            const query = document.getElementById('memberSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#teamTable tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function setRoleFilter(role, btn) {
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const rows = document.querySelectorAll('#teamTable tbody tr');
+            rows.forEach(r => {
+                if (role === 'all') {
+                    r.style.display = '';
+                } else {
+                    const rowRole = r.getAttribute('data-role');
+                    r.style.display = (rowRole === role) ? '' : 'none';
+                }
+            });
+        }
+
+        function openInviteModal() {
+            showToast('Opening invitation modal for new team member', 'info');
+        }
+    </script>
+</body>
+
+</html>

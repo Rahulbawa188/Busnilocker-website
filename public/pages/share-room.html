@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Share Room | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">PERMISSIONED B2B SHARING</span>
+                <h1>Share Room</h1>
+                <p class="subtitle">Securely disclose verified credentials, statutory documents, and KYC dossiers with buyers, vendors, banks, and auditors.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn" id="btnCreateShareRoom" onclick="openCreateRoomModal()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Create Share Room
+                </button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Overview Cards -->
+        <div class="stats" style="grid-template-columns: repeat(4, 1fr); margin-bottom:24px;">
+            <div class="stat">
+                <small>Active Share Rooms</small>
+                <b id="activeRoomsCount">03</b>
+                <span class="positive">● Time-limited &amp; Protected</span>
+            </div>
+            <div class="stat">
+                <small>Counterparty Views</small>
+                <b>24</b>
+                <span>Recorded in access log</span>
+            </div>
+            <div class="stat">
+                <small>Shared Documents</small>
+                <b>06 Docs</b>
+                <span>Across active rooms</span>
+            </div>
+            <div class="stat">
+                <small>Security Protocol</small>
+                <b style="font-size:20px; margin: 16px 0 10px; color:#059669;">Zero-Trust</b>
+                <span>Instant Revoke &amp; Watermark</span>
+            </div>
+        </div>
+
+        <!-- Active Share Rooms Table Section -->
+        <section class="panel" style="margin-bottom:24px;">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">Active B2B Share Rooms</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Permissioned links granted to enterprise clients, lenders, and procurement partners</p>
+                </div>
+                <button type="button" class="btn outline btn-sm" onclick="resetDemoRooms()">Reset Demo Rooms</button>
+            </div>
+
+            <div class="table-container" style="box-shadow:none; border:none;">
+                <table class="saas-table" id="roomsTable">
+                    <thead>
+                        <tr>
+                            <th>Room Name &amp; Purpose</th>
+                            <th>Recipient &amp; Organization</th>
+                            <th>Items Shared</th>
+                            <th>Permissions</th>
+                            <th>Created</th>
+                            <th>Expiry</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roomsTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Access Log / Counterparty Audit Trail Section -->
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">Share Room Access Logs</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Immutable record of counterparty views, downloads, IP addresses, and devices</p>
+                </div>
+                <span class="badge badge-verified">Audit Log Monitored</span>
+            </div>
+
+            <div class="table-container" style="box-shadow:none; border:none;">
+                <table class="saas-table" id="accessLogsTable">
+                    <thead>
+                        <tr>
+                            <th>Recipient / Counterparty</th>
+                            <th>Room Name</th>
+                            <th>Timestamp</th>
+                            <th>Device &amp; Browser</th>
+                            <th>IP Address</th>
+                            <th>Documents Viewed</th>
+                            <th style="text-align:right;">Security State</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accessLogsBody">
+                        <tr>
+                            <td>
+                                <b>Vikram Singhania</b><br>
+                                <small class="muted">Tata Projects Procurement</small>
+                            </td>
+                            <td>Vendor Onboarding Q4</td>
+                            <td>Today, 02:40 PM</td>
+                            <td>Chrome 129 / Windows 11</td>
+                            <td><code>103.112.44.89</code></td>
+                            <td>GST REG-06, PAN, Incorporation</td>
+                            <td style="text-align:right;"><span class="badge badge-verified">✓ Authorized</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Anita Deshmukh</b><br>
+                                <small class="muted">HDFC Bank Commercial Credit</small>
+                            </td>
+                            <td>Working Capital Due Diligence</td>
+                            <td>Yesterday, 11:15 AM</td>
+                            <td>Edge 128 / macOS</td>
+                            <td><code>14.143.18.204</code></td>
+                            <td>GST, Audited P&amp;L, Bank Conf.</td>
+                            <td style="text-align:right;"><span class="badge badge-verified">✓ PIN Validated</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Siddharth Rao</b><br>
+                                <small class="muted">KPMG Statutory Auditor</small>
+                            </td>
+                            <td>Annual Statutory Compliance Room</td>
+                            <td>28 Sep 2026, 04:30 PM</td>
+                            <td>Safari 18 / macOS</td>
+                            <td><code>49.207.195.12</code></td>
+                            <td>All 6 Core Statutory Documents</td>
+                            <td style="text-align:right;"><span class="badge badge-verified">✓ Watermarked</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Share Room Modal Wizard -->
+    <div class="modal-overlay" id="createRoomModal" style="display:none;">
+        <div class="modal-box" style="width:min(620px, 95%); max-height:90vh; overflow-y:auto;">
+            <div class="modal-header">
+                <div>
+                    <span class="eyebrow" style="font-size:11px; color:#FF2028; font-weight:700;">STEP-BY-STEP WORKFLOW</span>
+                    <h3 style="margin:2px 0 0; font-size:20px;">Create B2B Share Room</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeCreateRoomModal()">&times;</button>
+            </div>
+
+            <form id="createRoomForm" onsubmit="handleCreateRoomSubmit(event)" style="display:flex; flex-direction:column; gap:18px;">
+                <!-- Step 1: Recipient -->
+                <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+                    <h4 style="margin:0 0 10px; font-size:13.5px; color:#0B1F3A;">Step 1: Recipient Information</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Room Title / Purpose *</label>
+                            <input type="text" id="srTitle" placeholder="e.g. Vendor Onboarding Dossier" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Recipient Name *</label>
+                            <input type="text" id="srRecipientName" placeholder="e.g. Vikram Singhania" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Organization / Company *</label>
+                            <input type="text" id="srOrgName" placeholder="e.g. Tata Projects Ltd" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Recipient Email *</label>
+                            <input type="email" id="srEmail" placeholder="vikram.s@tataprojects.com" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Document Selection Checklist -->
+                <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+                    <h4 style="margin:0 0 10px; font-size:13.5px; color:#0B1F3A;">Step 2: Select Documents &amp; Records to Disclose</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px;">
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Business Passport Card" checked>
+                            <span>Business Passport Credential</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="GST Certificate" checked>
+                            <span>GSTIN Registration (REG-06)</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="PAN Card" checked>
+                            <span>Company PAN Attestation</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Certificate of Incorporation" checked>
+                            <span>MCA Incorporation Certificate</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Udyam MSME Certificate">
+                            <span>Udyam MSME Certificate</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Shop & Establishment">
+                            <span>Shop &amp; Establishment License</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Audited Financials">
+                            <span>Audited Financial Statements</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="checkbox" name="srDocs" value="Bank Account Confirmation">
+                            <span>Bank Account Confirmation Letter</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3 & 4: Permissions & Expiry -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div style="background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #e2e8f0;">
+                        <h4 style="margin:0 0 8px; font-size:13px; color:#0B1F3A;">Step 3: Access Permissions</h4>
+                        <div style="display:flex; flex-direction:column; gap:6px; font-size:12.5px;">
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                <input type="radio" name="srPerm" value="View Only" checked>
+                                <span>View Only (Protected Viewer)</span>
+                            </label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                <input type="radio" name="srPerm" value="Download Allowed">
+                                <span>Download Allowed (Signed PDF)</span>
+                            </label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                <input type="checkbox" id="srWatermark" checked>
+                                <span>Dynamic NDA Watermarking</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="background:#f8fafc; padding:14px; border-radius:12px; border:1px solid #e2e8f0;">
+                        <h4 style="margin:0 0 8px; font-size:13px; color:#0B1F3A;">Step 4: Room Expiration</h4>
+                        <select id="srExpiryDays" style="width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; background:#fff; margin-bottom:8px;">
+                            <option value="24 Hours">24 Hours (Urgent Review)</option>
+                            <option value="7 Days" selected>7 Days (Standard RFP)</option>
+                            <option value="30 Days">30 Days (Extended Due Diligence)</option>
+                            <option value="90 Days">90 Days (Quarterly Audit)</option>
+                        </select>
+                        <label style="display:block; font-size:12px; color:#475569; margin-bottom:4px;">Step 5: Passcode / PIN (Optional)</label>
+                        <input type="text" id="srPin" maxlength="6" placeholder="e.g. 4819" style="width:100%; padding:7px 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-family:monospace;">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+                    <button type="button" class="btn outline" onclick="closeCreateRoomModal()">Cancel</button>
+                    <button type="submit" class="btn">Generate Secure Share Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Counterparty Room Preview Modal -->
+    <div class="modal-overlay" id="viewRoomModal" style="display:none;">
+        <div class="modal-box" style="width:min(580px, 95%);">
+            <div class="modal-header">
+                <div>
+                    <span class="eyebrow" style="font-size:11px; color:#059669; font-weight:700;">COUNTERPARTY VIEW SIMULATION</span>
+                    <h3 id="vrTitle" style="margin:2px 0 0; font-size:19px;">Room Details</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeViewRoomModal()">&times;</button>
+            </div>
+            <div id="vrBody" style="font-size:13.5px; line-height:1.6; color:#334155;">
+                <!-- Populated dynamically -->
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:14px; border-top:1px solid #e2e8f0;">
+                <button type="button" class="btn outline btn-sm" onclick="closeViewRoomModal()">Close</button>
+                <button type="button" class="btn btn-sm" id="btnCopyFromView">Copy Share URL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Share Room Logic -->
+    <script>
+        const DEFAULT_ROOMS = [
+            {
+                id: "sr_01",
+                name: "Vendor Onboarding Dossier Q4",
+                recipient: "Vikram Singhania",
+                org: "Tata Projects Ltd",
+                email: "vikram.s@tataprojects.com",
+                items: ["Business Passport Card", "GST Certificate", "PAN Card", "Certificate of Incorporation"],
+                perm: "View Only (Watermarked)",
+                created: "28 Sep 2026",
+                expiry: "05 Oct 2026 (3 days left)",
+                status: "Active",
+                url: "https://ohana.business/share/abc-tech-tata892"
+            },
+            {
+                id: "sr_02",
+                name: "Working Capital Due Diligence",
+                recipient: "Anita Deshmukh",
+                org: "HDFC Bank Commercial Credit",
+                email: "anita.d@hdfcbank.com",
+                items: ["GST Certificate", "Audited Financials", "Bank Account Confirmation"],
+                perm: "Download Allowed (PIN Protected)",
+                created: "25 Sep 2026",
+                expiry: "25 Oct 2026 (23 days left)",
+                status: "Active",
+                url: "https://ohana.business/share/abc-tech-hdfc412"
+            },
+            {
+                id: "sr_03",
+                name: "Annual Statutory Compliance Room",
+                recipient: "Siddharth Rao",
+                org: "KPMG Statutory Auditor",
+                email: "siddharth.rao@kpmg.com",
+                items: ["All 6 Statutory Documents"],
+                perm: "View Only",
+                created: "15 Sep 2026",
+                expiry: "22 Sep 2026 (Expired)",
+                status: "Expired",
+                url: "https://ohana.business/share/abc-tech-kpmg104"
+            }
+        ];
+
+        let roomsData = [];
+
+        function loadRoomsData() {
+            try {
+                const stored = localStorage.getItem('ohana_share_rooms');
+                if (stored) {
+                    roomsData = JSON.parse(stored);
+                } else {
+                    roomsData = DEFAULT_ROOMS;
+                    localStorage.setItem('ohana_share_rooms', JSON.stringify(roomsData));
+                }
+            } catch (e) {
+                roomsData = DEFAULT_ROOMS;
+            }
+            renderRoomsTable();
+        }
+
+        function saveRoomsData() {
+            try {
+                localStorage.setItem('ohana_share_rooms', JSON.stringify(roomsData));
+            } catch (e) {
+                console.error('Error saving rooms to localStorage', e);
+            }
+        }
+
+        function renderRoomsTable() {
+            const tbody = document.getElementById('roomsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            let activeCount = 0;
+
+            if (roomsData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:36px; color:#64748B;">No active Share Rooms.</td></tr>`;
+                const activeEl = document.getElementById('activeRoomsCount');
+                if (activeEl) activeEl.textContent = '00';
+                return;
+            }
+
+            roomsData.forEach(room => {
+                if (room.status === 'Active') activeCount++;
+
+                const tr = document.createElement('tr');
+                const isRevoked = room.status === 'Revoked';
+                const isExpired = room.status === 'Expired';
+
+                let statusBadge = '<span class="badge badge-verified">Active</span>';
+                if (isRevoked) {
+                    statusBadge = '<span class="badge badge-danger">Revoked</span>';
+                } else if (isExpired) {
+                    statusBadge = '<span class="badge badge-neutral">Expired</span>';
+                }
+
+                const docCountText = Array.isArray(room.items) ? `${room.items.length} Documents` : room.items;
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight:700; color:#0B1F3A;">${room.name}</div>
+                        <small class="muted" style="font-family:monospace; font-size:11.5px;">${room.url}</small>
+                    </td>
+                    <td>
+                        <div style="font-weight:600; color:#0f172a;">${room.recipient}</div>
+                        <small class="muted" style="font-size:12px;">${room.org}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-info">${docCountText}</span>
+                    </td>
+                    <td><span style="font-size:12.5px; color:#475569;">${room.perm}</span></td>
+                    <td><span style="font-size:12.5px;">${room.created}</span></td>
+                    <td><span style="font-size:12.5px; font-weight:600; color:${isRevoked ? '#94a3b8' : (isExpired ? '#64748b' : '#b45309')};">${room.expiry}</span></td>
+                    <td>${statusBadge}</td>
+                    <td style="text-align:right; white-space:nowrap;">
+                        <button type="button" class="btn-action" onclick="copyRoomLink('${room.url}')" ${isRevoked ? 'disabled style="opacity:0.5;"' : ''}>Copy</button>
+                        <button type="button" class="btn-action" onclick="viewRoomModal('${room.id}')">View</button>
+                        ${isRevoked 
+                            ? '<button type="button" class="btn-action" disabled style="opacity:0.5;">Revoked</button>' 
+                            : `<button type="button" class="btn-action" style="color:#dc2626;" onclick="revokeRoom('${room.id}')">Revoke</button>`
+                        }
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const activeEl = document.getElementById('activeRoomsCount');
+            if (activeEl) activeEl.textContent = String(activeCount).padStart(2, '0');
+        }
+
+        function openCreateRoomModal() {
+            const modal = document.getElementById('createRoomModal');
+            if (modal) {
+                modal.style.display = 'grid';
+                modal.classList.add('active');
+            }
+        }
+
+        function closeCreateRoomModal() {
+            const modal = document.getElementById('createRoomModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+        }
+
+        function handleCreateRoomSubmit(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('srTitle').value.trim();
+            const recipient = document.getElementById('srRecipientName').value.trim();
+            const org = document.getElementById('srOrgName').value.trim();
+            const email = document.getElementById('srEmail').value.trim();
+            const expiryDays = document.getElementById('srExpiryDays').value;
+            const permRadio = document.querySelector('input[name="srPerm"]:checked');
+            const watermark = document.getElementById('srWatermark').checked;
+            const pin = document.getElementById('srPin').value.trim();
+
+            const selectedDocs = [];
+            document.querySelectorAll('input[name="srDocs"]:checked').forEach(cb => {
+                selectedDocs.push(cb.value);
+            });
+
+            if (selectedDocs.length === 0) {
+                showToast('Please select at least one document to share.', 'warning');
+                return;
+            }
+
+            const randomCode = Math.random().toString(36).substring(2, 7);
+            const generatedUrl = `https://ohana.business/share/abc-tech-${randomCode}`;
+
+            let permText = permRadio ? permRadio.value : 'View Only';
+            if (watermark) permText += ' (Watermarked)';
+            if (pin) permText += ' (PIN Protected)';
+
+            const todayStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const newRoom = {
+                id: 'sr_' + Date.now(),
+                name: title,
+                recipient: recipient,
+                org: org,
+                email: email,
+                items: selectedDocs,
+                perm: permText,
+                created: todayStr,
+                expiry: expiryDays,
+                status: 'Active',
+                url: generatedUrl,
+                pin: pin || null
+            };
+
+            roomsData.unshift(newRoom);
+            saveRoomsData();
+            renderRoomsTable();
+            closeCreateRoomModal();
+
+            // Copy to clipboard immediately
+            navigator.clipboard.writeText(generatedUrl).then(() => {
+                showToast(`Share Room created! Link copied: ${generatedUrl}`, 'success');
+            }).catch(() => {
+                showToast(`Share Room created: ${generatedUrl}`, 'success');
+            });
+        }
+
+        function copyRoomLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Share Room URL copied to clipboard!', 'info');
+            });
+        }
+
+        function revokeRoom(id) {
+            const room = roomsData.find(r => r.id === id);
+            if (!room) return;
+
+            if (confirm(`Revoke access to "${room.name}" immediately? The link will stop working for ${room.recipient}.`)) {
+                room.status = 'Revoked';
+                saveRoomsData();
+                renderRoomsTable();
+                showToast(`Access to ${room.name} has been revoked immediately.`, 'warning');
+            }
+        }
+
+        function viewRoomModal(id) {
+            const room = roomsData.find(r => r.id === id);
+            if (!room) return;
+
+            document.getElementById('vrTitle').textContent = room.name;
+
+            const docListHtml = (room.items || []).map(d => `<li style="margin:4px 0;">✓ ${d}</li>`).join('');
+
+            // Check if Business Passport is disclosed in this room
+            const includesPassport = (room.items || []).some(item => 
+                item.toLowerCase().includes('passport') || item.toLowerCase().includes('business passport')
+            );
+
+            let passportPreviewHtml = '';
+            if (includesPassport) {
+                let orgName = "ABC Technologies Private Limited";
+                let cin = "U72200PN2021PTC198765";
+                let gstin = "27ABCDE1234F1Z5";
+                let pan = "ABCDE1234F";
+                let level = "L3";
+                let levelName = "Enhanced Verified";
+
+                try {
+                    const storedId = localStorage.getItem('ohana_business_identity');
+                    if (storedId) {
+                        const parsedId = JSON.parse(storedId);
+                        orgName = parsedId.legalName || orgName;
+                        cin = parsedId.cin || cin;
+                        gstin = parsedId.gstin || gstin;
+                        pan = parsedId.pan || pan;
+                    }
+                    const storedV = localStorage.getItem('ohana_verification_state');
+                    if (storedV) {
+                        const parsedV = JSON.parse(storedV);
+                        level = parsedV.currentLevel || level;
+                        levelName = parsedV.levelName || levelName;
+                    }
+                } catch(e) {}
+
+                passportPreviewHtml = `
+                    <div style="background:linear-gradient(135deg, #0B1F3A 0%, #1e293b 100%); color:#FFFFFF; border-radius:12px; padding:16px; margin-bottom:14px; border:1px solid #334155; box-shadow:0 4px 12px rgba(11,31,58,0.15);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size:10.5px; font-weight:800; color:#FF2028; letter-spacing:1px;">OFFICIAL BUSINESS PASSPORT</span>
+                            <span class="badge" style="background:#16A34A; color:#FFFFFF; font-size:11px; padding:2px 8px;">✓ ${level} ${levelName}</span>
+                        </div>
+                        <div style="font-size:15px; font-weight:800; margin-bottom:6px; color:#FFFFFF;">${orgName}</div>
+                        <div style="font-size:11.5px; color:#94A3B8; display:flex; gap:12px; flex-wrap:wrap; font-family:monospace;">
+                            <span>CIN: ${cin}</span>
+                            <span>GSTIN: ${gstin}</span>
+                            <span>PAN: ${pan}</span>
+                        </div>
+                        <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.1); font-size:11px; color:#CBD5E1; display:flex; justify-content:space-between;">
+                            <span>Trust Score: <b>98 / 100</b> (Grade A+)</span>
+                            <span>Verified on Ohana Trust Network</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('vrBody').innerHTML = `
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:14px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span><b>Recipient:</b> ${room.recipient} (${room.org})</span>
+                        <span class="badge ${room.status === 'Active' ? 'badge-verified' : 'badge-danger'}">${room.status}</span>
+                    </div>
+                    <div><b>Share URL:</b> <code style="background:#fff; padding:2px 6px; border-radius:4px; font-size:12px;">${room.url}</code></div>
+                    <div style="margin-top:4px;"><b>Permissions:</b> ${room.perm}</div>
+                    <div style="margin-top:4px;"><b>Validity:</b> Created on ${room.created} · ${room.expiry}</div>
+                    ${room.pin ? `<div style="margin-top:4px; color:#FF2028;"><b>Passcode / PIN:</b> <code>${room.pin}</code></div>` : ''}
+                </div>
+                ${passportPreviewHtml}
+                <h4 style="margin:10px 0 6px; font-size:14px; color:#0B1F3A;">Disclosed Document Dossier:</h4>
+                <ul style="padding-left:20px; margin:0; font-size:13px; color:#475569;">
+                    ${docListHtml}
+                </ul>
+            `;
+
+            document.getElementById('btnCopyFromView').onclick = () => copyRoomLink(room.url);
+
+            const modal = document.getElementById('viewRoomModal');
+            if (modal) {
+                modal.style.display = 'grid';
+                modal.classList.add('active');
+            }
+        }
+
+        function closeViewRoomModal() {
+            const modal = document.getElementById('viewRoomModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+        }
+
+        function resetDemoRooms() {
+            if (confirm('Reset Share Rooms to initial demo state?')) {
+                roomsData = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+                saveRoomsData();
+                renderRoomsTable();
+                showToast('Reset to default B2B Share Rooms.', 'info');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRoomsData();
+        });
+    </script>
+</body>
+
+</html>

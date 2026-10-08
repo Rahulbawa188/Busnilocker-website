@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Business Passport | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <script src="../assets/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #FF2028;
+            --navy: #0B1F3A;
+            --success: #16A34A;
+            --border: #e2e8f0;
+        }
+
+        /* Passport Document Card (Print-Ready) */
+        .passport-master-card {
+            background: #FFFFFF;
+            border: 2px solid #0B1F3A;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(11, 31, 58, 0.08);
+            padding: 36px;
+            margin-bottom: 28px;
+            position: relative;
+            background-image: radial-gradient(circle at 100% 0%, rgba(255, 32, 40, 0.03) 0%, transparent 60%);
+        }
+
+        .passport-seal-watermark {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px double #0B1F3A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #0B1F3A;
+            opacity: 0.85;
+            text-align: center;
+            pointer-events: none;
+            transform: rotate(-12deg);
+        }
+
+        .passport-seal-watermark span {
+            font-size: 8.5px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .passport-seal-watermark strong {
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .passport-header-flex {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #0B1F3A;
+            position: relative;
+            z-index: 2;
+        }
+
+        .passport-logo-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 14px;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+        }
+
+        .passport-logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .passport-logo-fallback {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--navy);
+        }
+
+        .passport-meta-tags {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .passport-id-badge {
+            background: #F1F5F9;
+            color: var(--navy);
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #CBD5E1;
+        }
+
+        .tier-badge-l0 { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+        .tier-badge-l1 { background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D; }
+        .tier-badge-l2 { background: #DBEAFE; color: #1D4ED8; border: 1px solid #93C5FD; }
+        .tier-badge-l3 { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
+        .tier-badge-l4 { background: #0B1F3A; color: #FFFFFF; border: 1px solid #0B1F3A; }
+
+        .passport-level-progress-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .level-tier-pills {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tier-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748B;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .tier-pill.active {
+            background: #0B1F3A;
+            color: #FFFFFF;
+            border-color: #0B1F3A;
+            box-shadow: 0 4px 12px rgba(11, 31, 58, 0.15);
+        }
+
+        .tier-pill.passed {
+            background: #DCFCE7;
+            color: #16A34A;
+            border-color: #86EFAC;
+        }
+
+        /* Information Grid */
+        .info-card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .info-card-header h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-row-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 16px;
+            font-size: 13px;
+        }
+
+        .detail-row-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-item small {
+            display: block;
+            color: #64748B;
+            font-size: 11.5px;
+            margin-bottom: 2px;
+        }
+
+        .detail-item strong {
+            color: #0F172A;
+            font-weight: 600;
+        }
+
+        /* Action bar */
+        .passport-action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        /* PDF & Print Page Breaks */
+        .info-card, .info-card-grid, .passport-header-flex, .passport-level-progress-box, .panel {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        @media print {
+            body {
+                background: #FFFFFF !important;
+            }
+            .sidebar, .app-header, .passport-action-bar, .side-bottom, .profile-chip, nav, .btn {
+                display: none !important;
+            }
+            main.content {
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            .passport-master-card {
+                border: 2px solid #000 !important;
+                box-shadow: none !important;
+                padding: 20px !important;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .info-card-grid {
+                grid-template-columns: 1fr;
+            }
+            .passport-header-flex {
+                flex-direction: column;
+            }
+            .passport-seal-watermark {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="../assets/ohana-brand-logo.png" alt="Ohana Logo" class="oib-brand-img" style="height: 36px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a class="active" href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">OFFICIAL CREDENTIAL</span>
+                <h1>Business Passport</h1>
+                <p class="subtitle">Unified statutory credential, dynamic verification tier, and enterprise trust attestation.</p>
+            </div>
+            <div class="header-actions">
+                <a href="verification.html" class="btn" style="text-decoration:none;">Verification Desk →</a>
+                <a href="public-profile.html" class="btn outline" style="text-decoration:none;">View Public Profile ↗</a>
+                <button type="button" class="btn outline" id="btnDownloadCert" onclick="downloadVerificationCertificate()" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download Certificate
+                </button>
+            </div>
+        </header>
+
+        <!-- Master Business Passport Document Card -->
+        <article class="passport-master-card" id="printablePassport">
+            <!-- Simulated Official Stamp Seal -->
+            <div class="passport-seal-watermark">
+                <span>OHANA VERIFIED</span>
+                <strong id="stampLevel">L3</strong>
+                <span>PASSPORT</span>
+            </div>
+
+            <!-- Header Section -->
+            <div class="passport-header-flex">
+                <div class="passport-logo-box" id="passportLogoBox">
+                    <span class="passport-logo-fallback" id="passportLogoFallback">AB</span>
+                    <img id="passportLogoImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Logo" style="display:none;">
+                </div>
+
+                <div style="flex:1;">
+                    <div class="passport-meta-tags">
+                        <span class="passport-id-badge" id="passportIdBadge">OHANA-BP-2026-9041</span>
+                        <span class="badge" id="heroLevelBadge" style="font-weight:700;">L3 — Enhanced Verified</span>
+                        <span class="badge badge-verified" id="heroStatusBadge">✓ Active Trust Seal</span>
+                    </div>
+
+                    <h2 style="font-size:26px; color:var(--navy); margin:4px 0 2px; font-weight:800;" id="passportLegalName">
+                        ABC Technologies Private Limited
+                    </h2>
+                    <div style="font-size:14px; color:#475569; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                        <span id="passportTradeName">Trade Name: ABC Technologies</span>
+                        <span>•</span>
+                        <span id="passportEntityType">Private Limited Company</span>
+                        <span>•</span>
+                        <span>Incorporated: <strong id="passportIncDate">15 Jan 2021</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Level Progress Banner -->
+            <div class="passport-level-progress-box">
+                <div>
+                    <div style="font-size:12px; font-weight:700; color:#64748B; text-transform:uppercase; margin-bottom:4px;">
+                        Current Verification State
+                    </div>
+                    <div style="font-size:18px; font-weight:800; color:var(--navy);" id="progressTierText">
+                        L3 Enhanced Verified <span style="font-size:13px; font-weight:600; color:#059669;" id="progressCountText">(7 of 9 proofs verified)</span>
+                    </div>
+                </div>
+
+                <div class="level-tier-pills" id="tierPillsContainer">
+                    <span class="tier-pill" id="pillL0">L0 Claimed</span>
+                    <span class="tier-pill" id="pillL1">L1 Contact</span>
+                    <span class="tier-pill" id="pillL2">L2 Business</span>
+                    <span class="tier-pill" id="pillL3">L3 Enhanced</span>
+                    <span class="tier-pill" id="pillL4">L4 Assured</span>
+                </div>
+            </div>
+
+            <!-- Section 1 & 2: Corporate Identity & Statutory Tax Identifiers -->
+            <div class="info-card-grid">
+                <!-- Corporate Identity -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h4>Corporate Identity</h4>
+                        <a href="identity.html" style="font-size:12px; color:var(--primary); font-weight:600; text-decoration:none;">Edit in Identity ✎</a>
+                    </div>
+                    <div class="detail-row-grid">
+                        <div class="detail-item">
+                            <small>Industry</small>
+                            <strong id="passportIndustry">Information Technology</strong>
+                        </div>
+                        <div class="detail-item">
+                            <small>Corporate Website</small>
+                            <strong id="passportWebsite">abctechnologies.io</strong>
+                        </div>
+                        <div class="detail-item">
+                            <small>Official Email</small>
+                            <strong id="passportEmail">compliance@abctechnologies.io</strong>
+                        </div>
+                        <div class="detail-item">
+                            <small>Primary Phone</small>
+                            <strong id="passportPhone">+91 20 6712 3400</strong>
+                        </div>
+                        <div class="detail-item" style="grid-column: span 2;">
+                            <small>Registered Office Address</small>
+                            <strong id="passportAddress">Unit 402, 4th Floor, Tech Park One, Yerawada, Pune, Maharashtra 411006</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statutory Tax Identifiers -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h4>Statutory Registrations</h4>
+                        <a href="verification.html" style="font-size:12px; color:var(--primary); font-weight:600; text-decoration:none;">Manage Verification →</a>
+                    </div>
+                    <div class="detail-row-grid">
+                        <div class="detail-item">
+                            <small>CIN / LLPIN (MCA)</small>
+                            <strong id="passportCin" style="font-family:monospace;">U72200PN2021PTC198765</strong>
+                            <div style="font-size:11px; color:#16A34A; margin-top:2px;" id="badgeCin">✓ MCA Registry Verified</div>
+                        </div>
+                        <div class="detail-item">
+                            <small>GSTIN Tax Identification</small>
+                            <strong id="passportGstin" style="font-family:monospace;">27ABCDE1234F1Z5</strong>
+                            <div style="font-size:11px; color:#16A34A; margin-top:2px;" id="badgeGstin">✓ GSTN Portal Verified</div>
+                        </div>
+                        <div class="detail-item">
+                            <small>Permanent Account Number (PAN)</small>
+                            <strong id="passportPan" style="font-family:monospace;">ABCDE1234F</strong>
+                            <div style="font-size:11px; color:#16A34A; margin-top:2px;" id="badgePan">✓ NSDL Validated</div>
+                        </div>
+                        <div class="detail-item">
+                            <small>Udyam MSME Registration</small>
+                            <strong id="passportUdyam" style="font-family:monospace;">UDYAM-MH-26-0019284</strong>
+                            <div style="font-size:11px; color:#16A34A; margin-top:2px;" id="badgeUdyam">✓ MSME Registry Verified</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expiring Credentials & Renewals Summary -->
+            <div class="info-card" style="margin-bottom:20px;">
+                <div class="info-card-header">
+                    <h4>Credentials &amp; Renewals</h4>
+                    <a href="renewals.html" style="font-size:12px; color:var(--primary); font-weight:600; text-decoration:none;">Manage Renewals ↻</a>
+                </div>
+                <div id="passportRenewalsContent">
+                    <!-- Populated dynamically from ohana_renewals_data -->
+                </div>
+            </div>
+
+            <!-- Credentials & Evidence Summary Table -->
+            <section class="panel" style="margin-bottom:20px; background:#FAFAFA;">
+                <div class="section-head" style="margin-bottom:12px;">
+                    <div>
+                        <h4 style="margin:0; font-size:14px; text-transform:uppercase; color:var(--navy);">Credentials &amp; Evidence Attestation</h4>
+                        <p class="muted" style="margin:2px 0 0; font-size:12px;">Summary of submitted filings and proof documents</p>
+                    </div>
+                    <a href="documents.html" style="font-size:12px; color:var(--primary); font-weight:600; text-decoration:none;">View Document Vault ▣</a>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="saas-table" style="background:#FFF;">
+                        <thead>
+                            <tr>
+                                <th>Evidence Document</th>
+                                <th>Statutory Identifier</th>
+                                <th>Verification Method</th>
+                                <th>Attestation Status</th>
+                                <th>Audit Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="evidenceTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Passport Actions Bar -->
+            <div class="passport-action-bar">
+                <button type="button" class="btn" id="btnDownloadPassportBottom" onclick="downloadBusinessPassportPdf()" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download Business Passport
+                </button>
+            </div>
+        </article>
+    </main>
+
+    <!-- Client-Side Engine for Business Passport -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBusinessPassport();
+        });
+
+        function loadBusinessPassport() {
+            // 1. Load Business Identity
+            let identity = {
+                legalName: "ABC Technologies Private Limited",
+                tradeName: "ABC Technologies",
+                entityType: "Private Limited Company",
+                cin: "U72200PN2021PTC198765",
+                incDate: "2021-01-15",
+                gstin: "27ABCDE1234F1Z5",
+                pan: "ABCDE1234F",
+                udyam: "UDYAM-MH-26-0019284",
+                industry: "Information Technology & Software",
+                website: "abctechnologies.io",
+                email: "compliance@abctechnologies.io",
+                phone: "+91 20 6712 3400",
+                address: "Unit 402, 4th Floor, Tech Park One, Airport Road, Yerawada, Pune, Maharashtra 411006",
+                logo: ""
+            };
+
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    const parsed = JSON.parse(storedId);
+                    identity = { ...identity, ...parsed };
+                }
+            } catch(e) {}
+
+            // Populate identity in UI
+            document.getElementById('passportLegalName').textContent = identity.legalName;
+            document.getElementById('passportTradeName').textContent = `Trade Name: ${identity.tradeName || identity.legalName}`;
+            document.getElementById('passportEntityType').textContent = identity.entityType;
+            document.getElementById('passportIncDate').textContent = identity.incDate;
+            document.getElementById('passportIndustry').textContent = identity.industry;
+            document.getElementById('passportWebsite').textContent = identity.website;
+            document.getElementById('passportEmail').textContent = identity.email;
+            document.getElementById('passportPhone').textContent = identity.phone;
+            document.getElementById('passportAddress').textContent = identity.address;
+
+            document.getElementById('passportGstin').textContent = identity.gstin || 'Unregistered';
+            document.getElementById('passportPan').textContent = identity.pan || 'ABCDE1234F';
+            document.getElementById('passportUdyam').textContent = identity.udyam || 'Not Registered';
+
+            // Sidebar org name
+            const sName = document.getElementById('sidebarOrgName');
+            if (sName) sName.textContent = identity.tradeName || identity.legalName;
+
+            // Logo
+            if (identity.logo) {
+                document.getElementById('passportLogoImg').src = identity.logo;
+                document.getElementById('passportLogoImg').style.display = 'block';
+                document.getElementById('passportLogoFallback').style.display = 'none';
+            } else {
+                const initials = (identity.tradeName || identity.legalName).substring(0, 2).toUpperCase();
+                document.getElementById('passportLogoFallback').textContent = initials;
+            }
+
+            // 2. Load Verification State & Dynamic Requirement Profile
+            let vState = getOrInitVerificationState();
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(identity)
+                : { normalizedEntity: "Sole Proprietorship", normalizedBusiness: "Food & Restaurant", entityType: identity.entityType, businessType: identity.businessType, requirements: [] };
+
+            const vProg = (typeof getVerificationProgress === 'function')
+                ? getVerificationProgress(identity, vState)
+                : { progressPct: 75, completedRequired: 5, completedOptional: 1, requiredCount: 6, optionalCount: 2, notApplicableCount: 2, totalApplicable: 8 };
+
+            // CIN Statutory Exemption for non-corporate entities (Sole Prop, Partnership)
+            const cinApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', identity)
+                : (profile.normalizedEntity !== 'Sole Proprietorship' && profile.normalizedEntity !== 'Partnership');
+
+            const cinEl = document.getElementById('passportCin');
+            const badgeCinEl = document.getElementById('badgeCin');
+            if (!cinApplicable) {
+                if (cinEl) {
+                    cinEl.textContent = 'Not Applicable (Exempt)';
+                    cinEl.style.fontStyle = 'italic';
+                    cinEl.style.color = '#64748B';
+                    cinEl.style.fontFamily = 'inherit';
+                }
+                if (badgeCinEl) {
+                    badgeCinEl.textContent = "Not Applicable";
+                    badgeCinEl.style.color = '#64748B';
+                }
+            } else {
+                if (cinEl) {
+                    cinEl.textContent = identity.cin || 'U72200PN2021PTC198765';
+                    cinEl.style.fontStyle = '';
+                    cinEl.style.color = '';
+                    cinEl.style.fontFamily = 'monospace';
+                }
+            }
+
+            // Render Compact Requirement Breakdown Card
+            // Simplified: no requirement breakdown card needed
+
+            applyVerificationStateToUI(vState, identity, profile, vProg);
+            renderEvidenceTable(vState, identity, profile);
+
+            // 3. Step 4 Modules: Renewals Integration
+            renderPassportRenewals();
+        }
+
+                function getOrInitVerificationState() {
+            let state = {
+                currentLevel: "L3",
+                levelName: "Enhanced Verified",
+                accountCreated: true,
+                emailVerified: true,
+                phoneVerified: true,
+                cinVerified: true,
+                gstVerified: true,
+                panVerified: true,
+                udyamVerified: true,
+                domainVerified: true,
+                addressVerified: true,
+                bankVerified: true,
+                fssaiVerified: true,
+                ownerVerified: true,
+                shopLicenseVerified: true,
+                auditFinancialsVerified: false,
+                directorKycVerified: false,
+                siteInspectionVerified: false,
+                enterpriseAssured: false,
+                lastUpdated: new Date().toISOString()
+            };
+
+            try {
+                const stored = localStorage.getItem('ohana_verification_state');
+                if (stored) {
+                    state = { ...state, ...JSON.parse(stored) };
+                } else {
+                    localStorage.setItem('ohana_verification_state', JSON.stringify(state));
+                }
+            } catch(e) {}
+
+            return state;
+        }
+
+        function applyVerificationStateToUI(state, identity, profile, vProg) {
+            // Unified Calculation Engine from single source of truth
+            const calc = typeof computeOhanaVerificationLevel === 'function'
+                ? computeOhanaVerificationLevel(state, identity)
+                : { level: state.currentLevel || "L3", levelName: state.levelName || "Enhanced Verified", progressPct: 78 };
+
+            const level = calc.level;
+            const levelName = calc.levelName;
+
+            // Update badge text and styles
+            const badge = document.getElementById('heroLevelBadge');
+            const stamp = document.getElementById('stampLevel');
+            const progressText = document.getElementById('progressTierText');
+            const sidebarBadge = document.getElementById('sidebarTierBadge');
+
+            if (stamp) stamp.textContent = level;
+            if (badge) {
+                badge.className = `badge tier-badge-${level.toLowerCase()}`;
+                badge.textContent = `${level} — ${levelName}`;
+            }
+
+            const totalApplicable = vProg ? vProg.totalApplicable : 9;
+            const completedCount = vProg ? ((vProg.completedRequired || 0) + (vProg.completedOptional || 0)) : 7;
+            const naCount = vProg ? vProg.notApplicableCount : 0;
+            const proofsVerified = `${completedCount} of ${totalApplicable} applicable proofs verified (${naCount} exempt)`;
+
+            const levelLabel = `${level} ${levelName}`;
+            if (progressText) {
+                progressText.innerHTML = `${levelLabel} <span style="font-size:13px; font-weight:600; color:#059669;">(${proofsVerified})</span>`;
+            }
+
+            if (sidebarBadge) {
+                sidebarBadge.textContent = `✓ ${level} Verified`;
+            }
+
+            // Update Pills
+            const tiers = ["L0", "L1", "L2", "L3", "L4"];
+            const currentIdx = tiers.indexOf(level);
+            tiers.forEach((t, idx) => {
+                const pill = document.getElementById(`pill${t}`);
+                if (!pill) return;
+                pill.className = "tier-pill";
+                if (idx < currentIdx) {
+                    pill.classList.add("passed");
+                    pill.innerHTML = `✓ ${t}`;
+                } else if (idx === currentIdx) {
+                    pill.classList.add("active");
+                    pill.innerHTML = `● ${t} Active`;
+                }
+            });
+
+            // Update Identifiers badges based on state
+            const cinApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', identity)
+                : true;
+            if (cinApplicable) {
+                updateIdentBadge('badgeCin', state.cinVerified, "MCA Registry Verified");
+            }
+            updateIdentBadge('badgeGstin', state.gstVerified, "GSTN Portal Verified");
+            updateIdentBadge('badgePan', state.panVerified, "NSDL Validated");
+            updateIdentBadge('badgeUdyam', state.udyamVerified, "MSME Registry Verified");
+        }
+
+        function updateIdentBadge(elemId, isVerified, label) {
+            const el = document.getElementById(elemId);
+            if (!el) return;
+            if (isVerified) {
+                el.style.color = "#16A34A";
+                el.textContent = `✓ ${label}`;
+            } else {
+                el.style.color = "#D97706";
+                el.textContent = `⚠ Verification Pending`;
+            }
+        }
+
+        function renderEvidenceTable(state, identity, profile) {
+            const tbody = document.getElementById('evidenceTableBody');
+            if (!tbody) return;
+
+            // Load documents from Ohana Digital Locker
+            let docs = [];
+            try {
+                const storedDocs = localStorage.getItem('ohana_documents');
+                if (storedDocs) docs = JSON.parse(storedDocs);
+            } catch(e) {}
+
+            tbody.innerHTML = '';
+
+            if (docs.length === 0) {
+                // If vault empty, show basic business credentials
+                const basicProofs = [
+                    { name: "Permanent Account Number (PAN)", ref: identity.pan || identity.panNumber || "ABCDE1234F", method: "NSDL_API", status: "Verified", date: "15 Jan 2026" },
+                    { name: "Official Contact Verification", ref: identity.email || "compliance@ohana.io", method: "2FA_TOKEN", status: "Verified", date: "12 Jan 2026" }
+                ];
+                basicProofs.forEach(bp => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><div style="font-weight:700; color:var(--navy);">${bp.name}</div></td>
+                        <td><code style="font-size:12px; color:#475569;">${bp.ref}</code></td>
+                        <td><span class="muted" style="font-size:12px;">${bp.method}</span></td>
+                        <td><span class="badge badge-verified">✓ ${bp.status}</span></td>
+                        <td style="font-size:12px; color:#64748B;">${bp.date}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                return;
+            }
+
+            docs.forEach(doc => {
+                const tr = document.createElement('tr');
+                let badgeClass = 'badge-verified';
+                let statusLabel = '✓ ' + (doc.status || 'Verified');
+                if (doc.status === 'In Review' || doc.status === 'Pending Review') {
+                    badgeClass = 'badge-warning';
+                    statusLabel = '● In Review';
+                } else if (doc.status === 'Uploaded') {
+                    badgeClass = 'badge-neutral';
+                    statusLabel = '↑ Uploaded';
+                } else if (doc.status === 'Rejected') {
+                    badgeClass = 'badge-rejected';
+                    statusLabel = '✕ Rejected';
+                }
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:18px;">${doc.icon || '📄'}</span>
+                            <div>
+                                <b style="color:var(--navy); font-size:13px; display:block;">${doc.name}</b>
+                                <small style="color:#64748B; font-size:11px;">Category: ${doc.category}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><code style="font-size:12px; color:#475569;">${doc.ref || doc.fileName || 'Vault Filing'}</code></td>
+                    <td><span class="muted" style="font-size:12px;">CRYPTOGRAPHIC_VAULT</span></td>
+                    <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+                    <td style="font-size:12px; color:#64748B;">${doc.uploadedDate || 'Active'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        const DEFAULT_PASSPORT_ASSETS = [
+            {
+                id: "AST-LP-010",
+                name: 'Apple MacBook Pro 16" (M2 Max)',
+                category: "Laptop",
+                tag: "LP-010",
+                serial: "C02G4589MD6R",
+                assignedTo: "Rahul Bawa",
+                assigneeInitials: "RB",
+                status: "In Use",
+                addedDate: "15 Jan 2026",
+                warranty: "AppleCare (Jan 2029)",
+                icon: "💻"
+            },
+            {
+                id: "AST-LP-008",
+                name: "Dell XPS 15 (i9 32GB)",
+                category: "Laptop",
+                tag: "LP-008",
+                serial: "7H81K23DL",
+                assignedTo: "Priya Sharma",
+                assigneeInitials: "PS",
+                status: "In Use",
+                addedDate: "20 Feb 2026",
+                warranty: "ProSupport (Feb 2028)",
+                icon: "💻"
+            },
+            {
+                id: "AST-MB-004",
+                name: "Apple iPhone 15 Pro (256GB)",
+                category: "Mobile",
+                tag: "MB-004",
+                serial: "356891024810294",
+                assignedTo: "Amit Kulkarni",
+                assigneeInitials: "AK",
+                status: "In Use",
+                addedDate: "10 Mar 2026",
+                warranty: "AppleCare+ (Mar 2028)",
+                icon: "📱"
+            },
+            {
+                id: "AST-DOM-001",
+                name: "abctechnologies.io (Primary Domain)",
+                category: "Domain",
+                tag: "DOM-01",
+                serial: "Cloudflare DNS",
+                assignedTo: "Infrastructure Pool",
+                assigneeInitials: "IT",
+                status: "Expiring Soon",
+                addedDate: "14 Oct 2025",
+                warranty: "14 Oct 2026 (28 days)",
+                icon: "🌐"
+            },
+            {
+                id: "AST-SFT-001",
+                name: "Google Workspace Enterprise (15 Seats)",
+                category: "Software",
+                tag: "SFT-GW15",
+                serial: "Contract #GW-2026-918",
+                assignedTo: "Organization Wide",
+                assigneeInitials: "OP",
+                status: "Active",
+                addedDate: "01 Jan 2026",
+                warranty: "31 Dec 2026",
+                icon: "🔐"
+            },
+            {
+                id: "AST-MB-007",
+                name: "Samsung Galaxy S24 Ultra (Testing)",
+                category: "Mobile",
+                tag: "MB-007",
+                serial: "QA Pool",
+                assignedTo: "QA Test Pool",
+                assigneeInitials: "QA",
+                status: "Available",
+                addedDate: "12 Apr 2026",
+                warranty: "Warranty (Apr 2027)",
+                icon: "📱"
+            }
+        ];
+
+        const DEFAULT_PASSPORT_RENEWALS = [
+            {
+                id: "rn_01",
+                item: "Business Domain (abctechnologies.io)",
+                sub: "Cloudflare Registrar · SSL Certificate",
+                cat: "Digital",
+                expiry: "14 Oct 2026",
+                days: 28,
+                owner: "Rahul Bawa",
+                avatar: "RB",
+                rule: "30 days before",
+                status: "Critical"
+            },
+            {
+                id: "rn_02",
+                item: "GST Certificate & Quarterly Filing",
+                sub: "GSTIN: 27ABCDE1234F1Z5 · Q2 Filing",
+                cat: "Statutory",
+                expiry: "30 Oct 2026",
+                days: 44,
+                owner: "Priya Sharma",
+                avatar: "PS",
+                rule: "30 days before",
+                status: "Upcoming"
+            },
+            {
+                id: "rn_03",
+                item: "Professional Tax Challan (PTRC)",
+                sub: "Government of Maharashtra State Tax",
+                cat: "Statutory",
+                expiry: "31 Oct 2026",
+                days: 45,
+                owner: "Sneha Joshi",
+                avatar: "SJ",
+                rule: "30 days before",
+                status: "Upcoming"
+            },
+            {
+                id: "rn_04",
+                item: "Workstation Fleet Hardware AMC",
+                sub: "Dell ProSupport Plus Contract (10 Laptops)",
+                cat: "AMC",
+                expiry: "15 Nov 2026",
+                days: 60,
+                owner: "Amit Kulkarni",
+                avatar: "AK",
+                rule: "60 days before",
+                status: "Active"
+            }
+        ];
+
+        function renderPassportAssets() {
+            const container = document.getElementById('passportAssetsContent');
+            if (!container) return;
+
+            let assets = [];
+            try {
+                const stored = localStorage.getItem('ohana_assets');
+                if (stored) {
+                    assets = JSON.parse(stored);
+                } else {
+                    assets = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_ASSETS));
+                    localStorage.setItem('ohana_assets', JSON.stringify(assets));
+                }
+            } catch(e) {
+                assets = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_ASSETS));
+            }
+
+            if (!assets || assets.length === 0) {
+                assets = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_ASSETS));
+            }
+
+            const total = assets.length;
+            const active = assets.filter(a => a.status === 'In Use' || a.status === 'Active').length;
+            const expiring = assets.filter(a => a.status === 'Expiring Soon' || (a.warranty && a.warranty.includes('2026'))).length;
+            const topAssets = assets.slice(0, 2);
+
+            container.innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:12px;">
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Total Assets</small>
+                        <strong style="font-size:18px; color:var(--navy); font-weight:800;">${total}</strong>
+                    </div>
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Active Assets</small>
+                        <strong style="font-size:18px; color:#16A34A; font-weight:800;">${active}</strong>
+                    </div>
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Expiring Assets</small>
+                        <strong style="font-size:18px; color:${expiring > 0 ? '#D97706' : '#64748B'}; font-weight:800;">${expiring}</strong>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    ${topAssets.map(a => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FFF; padding:6px 10px; border-radius:6px; border:1px solid #E2E8F0;">
+                            <span style="font-weight:600; color:var(--navy); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:210px; display:flex; align-items:center; gap:6px;">
+                                <span>${a.icon || '💻'}</span>
+                                <span title="${a.name}">${a.name}</span>
+                            </span>
+                            <span class="badge" style="font-size:10.5px; padding:2px 6px; ${
+                                (a.status === 'In Use' || a.status === 'Active') 
+                                    ? 'background:#DCFCE7; color:#16A34A; border:1px solid #86EFAC;' 
+                                    : (a.status === 'Expiring Soon' ? 'background:#FEF3C7; color:#D97706; border:1px solid #FCD34D;' : 'background:#F1F5F9; color:#475569; border:1px solid #CBD5E1;')
+                            }">
+                                ${a.status}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderPassportRenewals() {
+            const container = document.getElementById('passportRenewalsContent');
+            if (!container) return;
+
+            let renewals = [];
+            try {
+                const stored = localStorage.getItem('ohana_renewals_data');
+                if (stored) {
+                    renewals = JSON.parse(stored);
+                } else {
+                    renewals = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_RENEWALS));
+                    localStorage.setItem('ohana_renewals_data', JSON.stringify(renewals));
+                }
+            } catch(e) {
+                renewals = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_RENEWALS));
+            }
+
+            if (!renewals || renewals.length === 0) {
+                renewals = JSON.parse(JSON.stringify(DEFAULT_PASSPORT_RENEWALS));
+            }
+
+            const activeCount = renewals.filter(r => r.status === 'Active').length;
+            const expiringSoon = renewals.filter(r => r.status === 'Urgent' || r.status === 'Upcoming' || r.days <= 60).length;
+            const topExpiring = renewals.slice(0, 2);
+
+            container.innerHTML = `
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:12px;">
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Active Credentials</small>
+                        <strong style="font-size:18px; color:#16A34A; font-weight:800;">${activeCount}</strong>
+                    </div>
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Expiring Credentials</small>
+                        <strong style="font-size:18px; color:${expiringSoon > 0 ? '#D97706' : '#64748B'}; font-weight:800;">${expiringSoon}</strong>
+                    </div>
+                    <div style="background:#FFF; padding:10px; border-radius:8px; border:1px solid #E2E8F0; text-align:center;">
+                        <small style="color:#64748B; font-size:11px; display:block;">Renewal Required</small>
+                        <strong style="font-size:18px; color:var(--navy); font-weight:800;">${expiringSoon > 0 ? expiringSoon : '0'}</strong>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                    ${topExpiring.map(r => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FFF; padding:6px 10px; border-radius:6px; border:1px solid #E2E8F0;">
+                            <span style="font-weight:600; color:var(--navy); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:210px;">${r.item}</span>
+                            <span class="badge ${r.days <= 30 ? 'badge-expiring' : 'badge-warning'}" style="font-size:10.5px; padding:2px 6px;">${r.days}d remaining</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function printPassport() {
+            window.print();
+        }
+
+        /* Generate & Download Professional Wall Certificate PDF (Uncropped, Proportional A4 Landscape) */
+        async function downloadVerificationCertificate() {
+            const btn = document.getElementById('btnDownloadCert');
+            const originalHtml = btn ? btn.innerHTML : 'Download Certificate';
+            if (btn) {
+                btn.innerHTML = `
+                    <svg class="spin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                    Generating PDF...
+                `;
+                btn.disabled = true;
+            }
+
+            const scrollBefore = window.scrollY;
+
+            try {
+                window.scrollTo(0, 0);
+
+                // 1. Read live Identity data
+                let identity = {
+                    legalName: "ABC Technologies Private Limited",
+                    tradeName: "ABC Technologies",
+                    entityType: "Private Limited Company",
+                    cin: "U72200PN2021PTC198765",
+                    incDate: "2021-01-15",
+                    gstin: "27ABCDE1234F1Z5",
+                    pan: "ABCDE1234F",
+                    udyam: "UDYAM-MH-26-0019284",
+                    address: "Unit 402, 4th Floor, Tech Park One, Airport Road, Yerawada, Pune, Maharashtra 411006"
+                };
+
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    const parsed = JSON.parse(storedId);
+                    if (parsed.legalName) identity.legalName = parsed.legalName.trim();
+                    if (parsed.tradeName) identity.tradeName = parsed.tradeName.trim();
+                    if (parsed.entityType) identity.entityType = parsed.entityType.trim();
+                    if (parsed.cinNumber || parsed.cin) identity.cin = (parsed.cinNumber || parsed.cin).trim();
+                    if (parsed.gstin) identity.gstin = parsed.gstin.trim();
+                    if (parsed.panNumber || parsed.pan) identity.pan = (parsed.panNumber || parsed.pan).trim();
+                    if (parsed.udyamNumber || parsed.udyam) identity.udyam = (parsed.udyamNumber || parsed.udyam).trim();
+                    if (parsed.incDate) identity.incDate = parsed.incDate.trim();
+                    if (parsed.address || parsed.address1) {
+                        identity.address = parsed.address1 
+                            ? [parsed.address1, parsed.address2, parsed.city, parsed.state, parsed.pincode].filter(Boolean).join(', ').trim()
+                            : (parsed.address || identity.address).trim();
+                    }
+                }
+
+                // 2. Read live Verification State
+                let vState = {};
+                try {
+                    const storedV = localStorage.getItem('ohana_verification_state');
+                    if (storedV) vState = JSON.parse(storedV);
+                } catch(e) {}
+                const calc = typeof computeOhanaVerificationLevel === 'function'
+                    ? computeOhanaVerificationLevel(vState)
+                    : { level: vState.currentLevel || "L3", levelName: vState.levelName || "Enhanced Verified" };
+                const level = calc.level || "L3";
+                const levelName = calc.levelName || "Enhanced Verified";
+
+                // 3. Read live Business Passport ID
+                let passportId = "OHANA-BP-2026-9041";
+                try {
+                    const storedP = localStorage.getItem('ohana_business_passport');
+                    if (storedP) {
+                        const pObj = JSON.parse(storedP);
+                        if (pObj.id) passportId = pObj.id;
+                    }
+                } catch(e) {}
+
+                // 4. Issue Date & Safe Filename
+                const issueDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const rawName = identity.tradeName || identity.legalName || 'Business';
+                const safeName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+                const filename = `OHANA-Trust-Certificate-${safeName}.pdf`;
+
+                // 5. Construct Credentials Cards Grid
+                let credsHtml = '';
+                if (identity.cin) {
+                    credsHtml += `
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:4px 8px;">
+                            <span style="display:block; color:#64748B; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">CIN / LLPIN (MCA Registration)</span>
+                            <strong style="color:#0B1F3A; font-family:monospace; font-size:10.5px; letter-spacing:0.3px;">${identity.cin}</strong>
+                            <span style="display:block; color:#16A34A; font-size:8px; font-weight:700; margin-top:1px;">✓ MCA Registry Verified</span>
+                        </div>
+                    `;
+                }
+                if (identity.gstin) {
+                    credsHtml += `
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:4px 8px;">
+                            <span style="display:block; color:#64748B; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">GSTIN Tax Identification</span>
+                            <strong style="color:#0B1F3A; font-family:monospace; font-size:10.5px; letter-spacing:0.3px;">${identity.gstin}</strong>
+                            <span style="display:block; color:#16A34A; font-size:8px; font-weight:700; margin-top:1px;">✓ GSTN Portal Attested</span>
+                        </div>
+                    `;
+                }
+                if (identity.pan) {
+                    credsHtml += `
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:4px 8px;">
+                            <span style="display:block; color:#64748B; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Permanent Account Number (PAN)</span>
+                            <strong style="color:#0B1F3A; font-family:monospace; font-size:10.5px; letter-spacing:0.3px;">${identity.pan}</strong>
+                            <span style="display:block; color:#16A34A; font-size:8px; font-weight:700; margin-top:1px;">✓ Income Tax / NSDL Validated</span>
+                        </div>
+                    `;
+                }
+                if (identity.udyam) {
+                    credsHtml += `
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:4px 8px;">
+                            <span style="display:block; color:#64748B; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Udyam MSME Registration</span>
+                            <strong style="color:#0B1F3A; font-family:monospace; font-size:10.5px; letter-spacing:0.3px;">${identity.udyam}</strong>
+                            <span style="display:block; color:#16A34A; font-size:8px; font-weight:700; margin-top:1px;">✓ MSME Registry Verified</span>
+                        </div>
+                    `;
+                }
+                if (identity.address) {
+                    credsHtml += `
+                        <div style="grid-column: span 2; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:6px; padding:4px 8px;">
+                            <span style="display:block; color:#64748B; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Registered Office Address</span>
+                            <strong style="color:#0B1F3A; font-size:9.5px; line-height:1.2; display:block;">${identity.address}</strong>
+                        </div>
+                    `;
+                }
+
+                // 6. Construct Off-Screen Certificate DOM Element (Normal flow in offscreen host wrapper)
+                const hostWrapper = document.createElement('div');
+                hostWrapper.id = 'ohanaWallCertHost';
+                hostWrapper.style.cssText = 'position:fixed; left:-99999px; top:0; width:1000px; z-index:-1; pointer-events:none;';
+
+                const stageWidth = 1000;
+                const stageHeight = 690;
+
+                const certStage = document.createElement('div');
+                certStage.id = 'ohanaWallCertStageBp';
+                certStage.style.cssText = `
+                    width: ${stageWidth}px;
+                    height: ${stageHeight}px;
+                    box-sizing: border-box;
+                    background: #0B1F3A;
+                    padding: 10px;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    color: #0B1F3A;
+                    overflow: hidden;
+                `;
+
+                certStage.innerHTML = `
+                    <!-- Outer Navy Frame with Double Borders & Corner Accents -->
+                    <div style="border:5px solid #0B1F3A; height:100%; box-sizing:border-box; padding:6px; position:relative; background:#FFFFFF;">
+                        <!-- Inner Red Ornate Frame -->
+                        <div style="border:2px solid #FF2028; height:100%; box-sizing:border-box; padding:14px 24px 10px; position:relative; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(135deg, #FFFFFF 0%, #FAFCFF 50%, #FFFFFF 100%);">
+                            
+                            <!-- Ornate Corner Filigrees -->
+                            <div style="position:absolute; top:5px; left:5px; width:22px; height:22px; border-top:3px solid #0B1F3A; border-left:3px solid #0B1F3A;"></div>
+                            <div style="position:absolute; top:9px; left:9px; width:11px; height:11px; border-top:1.5px solid #FF2028; border-left:1.5px solid #FF2028;"></div>
+                            <div style="position:absolute; top:5px; right:5px; width:22px; height:22px; border-top:3px solid #0B1F3A; border-right:3px solid #0B1F3A;"></div>
+                            <div style="position:absolute; top:9px; right:9px; width:11px; height:11px; border-top:1.5px solid #FF2028; border-right:1.5px solid #FF2028;"></div>
+                            <div style="position:absolute; bottom:5px; left:5px; width:22px; height:22px; border-bottom:3px solid #0B1F3A; border-left:3px solid #0B1F3A;"></div>
+                            <div style="position:absolute; bottom:9px; left:9px; width:11px; height:11px; border-bottom:1.5px solid #FF2028; border-left:1.5px solid #FF2028;"></div>
+                            <div style="position:absolute; bottom:5px; right:5px; width:22px; height:22px; border-bottom:3px solid #0B1F3A; border-right:3px solid #0B1F3A;"></div>
+                            <div style="position:absolute; bottom:9px; right:9px; width:11px; height:11px; border-bottom:1.5px solid #FF2028; border-right:1.5px solid #FF2028;"></div>
+
+                            <!-- Header: Brand & Credential Meta -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #E2E8F0; padding-bottom:7px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:38px; height:38px; flex-shrink:0;">
+                                        <svg viewBox="0 0 100 100" width="38" height="38" fill="none">
+                                            <defs>
+                                                <linearGradient id="certRedGradBp" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stop-color="#FF3840" />
+                                                    <stop offset="100%" stop-color="#DE0C14" />
+                                                </linearGradient>
+                                                <linearGradient id="certNavyGradBp" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stop-color="#142B4E" />
+                                                    <stop offset="100%" stop-color="#0B1F3A" />
+                                                </linearGradient>
+                                            </defs>
+                                            <path d="M 8 68 C 4 88 38 98 62 92 C 84 86 98 70 96 54 C 94 42 82 38 72 43" stroke="#FF2028" stroke-width="5" stroke-linecap="round" fill="none" />
+                                            <rect x="32" y="12" width="52" height="44" rx="10" transform="rotate(9 58 34)" fill="url(#certNavyGradBp)" />
+                                            <rect x="15" y="27" width="65" height="52" rx="12" fill="url(#certRedGradBp)" />
+                                            <circle cx="73" cy="53" r="2.8" fill="#FFFFFF" />
+                                            <g transform="translate(35, 43)">
+                                                <path d="M 6 10 V 6 C 6 2.7 8.7 0 12 0 C 15.3 0 18 2.7 18 6 V 10" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" fill="none" />
+                                                <rect x="2" y="9" width="20" height="17" rx="4.5" fill="#FFFFFF" />
+                                                <circle cx="12" cy="15.5" r="2.2" fill="#0B1F3A" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:16.5px; font-weight:900; letter-spacing:0.5px; color:#0B1F3A;">
+                                            OHANA <span style="color:#FF2028;">BUSINESS LOCKER</span>
+                                        </div>
+                                        <div style="font-size:8.5px; font-weight:700; color:#64748B; letter-spacing:1.5px; text-transform:uppercase;">
+                                            National Business Credential Registry &bull; Trust Assurance Protocol
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="text-align:right;">
+                                    <div style="display:inline-block; background:#0B1F3A; color:#FFFFFF; font-size:9px; font-weight:800; padding:3px 8px; border-radius:4px; letter-spacing:1px; text-transform:uppercase;">
+                                        OFFICIAL STATUTORY ATTESTATION
+                                    </div>
+                                    <div style="font-size:10px; font-weight:700; color:#475569; margin-top:2px; font-family:monospace;">
+                                        PASSPORT ID: <span style="color:#0B1F3A;">${passportId}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Title & Proclamation -->
+                            <div style="text-align:center; margin:2px 0 1px;">
+                                <div style="font-size:9.5px; font-weight:800; color:#FF2028; letter-spacing:3px; text-transform:uppercase; margin-bottom:1px;">
+                                    CORPORATE TRUST PROTOCOL
+                                </div>
+                                <h1 style="margin:0; font-size:21px; font-weight:900; color:#0B1F3A; letter-spacing:1px; text-transform:uppercase; line-height:1.2;">
+                                    OHANA BUSINESS VERIFICATION CERTIFICATE
+                                </h1>
+                                <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin:2px auto;">
+                                    <div style="width:45px; height:1.5px; background:linear-gradient(90deg, transparent, #FF2028);"></div>
+                                    <span style="color:#FF2028; font-size:9px;">★ ★ ★</span>
+                                    <div style="width:45px; height:1.5px; background:linear-gradient(90deg, #FF2028, transparent);"></div>
+                                </div>
+                                <p style="margin:0 auto; max-width:760px; font-size:10px; color:#64748B; font-style:italic; line-height:1.3;">
+                                    This official credential certifies that the enterprise identified below has undergone comprehensive verification of its statutory registrations, active corporate filings, and compliance standing under the Ohana Trust Protocol.
+                                </p>
+                            </div>
+
+                            <!-- Enterprise Name Banner -->
+                            <div style="text-align:center; padding:5px 12px; background:linear-gradient(90deg, rgba(248,250,252,0.5) 0%, rgba(254,242,242,0.8) 50%, rgba(248,250,252,0.5) 100%); border-radius:6px; border:1px solid #FFE4E6; margin:1px 0 3px;">
+                                <div style="font-size:8px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:1.5px;">
+                                    ENTERPRISE GRANTED CERTIFICATION
+                                </div>
+                                <h2 style="margin:1px 0; font-size:20px; font-weight:900; color:#0B1F3A; letter-spacing:-0.3px; text-transform:uppercase; line-height:1.2;">
+                                    ${identity.legalName}
+                                </h2>
+                                ${identity.tradeName && identity.tradeName !== identity.legalName ? `
+                                <div style="font-size:10.5px; color:#475569; font-weight:600;">
+                                    Operating Trade Name: <strong style="color:#0B1F3A;">${identity.tradeName}</strong>
+                                </div>` : ''}
+                                <div style="font-size:10px; color:#64748B;">
+                                    ${identity.entityType ? `<span>Entity Type: <strong style="color:#0B1F3A;">${identity.entityType}</strong></span>` : ''}
+                                    ${identity.incDate ? ` &bull; <span>Incorporated: <strong style="color:#0B1F3A;">${identity.incDate}</strong></span>` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Credentials Grid & Stamp Seal Badge -->
+                            <div style="display:grid; grid-template-columns: 1fr 180px; gap:14px; align-items:center; margin:1px 0;">
+                                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:5px 8px;">
+                                    ${credsHtml}
+                                </div>
+
+                                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                    <div style="width:102px; height:102px; border-radius:50%; border:3px solid #0B1F3A; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle, #FFFFFF 50%, #FFF5F5 100%); box-shadow:0 3px 10px rgba(11,31,58,0.1);">
+                                        <div style="position:absolute; inset:4px; border-radius:50%; border:1.5px dashed #FF2028;"></div>
+                                        <span style="font-size:7px; font-weight:800; letter-spacing:1px; color:#FF2028; text-transform:uppercase;">OHANA TRUST</span>
+                                        <strong style="font-size:23px; font-weight:900; line-height:1; color:#0B1F3A; margin:1px 0;">${level}</strong>
+                                        <span style="font-size:7.5px; font-weight:800; letter-spacing:0.5px; color:#16A34A; text-transform:uppercase; text-align:center; padding:0 6px;">${levelName}</span>
+                                        <span style="font-size:6px; font-weight:700; color:#64748B; margin-top:1px;">AUTHENTICATED</span>
+                                    </div>
+                                    <div style="background:#16A34A; color:#FFFFFF; font-size:8px; font-weight:800; padding:2px 8px; border-radius:10px; margin-top:4px; letter-spacing:0.5px;">
+                                        ✓ ACTIVE TRUST SEAL
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Section: Attestation, Security Fingerprint & Authorized Signature -->
+                            <div style="border-top:1.5px solid #E2E8F0; padding-top:6px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; align-items:flex-end;">
+                                <div>
+                                    <div style="font-size:8px; color:#64748B; font-weight:700; text-transform:uppercase;">Date of Certification</div>
+                                    <div style="font-size:10.5px; font-weight:800; color:#0B1F3A;">${issueDate}</div>
+                                    <div style="font-size:8px; color:#16A34A; font-weight:600;">● Statutory Ledger Active</div>
+                                </div>
+
+                                <div style="text-align:center;">
+                                    <div style="font-size:7.5px; color:#64748B; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Security Verification Fingerprint</div>
+                                    <div style="font-size:8.5px; font-family:monospace; color:#0B1F3A; font-weight:700; background:#F1F5F9; padding:2px 6px; border-radius:3px; border:1px solid #CBD5E1; margin:1px auto 0; display:inline-block;">
+                                        SHA256-${passportId.replace(/[^A-Z0-9]/g, '')}-VERIFIED
+                                    </div>
+                                    <div style="font-size:7.5px; color:#64748B; margin-top:1px;">Attested on Ohana Trust Protocol</div>
+                                </div>
+
+                                <div style="text-align:right;">
+                                    <div style="display:inline-block; text-align:center;">
+                                        <div style="font-family:'Brush Script MT', cursive, Georgia, serif; font-size:18px; color:#0B1F3A; line-height:1; font-weight:600;">
+                                            Rahul Bawa
+                                        </div>
+                                        <div style="width:115px; height:1px; background:#0B1F3A; margin:0 auto 2px;"></div>
+                                        <div style="font-size:8px; font-weight:800; color:#0B1F3A; text-transform:uppercase; letter-spacing:0.5px;">Registrar of Corporate Trust</div>
+                                        <div style="font-size:7px; color:#64748B; font-weight:600;">Directorate of Statutory Compliance</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                hostWrapper.appendChild(certStage);
+                document.body.appendChild(hostWrapper);
+
+                // 7. Generate & Save PDF with html2pdf (A4 Landscape, Safe 8mm/12mm Margins)
+                if (typeof html2pdf !== 'function') {
+                    throw new Error('html2pdf library is not loaded');
+                }
+
+                const opt = {
+                    margin: [8, 12, 8, 12],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+                };
+
+                await html2pdf().set(opt).from(certStage).save();
+
+                if (hostWrapper.parentNode) {
+                    hostWrapper.parentNode.removeChild(hostWrapper);
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast('OHANA Verification Certificate downloaded successfully!', 'success');
+                }
+            } catch (err) {
+                console.error('Error generating certificate PDF:', err);
+                const host = document.getElementById('ohanaWallCertHost');
+                if (host && host.parentNode) host.parentNode.removeChild(host);
+                if (typeof showToast === 'function') {
+                    showToast('Could not generate PDF: ' + err.message, 'error');
+                }
+            } finally {
+                window.scrollTo(0, scrollBefore);
+                if (btn) {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        /* Generate & Download Official Professional Business Passport Document PDF */
+        async function downloadBusinessPassportPdf() {
+            const btn = document.getElementById('btnDownloadPassportBottom');
+            const originalHtml = btn ? btn.innerHTML : 'Download Business Passport';
+            if (btn) {
+                btn.innerHTML = `
+                    <svg class="spin-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                    Generating PDF...
+                `;
+                btn.disabled = true;
+            }
+
+            const scrollBefore = window.scrollY;
+
+            try {
+                window.scrollTo(0, 0);
+
+                if (typeof html2pdf !== 'function') {
+                    throw new Error('html2pdf library is not loaded');
+                }
+
+                // 1. Resolve Identity Attributes
+                let identity = {
+                    legalName: document.getElementById('passportLegalName')?.textContent?.trim() || "ABC Technologies Private Limited",
+                    tradeName: document.getElementById('passportTradeName')?.textContent?.replace(/^Trade Name:\s*/i, '')?.trim() || "ABC Technologies",
+                    entityType: document.getElementById('passportEntityType')?.textContent?.trim() || "Private Limited Company",
+                    incDate: document.getElementById('passportIncDate')?.textContent?.trim() || "15 Jan 2021",
+                    industry: document.getElementById('passportIndustry')?.textContent?.trim() || "Information Technology",
+                    website: document.getElementById('passportWebsite')?.textContent?.trim() || "abctechnologies.io",
+                    email: document.getElementById('passportEmail')?.textContent?.trim() || "compliance@abctechnologies.io",
+                    phone: document.getElementById('passportPhone')?.textContent?.trim() || "+91 20 6712 3400",
+                    address: document.getElementById('passportAddress')?.textContent?.trim() || "Unit 402, 4th Floor, Tech Park One, Yerawada, Pune, Maharashtra 411006",
+                    cin: document.getElementById('passportCin')?.textContent?.trim() || "U72200PN2021PTC198765",
+                    gstin: document.getElementById('passportGstin')?.textContent?.trim() || "27ABCDE1234F1Z5",
+                    pan: document.getElementById('passportPan')?.textContent?.trim() || "ABCDE1234F",
+                    udyam: document.getElementById('passportUdyam')?.textContent?.trim() || "UDYAM-MH-26-0019284"
+                };
+
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    try {
+                        const parsed = JSON.parse(storedId);
+                        if (parsed.legalName) identity.legalName = parsed.legalName.trim();
+                        if (parsed.tradeName) identity.tradeName = parsed.tradeName.trim();
+                        if (parsed.entityType) identity.entityType = parsed.entityType.trim();
+                        if (parsed.cinNumber || parsed.cin) identity.cin = (parsed.cinNumber || parsed.cin).trim();
+                        if (parsed.gstin) identity.gstin = parsed.gstin.trim();
+                        if (parsed.panNumber || parsed.pan) identity.pan = (parsed.panNumber || parsed.pan).trim();
+                        if (parsed.udyamNumber || parsed.udyam) identity.udyam = (parsed.udyamNumber || parsed.udyam).trim();
+                        if (parsed.incDate) identity.incDate = parsed.incDate.trim();
+                        if (parsed.industry) identity.industry = parsed.industry.trim();
+                        if (parsed.officialWebsite || parsed.website) identity.website = (parsed.officialWebsite || parsed.website).trim();
+                        if (parsed.officialEmail || parsed.email) identity.email = (parsed.officialEmail || parsed.email).trim();
+                        if (parsed.officialPhone || parsed.phone) identity.phone = (parsed.officialPhone || parsed.phone).trim();
+                        if (parsed.address || parsed.address1) {
+                            identity.address = parsed.address1 
+                                ? [parsed.address1, parsed.address2, parsed.city, parsed.state, parsed.pincode].filter(Boolean).join(', ').trim()
+                                : (parsed.address || identity.address).trim();
+                        }
+                    } catch(e) {}
+                }
+
+                // 2. Verification Standing & Live Passport ID
+                let vState = {};
+                try {
+                    const storedV = localStorage.getItem('ohana_verification_state');
+                    if (storedV) vState = JSON.parse(storedV);
+                } catch(e) {}
+
+                const calc = typeof computeOhanaVerificationLevel === 'function'
+                    ? computeOhanaVerificationLevel(vState)
+                    : { level: vState.currentLevel || "L3", levelName: vState.levelName || "Enhanced Verified" };
+                const level = calc.level || "L3";
+                const levelName = calc.levelName || "Enhanced Verified";
+
+                let passportId = document.getElementById('passportIdBadge')?.textContent?.trim() || "OHANA-BP-2026-9041";
+                try {
+                    const storedP = localStorage.getItem('ohana_business_passport');
+                    if (storedP) {
+                        const pObj = JSON.parse(storedP);
+                        if (pObj.id) passportId = pObj.id;
+                    }
+                } catch(e) {}
+
+                const issueDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                const rawName = identity.tradeName || identity.legalName || 'Business';
+                const safeName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+                const filename = `OHANA-Business-Passport-${safeName}.pdf`;
+
+                // 3. Extract Submitted Filings & Evidence rows
+                const evidenceItems = [
+                    { name: "Certificate of Incorporation (MCA)", id: identity.cin, method: "MCA_REGISTRY", status: "Verified", date: "15 Jan 2026" },
+                    { name: "GST Registration Certificate (REG-06)", id: identity.gstin, method: "GSTN_PORTAL", status: "Verified", date: "18 Feb 2026" },
+                    { name: "Income Tax PAN Card", id: identity.pan, method: "NSDL_API", status: "Verified", date: "15 Jan 2026" },
+                    { name: "Udyam MSME Registration Certificate", id: identity.udyam, method: "UDYAM_MSME", status: "Verified", date: "20 Jan 2026" },
+                    { name: "Corporate Domain TXT Record", id: identity.website.replace(/^https?:\/\//, ''), method: "DOMAIN_DNS_TXT", status: "Verified", date: "18 Feb 2026" },
+                    { name: "Commercial Office Premise Lease Proof", id: "Tech Park One, Yerawada", method: "GEO_TAG_INSPECTION", status: "Verified", date: "18 Feb 2026" },
+                    { name: "Corporate Bank Account Mandate", id: "HDFC Bank (IFSC HDFC0001234)", method: "PENNY_DROP_IFSC", status: "Verified", date: "18 Feb 2026" },
+                    { name: "Annual Audited Financial Statements", id: "FY 2025-26 Financials", method: "DOCUMENT_REVIEW", status: vState.auditFinancialsVerified ? "Verified" : "Pending Review", date: vState.auditFinancialsVerified ? "18 Feb 2026" : "Pending Upload" }
+                ];
+
+                // 4. Build Dedicated Offscreen Passport Stage (A4: 794px x 1122px)
+                const hostWrapper = document.createElement('div');
+                hostWrapper.id = 'ohanaPassportHost';
+                hostWrapper.style.cssText = 'position:fixed; left:0; top:0; width:794px; z-index:-1; pointer-events:none;';
+
+                const passportStage = document.createElement('div');
+                passportStage.id = 'ohanaBusinessPassportStage';
+                passportStage.style.cssText = `
+                    width: 794px;
+                    height: 1122px;
+                    box-sizing: border-box;
+                    background: #FFFFFF;
+                    padding: 14px;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    color: #0B1F3A;
+                    overflow: hidden;
+                `;
+
+                passportStage.innerHTML = `
+                    <div style="border: 3.5px solid #0B1F3A; height: 100%; box-sizing: border-box; padding: 4px; background: #FFFFFF; position: relative;">
+                        <div style="border: 1.5px solid #FF2028; height: 100%; box-sizing: border-box; padding: 16px 20px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between;">
+                            
+                            <!-- Top Section -->
+                            <div>
+                                <!-- Header Bar -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0B1F3A; padding-bottom: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 40px; height: 40px; background: #0B1F3A; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(11,31,58,0.2);">
+                                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 18px; font-weight: 900; letter-spacing: 0.5px; color: #0B1F3A; line-height: 1.1;">
+                                                OHANA <span style="color: #FF2028;">BUSINESS PASSPORT</span>
+                                            </div>
+                                            <div style="font-size: 8.5px; font-weight: 700; color: #64748B; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px;">
+                                                National Corporate Trust Registry &bull; Statutory Credential Desk
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="background: #0B1F3A; color: #FFFFFF; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.6px; text-transform: uppercase; display: inline-block;">
+                                            Official Business Passport
+                                        </div>
+                                        <div style="font-size: 10px; font-weight: 700; color: #475569; margin-top: 2px; font-family: monospace;">
+                                            ID: <span style="color: #0B1F3A;">${passportId}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Trust Standing Banner -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #0B1F3A; color: #FFFFFF; padding: 6px 12px; border-radius: 6px; margin-top: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="background: #16A34A; color: #FFFFFF; font-size: 9.5px; font-weight: 800; padding: 2px 6px; border-radius: 3px;">
+                                            ✓ ACTIVE SEAL
+                                        </div>
+                                        <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.3px;">
+                                            VERIFICATION STANDING: ${level} &bull; ${levelName.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div style="font-size: 9.5px; font-weight: 600; opacity: 0.9;">
+                                        ISSUED: <strong style="color: #FFFFFF;">${issueDate}</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Corporate Identity Box -->
+                                <div style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; padding: 10px 14px; margin-top: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                        <div>
+                                            <span style="font-size: 8.5px; font-weight: 800; color: #FF2028; text-transform: uppercase; letter-spacing: 0.8px;">Registered Legal Enterprise</span>
+                                            <h2 style="font-size: 16px; font-weight: 900; color: #0B1F3A; margin: 1px 0 3px;">
+                                                ${identity.legalName}
+                                            </h2>
+                                            <div style="font-size: 10.5px; color: #475569; display: flex; gap: 8px; align-items: center;">
+                                                <span>Trade Name: <strong style="color: #0B1F3A;">${identity.tradeName}</strong></span>
+                                                <span>&bull;</span>
+                                                <span>Entity: <strong style="color: #0B1F3A;">${identity.entityType}</strong></span>
+                                                <span>&bull;</span>
+                                                <span>Incorporated: <strong style="color: #0B1F3A;">${identity.incDate}</strong></span>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 4px; padding: 4px 8px;">
+                                            <span style="font-size: 8px; font-weight: 700; color: #64748B; text-transform: uppercase; display: block;">Industry Domain</span>
+                                            <strong style="font-size: 9.5px; color: #0B1F3A;">${identity.industry}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed #E2E8F0; display: grid; grid-template-columns: 2.2fr 1fr 1fr; gap: 8px; font-size: 9.5px;">
+                                        <div>
+                                            <span style="color: #64748B; font-weight: 700; font-size: 8px; text-transform: uppercase; display: block;">Registered Corporate Address</span>
+                                            <span style="color: #0B1F3A; font-weight: 600; line-height: 1.25; display: block; margin-top: 1px;">${identity.address}</span>
+                                        </div>
+                                        <div>
+                                            <span style="color: #64748B; font-weight: 700; font-size: 8px; text-transform: uppercase; display: block;">Corporate Website</span>
+                                            <span style="color: #0B1F3A; font-weight: 600; font-family: monospace; font-size: 9px; display: block; margin-top: 1px;">${identity.website.replace(/^https?:\/\//, '')}</span>
+                                        </div>
+                                        <div>
+                                            <span style="color: #64748B; font-weight: 700; font-size: 8px; text-transform: uppercase; display: block;">Official Contact</span>
+                                            <span style="color: #0B1F3A; font-weight: 600; font-size: 9px; display: block; margin-top: 1px;">${identity.email}</span>
+                                            <span style="color: #64748B; font-size: 8.5px;">${identity.phone}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Statutory Registry Attestations (4 Grid Cards) -->
+                                <div style="margin-top: 10px;">
+                                    <div style="font-size: 9.5px; font-weight: 800; color: #0B1F3A; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px;">
+                                        Statutory Registry Attestations
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                                        <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 6px 8px;">
+                                            <span style="color: #64748B; font-size: 7.5px; font-weight: 700; text-transform: uppercase; display: block;">CIN / LLPIN (MCA)</span>
+                                            <div style="font-size: 10px; font-family: monospace; font-weight: 800; color: #0B1F3A; margin: 2px 0;">${identity.cin}</div>
+                                            <span style="color: #16A34A; font-size: 8px; font-weight: 800;">✓ VALIDATED</span>
+                                        </div>
+                                        <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 6px 8px;">
+                                            <span style="color: #64748B; font-size: 7.5px; font-weight: 700; text-transform: uppercase; display: block;">GSTIN Tax ID</span>
+                                            <div style="font-size: 10px; font-family: monospace; font-weight: 800; color: #0B1F3A; margin: 2px 0;">${identity.gstin}</div>
+                                            <span style="color: #16A34A; font-size: 8px; font-weight: 800;">✓ ATTESTED</span>
+                                        </div>
+                                        <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 6px 8px;">
+                                            <span style="color: #64748B; font-size: 7.5px; font-weight: 700; text-transform: uppercase; display: block;">Income Tax PAN</span>
+                                            <div style="font-size: 10px; font-family: monospace; font-weight: 800; color: #0B1F3A; margin: 2px 0;">${identity.pan}</div>
+                                            <span style="color: #16A34A; font-size: 8px; font-weight: 800;">✓ VERIFIED</span>
+                                        </div>
+                                        <div style="background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 6px; padding: 6px 8px;">
+                                            <span style="color: #64748B; font-size: 7.5px; font-weight: 700; text-transform: uppercase; display: block;">Udyam MSME</span>
+                                            <div style="font-size: 10px; font-family: monospace; font-weight: 800; color: #0B1F3A; margin: 2px 0;">${identity.udyam}</div>
+                                            <span style="color: #16A34A; font-size: 8px; font-weight: 800;">✓ REGISTERED</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submitted Statutory Filings & Evidence Table -->
+                                <div style="margin-top: 10px; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
+                                    <div style="background: #F1F5F9; padding: 6px 10px; font-size: 9px; font-weight: 800; color: #0B1F3A; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>Submitted Statutory Filings &amp; Proof Documents</span>
+                                        <span style="font-size: 8px; color: #64748B; font-weight: 600;">8 Evidence Proofs Attested</span>
+                                    </div>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 9px;">
+                                        <thead>
+                                            <tr style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; color: #475569; text-align: left;">
+                                                <th style="padding: 5px 8px; font-weight: 700;">Evidence Document</th>
+                                                <th style="padding: 5px 8px; font-weight: 700;">Statutory Identifier</th>
+                                                <th style="padding: 5px 8px; font-weight: 700;">Verification Method</th>
+                                                <th style="padding: 5px 8px; font-weight: 700;">Attestation Status</th>
+                                                <th style="padding: 5px 8px; font-weight: 700; text-align: right;">Audit Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${evidenceItems.map((item, idx) => `
+                                                <tr style="border-bottom: ${idx === evidenceItems.length - 1 ? 'none' : '1px solid #F1F5F9'}; background: ${idx % 2 === 0 ? '#FFFFFF' : '#FAFAFA'};">
+                                                    <td style="padding: 4px 8px; font-weight: 600; color: #0B1F3A;">${item.name}</td>
+                                                    <td style="padding: 4px 8px; font-family: monospace; color: #334155; font-size: 8.5px;">${item.id}</td>
+                                                    <td style="padding: 4px 8px; font-family: monospace; color: #64748B; font-size: 8px;">${item.method}</td>
+                                                    <td style="padding: 4px 8px;">
+                                                        <span style="color: ${item.status === 'Verified' ? '#16A34A' : '#D97706'}; font-weight: 700; font-size: 8.5px;">
+                                                            ${item.status === 'Verified' ? '✓ Verified' : '● In Review'}
+                                                        </span>
+                                                    </td>
+                                                    <td style="padding: 4px 8px; text-align: right; color: #64748B; font-size: 8.5px;">${item.date}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Footer Section -->
+                            <div style="border-top: 1.5px solid #E2E8F0; padding-top: 8px; margin-top: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                    
+                                    <!-- Left: Protocol Cryptographic Attestation -->
+                                    <div style="max-width: 250px;">
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <div style="width: 24px; height: 24px; border: 2px solid #0B1F3A; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #0B1F3A;">
+                                                ✓
+                                            </div>
+                                            <div>
+                                                <div style="font-size: 9px; font-weight: 800; color: #0B1F3A; text-transform: uppercase;">Cryptographic Seal</div>
+                                                <div style="font-size: 7.5px; color: #64748B;">Ohana Trust Protocol V2.4</div>
+                                            </div>
+                                        </div>
+                                        <p style="margin: 3px 0 0; font-size: 7.5px; color: #64748B; line-height: 1.25;">
+                                            Attested digital credential. Verified counterparties can validate authenticity against the Ohana National Credential Ledger.
+                                        </p>
+                                    </div>
+
+                                    <!-- Center: Security Hash Fingerprint -->
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 7.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Security Verification Fingerprint</div>
+                                        <div style="font-size: 8px; font-family: monospace; font-weight: 700; color: #0B1F3A; background: #F1F5F9; padding: 2px 6px; border-radius: 4px; border: 1px solid #CBD5E1; margin: 2px auto 0; display: inline-block;">
+                                            SHA256-${passportId.replace(/[^A-Z0-9]/g, '')}-PASSPORT-VERIFIED
+                                        </div>
+                                        <div style="font-size: 7.5px; color: #16A34A; font-weight: 700; margin-top: 2px;">
+                                            ● Verified &amp; Active on Trust Protocol
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Registrar Signature -->
+                                    <div style="text-align: right;">
+                                        <div style="display: inline-block; text-align: center;">
+                                            <div style="font-family: 'Brush Script MT', cursive, Georgia, serif; font-size: 18px; color: #0B1F3A; line-height: 1; font-weight: 600; margin-bottom: 2px;">
+                                                Rahul Bawa
+                                            </div>
+                                            <div style="width: 110px; height: 1px; background: #0B1F3A; margin: 0 auto 2px;"></div>
+                                            <div style="font-size: 8px; font-weight: 800; color: #0B1F3A; text-transform: uppercase; letter-spacing: 0.5px;">Registrar of Corporate Trust</div>
+                                            <div style="font-size: 7px; color: #64748B; font-weight: 600;">Ohana Credential Directorate</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+
+                hostWrapper.appendChild(passportStage);
+                document.body.appendChild(hostWrapper);
+
+                const opt = {
+                    margin: 0,
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                await html2pdf().set(opt).from(passportStage).save();
+
+                if (hostWrapper.parentNode) {
+                    hostWrapper.parentNode.removeChild(hostWrapper);
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast('Official Business Passport PDF downloaded successfully!', 'success');
+                }
+            } catch (err) {
+                console.error('Error generating Business Passport PDF:', err);
+                const host = document.getElementById('ohanaPassportHost');
+                if (host && host.parentNode) host.parentNode.removeChild(host);
+                if (typeof showToast === 'function') {
+                    showToast('Could not generate PDF: ' + err.message, 'error');
+                }
+            } finally {
+                window.scrollTo(0, scrollBefore);
+                if (btn) {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

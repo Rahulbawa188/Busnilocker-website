@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Activity Log | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">AUDIT TRAIL</span>
+                <h1>Activity Log</h1>
+                <p class="subtitle">Track important actions across your organization.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn outline" onclick="showToast('Exporting immutable audit log (CSV)...', 'success')">Export Audit Log</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats">
+            <div class="stat">
+                <small>Total Events (30 Days)</small>
+                <b>248</b>
+                <span>Recorded in tamper-evident ledger</span>
+            </div>
+            <div class="stat">
+                <small>Document Actions</small>
+                <b>84</b>
+                <span>Uploads, verifications & shares</span>
+            </div>
+            <div class="stat">
+                <small>Asset Modifications</small>
+                <b>32</b>
+                <span>Hardware & software updates</span>
+            </div>
+            <div class="stat">
+                <small>Security Events</small>
+                <b>18</b>
+                <span class="positive">● All verified logins</span>
+            </div>
+        </div>
+
+        <!-- Activity Table Section -->
+        <section class="panel">
+            <div class="toolbar-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="activitySearch" placeholder="Search by activity, user or IP..." onkeyup="filterActivities()">
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="setActivityFilter('all', this)">All</button>
+                    <button class="filter-tab" onclick="setActivityFilter('documents', this)">Documents</button>
+                    <button class="filter-tab" onclick="setActivityFilter('assets', this)">Assets</button>
+                    <button class="filter-tab" onclick="setActivityFilter('security', this)">Security</button>
+                    <button class="filter-tab" onclick="setActivityFilter('team', this)">Team</button>
+                    <button class="filter-tab" onclick="setActivityFilter('verification', this)">Verification</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none;border:none;">
+                <table class="saas-table" id="activityTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Activity</th>
+                            <th>Category</th>
+                            <th>Date & Time</th>
+                            <th>IP / Device</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-cat="documents">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#059669);">RB</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Rahul Bawa</span>
+                                        <span class="user-email">Owner</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>GST document uploaded</b><br><small class="muted">GST Certificate FY26 file attached</small></td>
+                            <td><span class="badge badge-info">Documents</span></td>
+                            <td>30 Sep 2026, 10:14 AM</td>
+                            <td><code>103.21.201.2</code> · Chrome / macOS</td>
+                            <td><span class="badge badge-verified">✓ Success</span></td>
+                        </tr>
+                        <tr data-cat="verification">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#059669,#10b981);">PS</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Priya Sharma</span>
+                                        <span class="user-email">Admin</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>Business email verified</b><br><small class="muted">OTP validation via admin@abctech.com</small></td>
+                            <td><span class="badge badge-verified">Verification</span></td>
+                            <td>30 Sep 2026, 09:30 AM</td>
+                            <td><code>103.21.201.2</code> · Safari / iOS</td>
+                            <td><span class="badge badge-verified">✓ Success</span></td>
+                        </tr>
+                        <tr data-cat="assets">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#059669,#10b981);">AK</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Amit Kulkarni</span>
+                                        <span class="user-email">Admin</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>Asset added: Laptop-10</b><br><small class="muted">MacBook Pro 16" [SN: C02G4589MD6R]</small></td>
+                            <td><span class="badge badge-warning">Assets</span></td>
+                            <td>29 Sep 2026, 04:45 PM</td>
+                            <td><code>192.168.1.45</code> · Firefox / Windows</td>
+                            <td><span class="badge badge-verified">✓ Success</span></td>
+                        </tr>
+                        <tr data-cat="team">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#059669);">RB</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Rahul Bawa</span>
+                                        <span class="user-email">Owner</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>Team member invited</b><br><small class="muted">Sent invite to vikram.mehta@abctech.com (Manager)</small></td>
+                            <td><span class="badge badge-info">Team</span></td>
+                            <td>29 Sep 2026, 02:15 PM</td>
+                            <td><code>103.21.201.2</code> · Chrome / macOS</td>
+                            <td><span class="badge badge-pending">● Pending</span></td>
+                        </tr>
+                        <tr data-cat="documents">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#10B981);">OS</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Ohana System</span>
+                                        <span class="user-email">Automated Audit</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>Document approved</b><br><small class="muted">Shop & Establishment Certificate auto-verified</small></td>
+                            <td><span class="badge badge-info">Documents</span></td>
+                            <td>28 Sep 2026, 11:20 AM</td>
+                            <td><code>Internal Bot</code> · Cloud API</td>
+                            <td><span class="badge badge-verified">✓ Success</span></td>
+                        </tr>
+                        <tr data-cat="verification">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#10B981);">OS</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Ohana Trust Engine</span>
+                                        <span class="user-email">System</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>L3 Enhanced Verification Granted</b><br><small class="muted">All statutory cross-checks validated successfully</small></td>
+                            <td><span class="badge badge-verified">Verification</span></td>
+                            <td>26 Sep 2026, 03:00 PM</td>
+                            <td><code>Trust Network</code> · Blockchain Node</td>
+                            <td><span class="badge badge-verified">✓ Verified</span></td>
+                        </tr>
+                        <tr data-cat="security">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="background:linear-gradient(135deg,#0C1814,#059669);">RB</div>
+                                    <div class="user-info">
+                                        <span class="user-name">Rahul Bawa</span>
+                                        <span class="user-email">Owner</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>Two-Factor Authentication re-confirmed</b><br><small class="muted">Authenticator app key refreshed</small></td>
+                            <td><span class="badge badge-danger">Security</span></td>
+                            <td>24 Sep 2026, 08:12 PM</td>
+                            <td><code>103.21.201.2</code> · Chrome / macOS</td>
+                            <td><span class="badge badge-verified">✓ Success</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function filterActivities() {
+            const query = document.getElementById('activitySearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#activityTable tbody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function setActivityFilter(cat, btn) {
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const rows = document.querySelectorAll('#activityTable tbody tr');
+            rows.forEach(r => {
+                if (cat === 'all') {
+                    r.style.display = '';
+                } else {
+                    const rowCat = r.getAttribute('data-cat');
+                    r.style.display = (rowCat === cat) ? '' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

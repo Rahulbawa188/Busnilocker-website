@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Help & Support | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a class="active" href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">CUSTOMER SUCCESS</span>
+                <h1>Help & Support</h1>
+                <p class="subtitle">Get help whenever you need it.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn" onclick="openTicketForm()">+ Raise a Ticket</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- 2 Quick Support Cards -->
+        <div class="grid-2" style="margin-bottom:28px;">
+            <!-- Card 1 -->
+            <div class="panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                    <span style="font-size:28px;">📖</span>
+                    <h3 style="margin:10px 0 6px;">Need help?</h3>
+                    <p class="muted" style="margin:0 0 16px;font-size:13.5px;line-height:1.5;">Browse step-by-step guides on verification tiers, tax compliance, and automated sharing rooms.</p>
+                </div>
+                <button class="btn outline btn-sm" onclick="openDocSupport()">Read Documentation</button>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                    <span style="font-size:28px;">🐛</span>
+                    <h3 style="margin:10px 0 6px;">Report an issue</h3>
+                    <p class="muted" style="margin:0 0 16px;font-size:13.5px;line-height:1.5;">Found a discrepancy in your document OCR or experiencing asset sync delays? Let our team know.</p>
+                </div>
+                <button class="btn outline btn-sm" onclick="openTicketForm()">Report Issue</button>
+            </div>
+        </div>
+
+        <!-- Grid 2: FAQs and Ticket Management -->
+        <div class="grid-2" style="align-items:start;">
+            <!-- FAQ Section -->
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3 style="margin:0;">Frequently Asked Questions</h3>
+                        <p class="muted" style="margin:2px 0 0;font-size:12.5px;">Quick answers to common questions</p>
+                    </div>
+                </div>
+
+                <div class="faq-accordion" id="faqList" style="margin-top:16px;">
+                    <details class="faq-item" open>
+                        <summary>How long does L3 Enhanced verification take?</summary>
+                        <p>Most statutory checks (GSTIN, MCA, PAN) are validated via automated government portal cross-checks within 15 minutes. Physical address inspections and executive KYC typically conclude within 24 business hours.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>How do Share Rooms protect sensitive documents?</summary>
+                        <p>Share Rooms generate encrypted, time-limited tokens with optional NDA watermarking and download restrictions. You can revoke access at any time, and every document view is permanently logged.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>What happens when a statutory document expires?</summary>
+                        <p>Ohana sends automated alerts at 90, 60, and 30 days prior to expiry via Slack, email, and dashboard notifications. Once renewed, simply upload the new certificate to maintain your Trust Score.</p>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>Can I assign hardware assets to external contractors?</summary>
+                        <p>Yes. Assets can be assigned to full-time staff, contract personnel, or departmental inventory pools with automated tracking of return dates and warranty terms.</p>
+                    </details>
+                </div>
+            </section>
+
+            <!-- Ticket History -->
+            <section class="panel">
+                <div class="section-head">
+                    <div>
+                        <h3 style="margin:0;">Ticket History</h3>
+                        <p class="muted" style="margin:2px 0 0;font-size:12.5px;">Recent support inquiries for ABC Technologies</p>
+                    </div>
+                </div>
+
+                <div class="table-container" style="box-shadow:none;border:none;margin-top:16px;">
+                    <table class="saas-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>#TK-8941</code></td>
+                                <td><b>L3 Verification Certificate Download</b><br><small class="muted">2 days ago</small></td>
+                                <td><span class="badge badge-neutral">Normal</span></td>
+                                <td><span class="badge badge-verified">Resolved</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>#TK-8620</code></td>
+                                <td><b>GST API Re-authentication</b><br><small class="muted">1 week ago</small></td>
+                                <td><span class="badge badge-warning">High</span></td>
+                                <td><span class="badge badge-verified">Resolved</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>#TK-8105</code></td>
+                                <td><b>Domain SSL Auto-check query</b><br><small class="muted">3 weeks ago</small></td>
+                                <td><span class="badge badge-neutral">Low</span></td>
+                                <td><span class="badge badge-verified">Resolved</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top:16px;text-align:center;">
+                    <button class="btn outline btn-sm" style="width:100%;" onclick="openTicketForm()">+ Submit New Support Request</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function filterFaqs() {
+            const input = document.getElementById('faqSearch');
+            if (!input) return;
+            const query = input.value.toLowerCase();
+            const items = document.querySelectorAll('.faq-item');
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+                if (query.length > 2 && text.includes(query)) {
+                    item.open = true;
+                }
+            });
+        }
+
+        function openLiveChatSupport() {
+            if (typeof window.openOhanaChatbot === 'function') {
+                window.openOhanaChatbot('Hello! I would like to speak with live compliance support.');
+            } else {
+                const trigger = document.getElementById('ohanaChatTrigger');
+                if (trigger) trigger.click();
+            }
+        }
+
+        function openDocSupport() {
+            const faq = document.querySelector('.faq-accordion');
+            if (faq) {
+                faq.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                showToast('Viewing Ohana statutory documentation & verification FAQs', 'info');
+            }
+        }
+
+        function openTicketForm() {
+            let overlay = document.querySelector('.ticket-modal-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'modal-overlay ticket-modal-overlay active';
+                overlay.innerHTML = `
+                    <div class="modal-box" style="max-width:500px;">
+                        <div class="modal-header">
+                            <h3>Raise a Support Ticket</h3>
+                            <button class="modal-close" onclick="this.closest('.ticket-modal-overlay').remove()">&times;</button>
+                        </div>
+                        <form id="supportTicketForm" onsubmit="handleTicketSubmit(event)" style="padding:18px 22px;display:grid;gap:14px;">
+                            <div>
+                                <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px;color:#0B1F3A;">Issue Subject</label>
+                                <input type="text" id="ticketSubject" placeholder="e.g. Verification delay, Document OCR error" required style="width:100%;height:38px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;box-sizing:border-box;">
+                            </div>
+                            <div>
+                                <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px;color:#0B1F3A;">Priority</label>
+                                <select id="ticketPriority" style="width:100%;height:38px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;box-sizing:border-box;">
+                                    <option value="Normal">Normal</option>
+                                    <option value="High">High (Urgent)</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:4px;color:#0B1F3A;">Description</label>
+                                <textarea id="ticketDesc" rows="3" placeholder="Describe the issue you are experiencing..." required style="width:100%;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:13px;box-sizing:border-box;"></textarea>
+                            </div>
+                            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:6px;">
+                                <button type="button" class="btn outline btn-sm" onclick="this.closest('.ticket-modal-overlay').remove()">Cancel</button>
+                                <button type="submit" class="btn btn-sm">Submit Ticket</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            } else {
+                overlay.classList.add('active');
+            }
+        }
+
+        function handleTicketSubmit(e) {
+            e.preventDefault();
+            const subject = document.getElementById('ticketSubject').value.trim();
+            const priority = document.getElementById('ticketPriority').value;
+            const newId = '#TK-' + Math.floor(1000 + Math.random() * 9000);
+
+            const tbody = document.querySelector('.table-responsive table tbody');
+            if (tbody) {
+                const tr = document.createElement('tr');
+                const badgeClass = priority === 'High' ? 'badge-warning' : (priority === 'Normal' ? 'badge-neutral' : 'badge-neutral');
+                tr.innerHTML = `
+                    <td><code>${newId}</code></td>
+                    <td><b>${subject}</b><br><small class="muted">Just now</small></td>
+                    <td><span class="badge ${badgeClass}">${priority}</span></td>
+                    <td><span class="badge badge-warning">In Review</span></td>
+                `;
+                tbody.prepend(tr);
+            }
+
+            document.querySelector('.ticket-modal-overlay')?.remove();
+            showToast(`Support Ticket ${newId} created! Our technical team has been notified.`, 'success');
+        }
+    </script>
+</body>
+
+</html>

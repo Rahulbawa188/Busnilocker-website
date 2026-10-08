@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Contact | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body>
+    <!-- Unified Enterprise Navbar -->
+    <header class="navbar enterprise-navbar">
+        <!-- Subtle Ambient Motion Layer behind Navbar Content -->
+        <div class="navbar-ambient-layer" aria-hidden="true">
+            <div class="navbar-blob navbar-blob-blue"></div>
+            <div class="navbar-blob navbar-blob-pink"></div>
+            <div class="navbar-particles"></div>
+        </div>
+
+        <a class="brand" href="../index.html" aria-label="Ohana Busnilocker">
+            <span class="ohana-inline-brand">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="features.html">Features</a>
+            <a href="login.html?redirect=dashboard.html" data-nav-pricing="true">Pricing</a>
+        </nav>
+        <div class="nav-cta-group">
+            <a class="btn-nav-login" href="login.html">Login</a>
+            <a class="btn-nav-cta" href="signup.html">Get Started →</a>
+        </div>
+    </header>
+
+    <!-- Contact Hero Banner -->
+    <section class="hero-enterprise" style="min-height:360px; padding: 60px 6% 70px;">
+        <div class="hero-corporate-bg"></div>
+        <div class="hero-corporate-overlay"></div>
+        <div style="position:relative; z-index:3; max-width:850px; margin:0 auto; text-align:center;">
+            <div class="hero-badge-pill" style="margin-bottom:16px;">
+                <span class="badge-title">ENTERPRISE SUPPORT</span>
+                <span class="badge-dot">•</span>
+                <span class="badge-sub">24/7 Client Advisory</span>
+            </div>
+            <h1 class="hero-title-main" style="font-size:42px; margin-bottom:16px;">
+                Connect with our <span class="hero-highlight-span">Compliance Specialists.</span>
+            </h1>
+            <p class="hero-subtitle-desc" style="max-width:700px; margin:0 auto; font-size:16.5px;">
+                Have questions regarding Business Passport onboarding, statutory cross-verification, or bespoke enterprise SLAs? We are here to support your team.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Form & Info Grid -->
+    <main class="section" style="background:#FFF7FB; padding: 70px 6%;">
+        <div style="max-width:1160px; margin:0 auto; display:grid; grid-template-columns:1.2fr 0.8fr; gap:36px; align-items:start;">
+            <!-- Form Card -->
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:38px; box-shadow:0 10px 30px rgba(11,31,58,0.06);">
+                <span class="tag-pill-pink">SEND AN INQUIRY</span>
+                <h3 style="font-size:24px; font-weight:800; color:#172033; margin:10px 0 6px;">How can we assist your business?</h3>
+                <p style="font-size:14px; color:#64748B; margin:0 0 24px;">Complete the form below and an Ohana compliance architect will respond promptly.</p>
+
+                <form onsubmit="event.preventDefault(); showToast('Message dispatched! Our compliance desk will reply within 2 hours.', 'success'); this.reset();">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                        <div>
+                            <label style="font-size:13px; font-weight:700; color:#334155; margin-bottom:6px; display:block;">Full Name *</label>
+                            <input type="text" placeholder="e.g. Rahul Bawa" required style="width:100%; padding:11px 14px; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px;">
+                        </div>
+                        <div>
+                            <label style="font-size:13px; font-weight:700; color:#334155; margin-bottom:6px; display:block;">Business Email *</label>
+                            <input type="email" placeholder="you@company.com" required style="width:100%; padding:11px 14px; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px;">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                        <div>
+                            <label style="font-size:13px; font-weight:700; color:#334155; margin-bottom:6px; display:block;">Organization Name *</label>
+                            <input type="text" placeholder="e.g. ABC Technologies Pvt Ltd" required style="width:100%; padding:11px 14px; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px;">
+                        </div>
+                        <div>
+                            <label style="font-size:13px; font-weight:700; color:#334155; margin-bottom:6px; display:block;">Inquiry Area</label>
+                            <select style="width:100%; padding:11px 14px; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; background:#FFFFFF;">
+                                <option>Business Verification (L1-L4)</option>
+                                <option>Document Vault Security</option>
+                                <option>Enterprise API Integrations</option>
+                                <option>B2B Share Room Pricing</option>
+                                <option>Other Statutory Questions</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:24px;">
+                        <label style="font-size:13px; font-weight:700; color:#334155; margin-bottom:6px; display:block;">Detailed Message *</label>
+                        <textarea rows="4" placeholder="Describe your organization's statutory requirements or due diligence questions..." required style="width:100%; padding:11px 14px; border:1.5px solid #E2E8F0; border-radius:10px; font-size:14px; font-family:inherit;"></textarea>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+                        <button type="submit" class="btn-enterprise-primary">
+                            <span>Send Message →</span>
+                        </button>
+                        <span style="font-size:12.5px; color:#16A34A; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+                            <span>●</span> Response SLA: Under 2 hours
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Direct Contact Info Card -->
+            <div style="display:flex; flex-direction:column; gap:20px;">
+                <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:32px; box-shadow:0 8px 24px rgba(12,24,20,0.04);">
+                    <div style="width:40px; height:40px; border-radius:10px; background:#FFF0F2; border:1px solid rgba(255,32,40,0.22); display:grid; place-items:center; color:#FF2028; margin-bottom:14px;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h4 style="font-size:17px; font-weight:800; color:#0B1F3A; margin:0 0 6px;">Email Advisory Desk</h4>
+                    <p style="font-size:13.5px; color:#64748B; margin:0 0 10px;">Direct communication channel for compliance officers and enterprise auditors.</p>
+                    <a href="mailto:support@ohanabusinesslocker.com" style="color:#FF2028; font-weight:700; font-size:14px; text-decoration:none;">support@ohanabusinesslocker.com ↗</a>
+                </div>
+
+                <div style="background:#FFFFFF; border:1px solid #E2E8F0; border-radius:18px; padding:32px; box-shadow:0 8px 24px rgba(11,31,58,0.04);">
+                    <div style="width:40px; height:40px; border-radius:10px; background:#FFF0F2; border:1px solid rgba(255,32,40,0.22); display:grid; place-items:center; color:#FF2028; margin-bottom:14px;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h4 style="font-size:17px; font-weight:800; color:#172033; margin:0 0 6px;">Corporate Headquarters</h4>
+                    <p style="font-size:13.5px; color:#64748B; margin:0 0 8px; line-height:1.5;">Ohana Business Locker Technologies Ltd.<br>Tower 4, Cyber City Phase 2, Pune, Maharashtra 411014</p>
+                    <span style="font-size:12.5px; color:#94A3B8; font-weight:600;">Mon - Fri, 9:00 AM - 7:00 PM IST</span>
+                </div>
+
+                <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:18px; padding:24px;">
+                    <div style="font-size:12px; font-weight:800; color:#16A34A; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+                        <span style="width:7px; height:7px; border-radius:50%; background:#16A34A;"></span> Enterprise Security Attestation
+                    </div>
+                    <p style="font-size:12.5px; color:#64748B; margin:0; line-height:1.5;">All support conversations, identity audits, and verification inquiries are conducted under strict non-disclosure governance and ISO/IEC 27001 data isolation.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Unified Enterprise Footer -->
+    <footer class="enterprise-footer-dark">
+        <div class="footer-dark-grid">
+            <div class="fd-brand-col">
+                <a class="brand" href="../index.html" aria-label="Ohana Busnilocker">
+                    <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+                </a>
+                <p>Ohana Business Locker helps you manage your business identity, verify your documents, track renewals and securely share important information — all in one place.</p>
+                <div class="cert-pill">🛡 SOC-2 Certified · ISO/IEC 27001 Ready</div>
+            </div>
+
+            <div class="fd-nav-col">
+                <h5>Product</h5>
+                <a href="dashboard.html">Business Passport</a>
+                <a href="identity.html">Business Identity</a>
+                <a href="documents.html">Document Vault</a>
+                <a href="share-room.html">Share Room</a>
+            </div>
+
+            <div class="fd-nav-col">
+                <h5>Company</h5>
+                <a href="about.html">About Us</a>
+                <a href="features.html">Features</a>
+                <a href="login.html?redirect=dashboard.html" data-nav-pricing="true">Pricing</a>
+                <a href="contact.html">Contact</a>
+                <a href="security.html">Security</a>
+            </div>
+
+            <div class="fd-nav-col">
+                <h5>Legal & Support</h5>
+                <a href="login.html">Login</a>
+                <a href="signup.html">Get Started</a>
+                <a href="about.html">Privacy Policy</a>
+                <a href="about.html">Terms</a>
+                <a href="contact.html">Support</a>
+            </div>
+        </div>
+
+        <div class="footer-dark-bottom">
+            <div>© 2026 Ohana Business Locker. All rights reserved.</div>
+            <div>
+                <a href="about.html" style="color:#64748B; margin-right:16px; text-decoration:none;">Privacy Policy</a>
+                <a href="about.html" style="color:#64748B; margin-right:16px; text-decoration:none;">Terms</a>
+                <a href="contact.html" style="color:#64748B; text-decoration:none;">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,2771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Business Verification Workflow | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <style>
+        .tier-badge-l0 { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+        .tier-badge-l1 { background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D; }
+        .tier-badge-l2 { background: #DBEAFE; color: #1D4ED8; border: 1px solid #93C5FD; }
+        .tier-badge-l3 { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
+        .tier-badge-l4 { background: #0B1F3A; color: #FFFFFF; border: 1px solid #0B1F3A; }
+
+        /* General page layout overrides for Verification */
+        .app-header {
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+        }
+
+        .app-header h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0B1F3A;
+            margin: 2px 0 2px;
+            letter-spacing: -0.3px;
+        }
+
+        .app-header .subtitle {
+            font-size: 12px;
+            color: #64748B;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .app-header .eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        /* Top Verification Summary Card */
+        .v-summary-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-left: 4px solid #16A34A;
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(11, 31, 58, 0.04);
+            position: relative;
+        }
+
+        .v-summary-banner.is-l4 {
+            border-left-color: #0B1F3A;
+        }
+
+        .v-summary-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .v-summary-meta-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .v-summary-title {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #0B1F3A;
+            margin: 0 0 3px;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .v-summary-desc {
+            font-size: 12px;
+            color: #64748B;
+            margin: 0 0 7px;
+            line-height: 1.4;
+        }
+
+        .v-summary-progress-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11.5px;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+
+        .v-mini-track {
+            width: 90px;
+            height: 5px;
+            background: #E2E8F0;
+            border-radius: 999px;
+            overflow: hidden;
+            display: inline-flex;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        .v-mini-fill {
+            height: 100%;
+            background: #16A34A;
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        .v-summary-right {
+            text-align: right;
+            min-width: 105px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            padding-left: 14px;
+            border-left: 1px solid #F1F5F9;
+        }
+
+        .v-summary-level-box {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 6px 14px;
+        }
+
+        .v-summary-level-num {
+            font-size: 26px;
+            font-weight: 800;
+            color: #15803D;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .v-summary-seal-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: #16A34A;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 3px;
+            white-space: nowrap;
+        }
+
+        /* 5-Stage Stepper Navigation - Compact Horizontal Timeline */
+        .v-stepper-panel {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 10px 16px 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(11, 31, 58, 0.04);
+        }
+
+        .v-stepper-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .v-stepper-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0B1F3A;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .v-stepper-subtitle {
+            font-size: 11px;
+            color: #64748B;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+
+        .v-stepper-wrap {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            padding: 6px 16px 0;
+        }
+
+        .v-step-line {
+            position: absolute;
+            top: 19px;
+            left: 46px;
+            right: 46px;
+            height: 2px;
+            background: #E2E8F0;
+            z-index: 1;
+        }
+
+        .v-step-line-fill {
+            height: 100%;
+            background: #16A34A;
+            width: 75%;
+            transition: width 0.3s ease;
+        }
+
+        .v-step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            text-align: center;
+            background: none;
+            border: none;
+            padding: 0;
+            min-width: 60px;
+        }
+
+        .v-step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+            color: #64748B;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 0 2px #FFFFFF;
+        }
+
+        .v-step-node.completed .v-step-circle {
+            background: #16A34A;
+            border-color: #16A34A;
+            color: #FFFFFF;
+        }
+
+        .v-step-node.active .v-step-circle {
+            background: #0B1F3A;
+            border-color: #0B1F3A;
+            color: #FFFFFF;
+            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px rgba(11, 31, 58, 0.15);
+        }
+
+        .v-step-node strong {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #0B1F3A;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        .v-step-node small {
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        /* 2-Column Dashboard Grid */
+        .v-dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(310px, 1fr);
+            gap: 12px;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        /* Section Panels */
+        .v-tier-panel {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(11, 31, 58, 0.03);
+            transition: border-color 0.2s;
+        }
+
+        .v-tier-panel:hover {
+            border-color: #CBD5E1;
+        }
+
+        .v-panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .v-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0B1F3A;
+            margin: 0;
+            letter-spacing: -0.1px;
+        }
+
+        .v-panel-sub {
+            font-size: 10.5px;
+            color: #64748B;
+            margin: 1px 0 0;
+        }
+
+        /* Verification Card Row */
+        .verification-task-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 7px;
+            margin-bottom: 6px;
+            transition: all 0.15s ease;
+            gap: 10px;
+        }
+
+        .verification-task-row:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .verification-task-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .task-status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .task-status-icon.verified { background: #DCFCE7; color: #16A34A; }
+        .task-status-icon.pending { background: #FEF3C7; color: #D97706; }
+        .task-status-icon.unverified { background: #E2E8F0; color: #64748B; }
+
+        .task-details {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .task-title {
+            color: #0B1F3A;
+            font-size: 12.5px;
+            font-weight: 600;
+            line-height: 1.25;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .task-val {
+            font-size: 11.5px;
+            color: #475569;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task-meta {
+            font-size: 10.5px;
+            color: #94A3B8;
+            line-height: 1.2;
+        }
+
+        .btn-verify-action {
+            background: #0B1F3A;
+            color: #FFFFFF;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-verify-action:hover {
+            background: #1E293B;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .btn-verify-action.verified {
+            background: #DCFCE7;
+            color: #15803D;
+            cursor: default;
+            border: 1px solid #86EFAC;
+        }
+
+        .btn-verify-action.in-review {
+            background: #FEF3C7;
+            color: #B45309;
+            cursor: pointer;
+            border: 1px solid #FCD34D;
+        }
+
+        .btn-verify-action.in-review:hover {
+            background: #FDE68A;
+        }
+
+        .btn-verify-action.uploaded {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            cursor: pointer;
+            border: 1px solid #93C5FD;
+        }
+
+        .btn-verify-action.uploaded:hover {
+            background: #DBEAFE;
+        }
+
+        /* Evidence tag styling */
+        .v-evidence-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10.5px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-top: 3px;
+            line-height: 1.3;
+        }
+
+        .v-evidence-tag.verified {
+            background: #DCFCE7;
+            color: #15803D;
+            border: 1px solid #86EFAC;
+        }
+
+        .v-evidence-tag.verified a {
+            color: #15803D;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .v-evidence-tag.pending,
+        .v-evidence-tag.in-review {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+
+        .v-evidence-tag.pending a,
+        .v-evidence-tag.in-review a {
+            color: #B45309;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .v-evidence-tag.missing {
+            background: #FEF2F2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+        }
+
+        .v-evidence-tag.missing a {
+            color: #DC2626;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .v-evidence-tag.uploaded {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+
+        .v-evidence-tag.uploaded a {
+            color: #1D4ED8;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .task-status-icon.in-review {
+            background: #FEF3C7;
+            color: #B45309;
+            border-color: #FCD34D;
+        }
+
+        .task-status-icon.uploaded {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border-color: #93C5FD;
+        }
+
+        .v-evidence-ref {
+            color: #64748B;
+            font-size: 10px;
+        }
+
+        /* Right Side Utility Panels */
+        .v-utility-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: sticky;
+            top: 12px;
+        }
+
+        .v-utility-panel {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: 0 1px 3px rgba(11, 31, 58, 0.03);
+        }
+
+        .v-utility-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .v-utility-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #0B1F3A;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Requirements checklist */
+        .v-req-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 8px;
+            margin-bottom: 4px;
+            background: #F8FAFC;
+            border: 1px solid #F1F5F9;
+            border-radius: 6px;
+            font-size: 11.5px;
+            color: #334155;
+            transition: background 0.15s;
+        }
+
+        .v-req-item:hover {
+            background: #F1F5F9;
+        }
+
+        .v-req-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .v-req-bullet {
+            color: #D97706;
+            font-size: 13px;
+            line-height: 1;
+            font-weight: bold;
+        }
+
+        .v-req-label {
+            line-height: 1.3;
+        }
+
+        /* Timeline Audit List */
+        .v-timeline-list {
+            position: relative;
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .v-timeline-list::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            left: 5px;
+            width: 2px;
+            background: #E2E8F0;
+        }
+
+        .v-timeline-item {
+            position: relative;
+        }
+
+        .v-timeline-dot {
+            position: absolute;
+            left: -18px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #16A34A;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 0 0 1.5px #CBD5E1;
+        }
+
+        .v-timeline-title {
+            font-weight: 600;
+            font-size: 11.5px;
+            color: #0B1F3A;
+            line-height: 1.25;
+        }
+
+        .v-timeline-meta {
+            font-size: 10.5px;
+            color: #64748B;
+            margin: 1px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .v-timeline-code {
+            font-size: 10px;
+            font-family: monospace;
+            background: #F1F5F9;
+            padding: 1px 4px;
+            border-radius: 3px;
+            color: #475569;
+        }
+
+        /* L4 action box */
+        .v-l4-cta-box {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #FFF7F8;
+            border: 1px solid #FFE4E6;
+            border-radius: 7px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .v-l4-cta-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .v-l4-cta-btn {
+            background: #FF2028;
+            color: #FFFFFF;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .v-l4-cta-btn:hover {
+            background: #E01820;
+        }
+
+        /* Modal */
+        .otp-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 31, 58, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .otp-modal-card {
+            background: #FFFFFF;
+            max-width: 440px;
+            width: 100%;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(11, 31, 58, 0.25);
+            animation: modalFade 0.2s ease;
+        }
+
+        .otp-code-input {
+            width: 100%;
+            box-sizing: border-box;
+            letter-spacing: 10px;
+            font-size: 26px;
+            font-weight: 800;
+            text-align: center;
+            padding: 12px;
+            border: 2px solid #CBD5E1;
+            border-radius: 8px;
+            margin: 16px 0;
+            outline: none;
+            color: var(--navy);
+        }
+
+        .otp-code-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 992px) {
+            .v-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .v-utility-column {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .v-summary-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .v-summary-right {
+                border-left: none;
+                border-top: 1px solid #F1F5F9;
+                padding-left: 0;
+                padding-top: 10px;
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .verification-task-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .btn-verify-action {
+                align-self: flex-end;
+            }
+            .v-step-node small {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="../assets/ohana-brand-logo.png" alt="Ohana Logo" class="oib-brand-img" style="height: 36px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content" style="padding-top: 14px;">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ASSURANCE PIPELINE</span>
+                <h1>Verification Workflow</h1>
+                <p class="subtitle">Complete dynamic verification proofs to advance your Business Passport from L0 Claimed to L4 Enterprise Assured.</p>
+            </div>
+            <div class="header-actions">
+                <a href="business-passport.html" class="btn" style="text-decoration:none; padding:6px 14px; font-size:12px;">View Passport 🪪</a>
+                <div class="profile-chip" style="padding:4px 10px; font-size:12px;"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Dynamic Level Hero Banner -->
+        <div class="v-summary-banner" id="verificationHeroBanner">
+            <div class="v-summary-left">
+                <div class="v-summary-meta-top">
+                    <span class="badge tier-badge-l3" id="vHeroBadge" style="font-weight:700; font-size:11px; padding:2px 8px;">
+                        Current Level: L3 — Enhanced Verified
+                    </span>
+                    <span style="font-size:11px; color:#16A34A; font-weight:600; display:inline-flex; align-items:center; gap:3px;">
+                        ● Cryptographically Signed
+                    </span>
+                </div>
+                <h2 class="v-summary-title" id="vHeroTitle">
+                    Verification Progress: 78% Completed (7 of 9 Checks Verified)
+                </h2>
+                <p class="v-summary-desc" id="vHeroDesc">
+                    ABC Technologies has verified statutory MCA incorporation, tax registrations, domain DNS ownership, and commercial premises.
+                </p>
+                <div class="v-summary-progress-row">
+                    <div class="v-mini-track"><div class="v-mini-fill" id="vHeroProgressFill" style="width: 80%;"></div></div>
+                    <span>Next Milestone: <strong id="vNextTierText" style="color:var(--navy);">L4 Enterprise Assured</strong></span>
+                    <span>•</span>
+                    <span id="vRemainingText" style="color:#D97706; font-weight:600;">2 Requirements Remaining</span>
+                </div>
+            </div>
+            <div class="v-summary-right">
+                <div class="v-summary-level-box">
+                    <div class="v-summary-level-num" id="vHeroLevelNum">L3</div>
+                    <small class="v-summary-seal-text" id="vHeroSealText">● Active Trust Seal</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5-Stage Stepper Navigation -->
+        <section class="v-stepper-panel">
+            <div class="v-stepper-header">
+                <div class="v-stepper-title">
+                    <span>Progressive Assurance Tiers</span>
+                    <span class="v-stepper-subtitle">• Dynamic cryptographic milestone proofs</span>
+                </div>
+                <span class="badge badge-info" id="stepperNextBadge" style="font-size:11px; padding:2px 8px;">Next: L4 Assured</span>
+            </div>
+
+            <div class="v-stepper-wrap">
+                <div class="v-step-line">
+                    <div class="v-step-line-fill" id="vStepFill" style="width: 75%;"></div>
+                </div>
+
+                <div class="v-step-node completed" id="nodeL0">
+                    <div class="v-step-circle">✓</div>
+                    <strong>L0 Claimed</strong>
+                    <small style="color:#16A34A;">Account Created</small>
+                </div>
+
+                <div class="v-step-node completed" id="nodeL1">
+                    <div class="v-step-circle">✓</div>
+                    <strong>L1 Contact</strong>
+                    <small style="color:#16A34A;">Email &amp; Phone</small>
+                </div>
+
+                <div class="v-step-node completed" id="nodeL2">
+                    <div class="v-step-circle">✓</div>
+                    <strong>L2 Business</strong>
+                    <small style="color:#16A34A;">MCA, GST, PAN</small>
+                </div>
+
+                <div class="v-step-node active" id="nodeL3">
+                    <div class="v-step-circle">L3</div>
+                    <strong>L3 Enhanced</strong>
+                    <small style="color:#059669; font-weight:700;">Current Level</small>
+                </div>
+
+                <div class="v-step-node" id="nodeL4">
+                    <div class="v-step-circle">L4</div>
+                    <strong>L4 Assured</strong>
+                    <small style="color:#64748B;">Audit &amp; KYC</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two-Column Verification Dashboard -->
+        <div class="v-dashboard-grid">
+            <!-- Left Column: Verification Proof Tasks -->
+            <div>
+                <!-- L1: Contact Verification Tasks -->
+                <section class="v-tier-panel">
+                    <div class="v-panel-head">
+                        <div>
+                            <h3 class="v-panel-title">Tier L1 — Contact Proofs</h3>
+                            <p class="v-panel-sub">Corporate communication channels 2FA authentication</p>
+                        </div>
+                        <span class="badge" id="badgeTierL1">Verified</span>
+                    </div>
+
+                    <!-- Email Task -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconEmail">✓</div>
+                            <div class="task-details">
+                                <span class="task-title">Corporate Email Address</span>
+                                <div class="task-val" id="taskEmailVal">compliance@abctechnologies.io</div>
+                                <span class="task-meta">Method: EMAIL_OTP (One-Time Token)</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyEmail" onclick="openOtpModal('email')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Phone Task -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconPhone">✓</div>
+                            <div class="task-details">
+                                <span class="task-title">Official Business Mobile</span>
+                                <div class="task-val" id="taskPhoneVal">+91 20 6712 3400</div>
+                                <span class="task-meta">Method: PHONE_OTP (SMS Gateway Token)</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyPhone" onclick="openOtpModal('phone')">
+                            ✓ Verified
+                        </button>
+                    </div>
+                </section>
+
+                <!-- L2: Business Identifiers & Registrations -->
+                <section class="v-tier-panel">
+                    <div class="v-panel-head">
+                        <div>
+                            <h3 class="v-panel-title">Tier L2 — Statutory Entity Identifiers</h3>
+                            <p class="v-panel-sub">Government registry verification against MCA, GSTN, and NSDL</p>
+                        </div>
+                        <span class="badge" id="badgeTierL2">Verified</span>
+                    </div>
+
+                    <!-- MCA Incorporation -->
+                    <div class="verification-task-row" id="rowCin">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconCin">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleCin">MCA Certificate of Incorporation</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskCinVal">CIN: U72200PN2021PTC198765</div>
+                                <span class="task-meta" id="metaCin">Method: MCA_REGISTRY (Ministry of Corporate Affairs)</span>
+                                <div id="refCin"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyCin" onclick="toggleTask('cinVerified', 'MCA Incorporation')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- GSTIN -->
+                    <div class="verification-task-row" id="rowGst">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconGst">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleGst">Goods &amp; Services Tax Registration</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskGstVal">GSTIN: 27ABCDE1234F1Z5</div>
+                                <span class="task-meta" id="metaGst">Method: GSTN_PORTAL API</span>
+                                <div id="refGst"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyGst" onclick="toggleTask('gstVerified', 'GSTIN Registration')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- PAN -->
+                    <div class="verification-task-row" id="rowPan">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconPan">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titlePan">Permanent Account Number (PAN)</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskPanVal">PAN: ABCDE1234F</div>
+                                <span class="task-meta" id="metaPan">Method: NSDL_API Checksum</span>
+                                <div id="refPan"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyPan" onclick="toggleTask('panVerified', 'Income Tax PAN')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- FSSAI Food License (For Food & Restaurant businesses) -->
+                    <div class="verification-task-row" id="rowFssai">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconFssai">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleFssai">FSSAI Food Safety License / Registration</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskFssaiVal">FSSAI: 11522001000987</div>
+                                <span class="task-meta" id="metaFssai">Method: FSSAI_FOSCOS Portal API Match</span>
+                                <div id="refFssai"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyFssai" onclick="toggleTask('fssaiVerified', 'FSSAI Food License')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Proprietor / Owner Identity Proof (For Sole Proprietorship) -->
+                    <div class="verification-task-row" id="rowOwnerId">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconOwner">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleOwner">Proprietor Identity Proof (Aadhaar / Voter ID)</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskOwnerVal">UIDAI: XXXX-XXXX-4412 (Biometric Attested)</div>
+                                <span class="task-meta" id="metaOwner">Method: UIDAI_OFFLINE_KYC / E-Sign</span>
+                                <div id="refOwner"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyOwner" onclick="toggleTask('ownerVerified', 'Proprietor Identity Proof')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Shop & Establishment / Trade License -->
+                    <div class="verification-task-row" id="rowShopLicense">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconShopLicense">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleShopLicense">Shop &amp; Establishment / Municipal Trade License</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskShopLicenseVal">Trade License: MH-PUN-SHOP-44910</div>
+                                <span class="task-meta" id="metaShopLicense">Method: MUNICIPAL_PORTAL / Labour Dept Register</span>
+                                <div id="refShopLicense"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyShopLicense" onclick="toggleTask('shopLicenseVerified', 'Shop & Establishment License')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Udyam MSME -->
+                    <div class="verification-task-row" id="rowUdyam">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconUdyam">✓</div>
+                            <div class="task-details">
+                                <span class="task-title" id="titleUdyam">Udyam MSME Registration</span>
+                                <div class="task-val" style="font-family:monospace;" id="taskUdyamVal">UDYAM-MH-26-0019284</div>
+                                <span class="task-meta" id="metaUdyam">Method: UDYAM_MSME Registry Match</span>
+                                <div id="refUdyam"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyUdyam" onclick="toggleTask('udyamVerified', 'Udyam Registration')">
+                            ✓ Verified
+                        </button>
+                    </div>
+                </section>
+
+                <!-- L3: Enhanced Verification -->
+                <section class="v-tier-panel">
+                    <div class="v-panel-head">
+                        <div>
+                            <h3 class="v-panel-title">Tier L3 — Enhanced Verification</h3>
+                            <p class="v-panel-sub">DNS TXT token, operational office inspection, and commercial bank account</p>
+                        </div>
+                        <span class="badge" id="badgeTierL3">Verified</span>
+                    </div>
+
+                    <!-- Corporate Domain -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconDomain">✓</div>
+                            <div class="task-details">
+                                <span class="task-title">Corporate Domain Ownership (DNS TXT)</span>
+                                <div class="task-val" id="taskDomainVal">abctechnologies.io (Token: ohana-dns-auth-9824)</div>
+                                <span class="task-meta">Method: DOMAIN_DNS_TXT Record Lookup</span>
+                                <div id="refDomain"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyDomain" onclick="runDnsCheck()">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Registered Office Address -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconAddress">✓</div>
+                            <div class="task-details">
+                                <span class="task-title">Commercial Operating Premises</span>
+                                <div class="task-val" id="taskAddressVal">Tech Park One, Airport Road, Yerawada, Pune</div>
+                                <span class="task-meta">Method: GEO_TAG_INSPECTION &amp; Utility Match</span>
+                                <div id="refAddress"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyAddress" onclick="toggleTask('addressVerified', 'Commercial Office')">
+                            ✓ Verified
+                        </button>
+                    </div>
+
+                    <!-- Bank Account -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon verified" id="iconBank">✓</div>
+                            <div class="task-details">
+                                <span class="task-title">Corporate Bank Account</span>
+                                <div class="task-val">HDFC Bank (IFSC HDFC0001234)</div>
+                                <span class="task-meta">Method: PENNY_DROP_IFSC Account Validation</span>
+                                <div id="refBank"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action verified" id="btnVerifyBank" onclick="toggleTask('bankVerified', 'Bank Account')">
+                            ✓ Verified
+                        </button>
+                    </div>
+                </section>
+
+                <!-- L4: Enterprise Assured -->
+                <section class="v-tier-panel">
+                    <div class="v-panel-head">
+                        <div>
+                            <h3 class="v-panel-title">Tier L4 — Enterprise Assurance (Top Tier)</h3>
+                            <p class="v-panel-sub">Institutional audit review for cross-border trade, bank credit, and major tenders</p>
+                        </div>
+                        <span class="badge" id="badgeTierL4" style="background:#F1F5F9; color:#475569;">Upgrade Available</span>
+                    </div>
+
+                    <!-- Audited Financials -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon unverified" id="iconFinancials">○</div>
+                            <div class="task-details">
+                                <span class="task-title">Annual Audited Financial Statements</span>
+                                <div class="task-val">FY 2025-26 Balance Sheet &amp; CA Certificate</div>
+                                <span class="task-meta">Method: DOCUMENT_REVIEW by Senior Auditor</span>
+                                <div id="refFinancials"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action" id="btnVerifyFinancials" onclick="toggleTask('auditFinancialsVerified', 'Audited Financials')">
+                            Upload &amp; Review
+                        </button>
+                    </div>
+
+                    <!-- Director KYC -->
+                    <div class="verification-task-row">
+                        <div class="task-left">
+                            <div class="task-status-icon unverified" id="iconDirector">○</div>
+                            <div class="task-details">
+                                <span class="task-title">Executive Director Biometric / Video KYC</span>
+                                <div class="task-val">Authorized Signatory Identity Attestation</div>
+                                <span class="task-meta">Method: AADHAAR_OKYC &amp; Video Liveness</span>
+                                <div id="refDirector"></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-verify-action" id="btnVerifyDirector" onclick="toggleTask('directorKycVerified', 'Director KYC')">
+                            Initiate KYC
+                        </button>
+                    </div>
+
+                    <div class="v-l4-cta-box">
+                        <span class="v-l4-cta-text">Ready for formal Enterprise Assurance audit inspection?</span>
+                        <button type="button" class="v-l4-cta-btn" onclick="requestEnterpriseAudit()">Apply for L4 Assured</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Verification Audit Trail & Requirements Card -->
+            <div class="v-utility-column">
+                <!-- Verified Evidence in Locker Summary -->
+                <section class="v-utility-panel">
+                    <div class="v-utility-head">
+                        <h4 class="v-utility-title">Verified Evidence in Locker</h4>
+                        <a href="documents.html" style="font-size:11.5px; color:var(--primary); font-weight:600; text-decoration:none;">View Locker ▣</a>
+                    </div>
+
+                    <div id="remainingRequirementsList">
+                        <!-- Populated dynamically with actual uploaded evidence -->
+                    </div>
+                </section>
+
+                <!-- Chronological Verification Timeline -->
+                <section class="v-utility-panel">
+                    <div class="v-utility-head">
+                        <h4 class="v-utility-title">Verification Audit Trail</h4>
+                        <button type="button" class="btn-action" style="font-size:11px; padding:2px 8px;" onclick="clearTimeline()">Reset</button>
+                    </div>
+
+                    <div class="v-timeline-list" id="timelineList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- OTP Verification Prototype Modal (Email & Phone) -->
+    <div class="otp-modal-backdrop" id="otpModal">
+        <div class="otp-modal-card">
+            <div style="width:50px; height:50px; border-radius:50%; background:#DCFCE7; color:#16A34A; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:22px; font-weight:800;">
+                ✓
+            </div>
+            <h3 style="margin:0 0 6px; font-size:18px; color:var(--navy);" id="otpModalTitle">Confirm Verification Token</h3>
+            <p style="font-size:12.5px; color:#64748B; margin:0 0 16px;" id="otpModalSub">
+                Enter the prototype one-time verification token:
+            </p>
+
+            <input type="text" class="otp-code-input" id="otpCodeInput" maxlength="6" value="849201">
+            <small style="color:var(--text-muted); font-size:11.5px; display:block; margin-bottom:18px;">
+                ⚡ Prototype Simulation: prefilled demo security token.
+            </small>
+
+            <div style="display:flex; gap:10px;">
+                <button type="button" class="btn outline" style="flex:1; justify-content:center;" onclick="closeOtpModal()">Cancel</button>
+                <button type="button" class="btn" style="flex:1.5; justify-content:center;" onclick="confirmOtp()">Confirm Token</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aadhaar OTP Verification Modal (Point 2C) -->
+    <div class="otp-modal-backdrop" id="aadhaarOtpModal" style="display:none;">
+        <div class="otp-modal-card" style="max-width:440px; text-align:center;">
+            <div style="width:52px; height:52px; border-radius:50%; background:#EFF6FF; color:#1D4ED8; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:24px;">
+                🪪
+            </div>
+            <h3 style="margin:0 0 4px; font-size:18px; color:var(--navy);">UIDAI Aadhaar Verification</h3>
+            <p style="font-size:12px; color:#64748B; margin:0 0 16px;">
+                Document uploaded ≠ verified. Complete OTP authentication to verify identity.
+            </p>
+
+            <div id="aadhaarStep1">
+                <div style="text-align:left; margin-bottom:12px;">
+                    <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">12-digit Aadhaar Number</label>
+                    <input type="text" id="aadhaarNumInput" value="5482 9102 3847" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:monospace; background:#fff;">
+                </div>
+                <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:8px 12px; font-size:11.5px; color:#92400E; margin-bottom:16px; text-align:left;">
+                    🔒 <b>OTP Protocol:</b> A one-time passcode will be dispatched to the mobile number registered with UIDAI.
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn outline" style="flex:1; justify-content:center;" onclick="closeAadhaarOtpModal()">Cancel</button>
+                    <button type="button" class="btn" style="flex:1.5; justify-content:center;" onclick="sendAadhaarOtp()">Send OTP →</button>
+                </div>
+            </div>
+
+            <div id="aadhaarStep2" style="display:none;">
+                <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:8px 12px; font-size:12px; color:#166534; margin-bottom:14px; text-align:left;">
+                    ✓ OTP dispatched to mobile linked with Aadhaar (Demo OTP: <b>782194</b>)
+                </div>
+                <label style="display:block; text-align:left; font-size:12px; font-weight:700; color:#334155; margin-bottom:4px;">Enter 6-digit OTP</label>
+                <input type="text" class="otp-code-input" id="aadhaarOtpInput" maxlength="6" value="782194" style="margin-bottom:14px;">
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn outline" style="flex:1; justify-content:center;" onclick="closeAadhaarOtpModal()">Cancel</button>
+                    <button type="button" class="btn" style="flex:1.5; justify-content:center;" onclick="verifyAadhaarOtp()">Verify OTP ✓</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document-Specific Verification Modal (Point 2D) -->
+    <div class="otp-modal-backdrop" id="docVerifyModal" style="display:none;">
+        <div class="otp-modal-card" style="max-width:460px; text-align:left;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+                <div id="dvmIcon" style="width:44px; height:44px; border-radius:10px; background:#EFF6FF; color:#1D4ED8; display:flex; align-items:center; justify-content:center; font-size:22px;">
+                    📄
+                </div>
+                <div>
+                    <h3 style="margin:0; font-size:17px; color:var(--navy);" id="dvmTitle">Document Verification</h3>
+                    <span style="font-size:12px; color:#64748B;" id="dvmSubtitle">Official Authority Match</span>
+                </div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:12px; margin-bottom:14px; font-size:12.5px;">
+                <div style="margin-bottom:6px;"><strong>Identifier:</strong> <span id="dvmIdentifier" style="font-family:monospace; color:#0B1F3A;">-</span></div>
+                <div style="margin-bottom:6px;"><strong>Authority:</strong> <span id="dvmAuthority">-</span></div>
+                <div><strong>Source Document:</strong> <span id="dvmSourceDoc">-</span></div>
+            </div>
+
+            <div id="dvmLoading" style="display:none; text-align:center; padding:16px 0;">
+                <div class="pulse-dot-amber" style="display:inline-block; margin-right:6px;"></div>
+                <span style="font-size:13px; color:#475569;" id="dvmLoadingText">Querying authority database...</span>
+            </div>
+
+            <div id="dvmSuccess" style="display:none; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:10px 14px; font-size:12.5px; color:#166534; margin-bottom:14px;">
+                ✓ <strong>Verification Successful:</strong> Registered record matches document details with 100% data integrity.
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;" id="dvmActions">
+                <button type="button" class="btn outline btn-sm" onclick="closeDocVerifyModal()">Cancel</button>
+                <button type="button" class="btn btn-sm" id="dvmConfirmBtn" onclick="executeDocSpecificVerification()">Run Verification Check</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Engine for Dynamic Verification Workflow -->
+    <script>
+        let currentTargetOtpChannel = 'email';
+        let verificationState = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVerificationWorkflow();
+        });
+
+        function loadVerificationWorkflow() {
+            // Load identity to populate values
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) {
+                    const idObj = JSON.parse(storedId);
+                    if (idObj.email) document.getElementById('taskEmailVal').textContent = idObj.email;
+                    if (idObj.phone) document.getElementById('taskPhoneVal').textContent = idObj.phone;
+                    if (idObj.cin) document.getElementById('taskCinVal').textContent = `CIN: ${idObj.cin}`;
+                    if (idObj.gstin) document.getElementById('taskGstVal').textContent = `GSTIN: ${idObj.gstin}`;
+                    if (idObj.pan) document.getElementById('taskPanVal').textContent = `PAN: ${idObj.pan}`;
+                    if (idObj.udyam) document.getElementById('taskUdyamVal').textContent = idObj.udyam;
+                    if (idObj.website) document.getElementById('taskDomainVal').textContent = `${idObj.website} (Token: ohana-dns-auth-9824)`;
+                    if (idObj.address) document.getElementById('taskAddressVal').textContent = idObj.address;
+
+                    const sName = document.getElementById('sidebarOrgName');
+                    if (sName) sName.textContent = idObj.tradeName || idObj.legalName;
+                }
+            } catch(e) {}
+
+            verificationState = getOrInitVerificationState();
+            recalculateAndRender();
+        }
+
+        function getOrInitVerificationState() {
+            let state = {
+                currentLevel: "L3",
+                levelName: "Enhanced Verified",
+                accountCreated: true,
+                emailVerified: true,
+                phoneVerified: true,
+                cinVerified: true,
+                gstVerified: true,
+                panVerified: true,
+                udyamVerified: true,
+                domainVerified: true,
+                addressVerified: true,
+                bankVerified: true,
+                auditFinancialsVerified: false,
+                directorKycVerified: false,
+                siteInspectionVerified: false,
+                enterpriseAssured: false,
+                verificationHistory: [
+                    { event: "Account Created & Registered", date: "10 Jan 2026, 09:30 IST", level: "L0", status: "Verified", ref: "EV-ACC-1001" },
+                    { event: "Corporate Email OTP Confirmed", date: "12 Jan 2026, 11:15 IST", level: "L1", status: "Verified", ref: "EV-EML-2041" },
+                    { event: "Corporate Phone OTP Confirmed", date: "12 Jan 2026, 11:22 IST", level: "L1", status: "Verified", ref: "EV-PHN-2042" },
+                    { event: "Ministry of Corporate Affairs CIN Validated", date: "15 Jan 2026, 14:10 IST", level: "L2", status: "Verified", ref: "EV-MCA-3081" },
+                    { event: "Income Tax PAN NSDL Validated", date: "15 Jan 2026, 14:18 IST", level: "L2", status: "Verified", ref: "EV-PAN-3082" },
+                    { event: "GSTIN Tax Portal Validated", date: "18 Feb 2026, 10:45 IST", level: "L3", status: "Verified", ref: "EV-GST-4019" },
+                    { event: "Corporate Domain DNS TXT Token Verified", date: "18 Feb 2026, 11:05 IST", level: "L3", status: "Verified", ref: "EV-DNS-4020" }
+                ],
+                lastUpdated: new Date().toISOString()
+            };
+
+            try {
+                const stored = localStorage.getItem('ohana_verification_state');
+                if (stored) {
+                    state = { ...state, ...JSON.parse(stored) };
+                } else {
+                    localStorage.setItem('ohana_verification_state', JSON.stringify(state));
+                }
+            } catch(e) {}
+
+            return state;
+        }
+
+        function saveVerificationState() {
+            verificationState.lastUpdated = new Date().toISOString();
+            localStorage.setItem('ohana_verification_state', JSON.stringify(verificationState));
+
+            // Also keep ohana_business_passport in sync
+            try {
+                let bp = JSON.parse(localStorage.getItem('ohana_business_passport') || '{}');
+                bp.level = verificationState.currentLevel;
+                bp.levelName = verificationState.levelName;
+                localStorage.setItem('ohana_business_passport', JSON.stringify(bp));
+            } catch(e) {}
+        }
+
+        function recalculateAndRender() {
+            // Read active business identity
+            let identity = {};
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) identity = JSON.parse(storedId);
+            } catch(e) {}
+
+            let docs = [];
+            try {
+                const storedDocs = localStorage.getItem('ohana_documents');
+                if (storedDocs) docs = JSON.parse(storedDocs);
+            } catch(e) {}
+
+            // Centralized profile & verification progress
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(identity)
+                : { normalizedEntity: "Sole Proprietorship", normalizedBusiness: "Food & Restaurant", entityType: "Sole Proprietorship", businessType: "Food & Restaurant" };
+
+            // Synchronize document evidence rows & verification states with actual uploaded documents
+            renderDocumentEvidenceRows(docs, identity, profile);
+
+            // Contact Proofs (Email & Phone OTP 2FA)
+            updateTaskRowUI('iconEmail', 'btnVerifyEmail', verificationState.emailVerified);
+            updateTaskRowUI('iconPhone', 'btnVerifyPhone', verificationState.phoneVerified);
+
+            const vProg = (typeof getVerificationProgress === 'function')
+                ? getVerificationProgress(identity, verificationState)
+                : { progressPct: 75, completedRequired: 5, completedOptional: 1, totalApplicable: 7, notApplicableCount: 2 };
+
+            // Requirement-Aware Level Calculation Engine
+            const calc = typeof computeOhanaVerificationLevel === 'function' 
+                ? computeOhanaVerificationLevel(verificationState, identity)
+                : {
+                    level: "L2",
+                    levelName: "Business Verified",
+                    nextRequirement: "Commercial Bank & Address (L3)",
+                    progressPct: vProg.progressPct,
+                    l1Passed: true, l2Passed: true, l3Passed: false, l4Passed: false
+                };
+
+            const level = calc.level;
+            const levelName = calc.levelName;
+            const nextLevel = calc.nextRequirement;
+            const progressPct = vProg.progressPct;
+
+            verificationState.currentLevel = level;
+            verificationState.levelName = levelName;
+            saveVerificationState();
+
+            // Render Hero Banner
+            const heroBadge = document.getElementById('vHeroBadge');
+            if (heroBadge) {
+                heroBadge.className = `badge tier-badge-${level.toLowerCase()}`;
+                heroBadge.textContent = `Current Level: ${level} — ${levelName}`;
+            }
+            
+            const levelNumEl = document.getElementById('vHeroLevelNum');
+            if (levelNumEl) {
+                levelNumEl.textContent = level;
+                if (level === 'L4') levelNumEl.style.color = '#0B1F3A';
+                else if (level === 'L0') levelNumEl.style.color = '#64748B';
+                else if (level === 'L1') levelNumEl.style.color = '#D97706';
+                else if (level === 'L2') levelNumEl.style.color = '#2563EB';
+                else levelNumEl.style.color = '#15803D';
+            }
+
+            const sealText = document.getElementById('vHeroSealText');
+            if (sealText) {
+                if (level === 'L0') {
+                    sealText.textContent = '○ Claim In Progress';
+                    sealText.style.color = '#64748B';
+                } else if (level === 'L4') {
+                    sealText.textContent = '★ Enterprise Assured';
+                    sealText.style.color = '#0B1F3A';
+                } else {
+                    sealText.textContent = '● Active Trust Seal';
+                    sealText.style.color = '#16A34A';
+                }
+            }
+
+            const banner = document.getElementById('verificationHeroBanner');
+            if (banner) {
+                if (level === 'L4') banner.classList.add('is-l4');
+                else banner.classList.remove('is-l4');
+            }
+
+            // Verification Progress: uses only applicable requirements
+            const completedCount = (vProg.completedRequired || 0) + (vProg.completedOptional || 0);
+            const totalApplicable = vProg.totalApplicable || 1;
+            const heroTitle = document.getElementById('vHeroTitle');
+            if (heroTitle) {
+                heroTitle.textContent = `Verification Progress: ${progressPct}% Completed (${completedCount} of ${totalApplicable} Applicable Proofs Verified)`;
+            }
+
+            const heroDesc = document.getElementById('vHeroDesc');
+            if (heroDesc) {
+                const orgName = identity.tradeName || identity.legalName || 'ABC Technologies';
+                const entLabel = profile.entityType || 'Business';
+                const bizLabel = profile.businessType || 'General';
+                if (profile.normalizedEntity === 'Sole Proprietorship') {
+                    heroDesc.textContent = `${orgName} (${entLabel} • ${bizLabel}) — Evaluated against dynamic small business statutory rules. Corporate CIN is legally Not Applicable; Proprietor PAN, Owner ID & Licenses apply.`;
+                } else {
+                    heroDesc.textContent = `${orgName} (${entLabel} • ${bizLabel}) — Dynamic statutory requirements evaluated: ${totalApplicable} applicable proofs, ${vProg.notApplicableCount} legally exempt.`;
+                }
+            }
+
+            document.getElementById('vNextTierText').textContent = nextLevel;
+            document.getElementById('vStepFill').style.width = `${progressPct}%`;
+            const vMiniFill = document.getElementById('vHeroProgressFill');
+            if (vMiniFill) vMiniFill.style.width = `${progressPct}%`;
+            document.getElementById('stepperNextBadge').textContent = `Next: ${nextLevel}`;
+
+            // Sidebar Org Badge
+            const sBadge = document.getElementById('sidebarTierBadge');
+            if (sBadge) sBadge.textContent = `✓ ${level} Verified`;
+            const sOrg = document.getElementById('sidebarOrgName');
+            if (sOrg) sOrg.textContent = identity.tradeName || identity.legalName || 'ABC Technologies';
+
+            // Update Stepper Nodes
+            const tiers = ["L0", "L1", "L2", "L3", "L4"];
+            const currentIdx = tiers.indexOf(level);
+            tiers.forEach((t, idx) => {
+                const node = document.getElementById(`node${t}`);
+                if (!node) return;
+                node.className = "v-step-node";
+                if (idx < currentIdx) {
+                    node.classList.add("completed");
+                } else if (idx === currentIdx) {
+                    node.classList.add("active");
+                }
+            });
+
+            // Evaluate Statutory Task Applicability
+            const cinApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', identity)
+                : (profile.normalizedEntity !== 'Sole Proprietorship' && profile.normalizedEntity !== 'Partnership');
+
+            const fssaiApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('fssai', identity)
+                : (profile.normalizedBusiness === 'Food & Restaurant');
+
+            const ownerApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('owner_id', identity)
+                : (profile.normalizedEntity === 'Sole Proprietorship');
+
+            const shopApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('shop_license', identity)
+                : true;
+
+            const directorApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('director_kyc', identity)
+                : (profile.normalizedEntity !== 'Sole Proprietorship' && profile.normalizedEntity !== 'Partnership');
+
+            // 1. CIN Row: If Not Applicable, mark as Exempt without penalizing score
+            const rowCin = document.getElementById('rowCin');
+            const iconCin = document.getElementById('iconCin');
+            const btnVerifyCin = document.getElementById('btnVerifyCin');
+            const titleCin = document.getElementById('titleCin');
+            const taskCinVal = document.getElementById('taskCinVal');
+            const metaCin = document.getElementById('metaCin');
+
+            if (!cinApplicable) {
+                if (iconCin) {
+                    iconCin.className = "task-status-icon na";
+                    iconCin.textContent = "⊘";
+                    iconCin.style.background = "#F1F5F9";
+                    iconCin.style.color = "#64748B";
+                    iconCin.style.borderColor = "#CBD5E1";
+                }
+                if (titleCin) {
+                    titleCin.innerHTML = `MCA Certificate of Incorporation <span class="badge" style="font-size:10px; padding:1px 6px; margin-left:6px; background:#F1F5F9; color:#64748B; border:1px solid #CBD5E1;">Not Applicable</span>`;
+                }
+                if (taskCinVal) {
+                    taskCinVal.innerHTML = `<span style="font-family:inherit; color:#64748B; font-style:italic;">Legally Exempt — ${profile.entityType} has no Corporate CIN</span>`;
+                }
+                if (metaCin) {
+                    metaCin.textContent = "Statutory Exemption: CIN is applicable only to incorporated companies (Pvt Ltd / Public Ltd / LLP)";
+                }
+                if (btnVerifyCin) {
+                    btnVerifyCin.className = "btn-verify-action disabled";
+                    btnVerifyCin.textContent = "⊘ Exempt (N/A)";
+                    btnVerifyCin.disabled = true;
+                    btnVerifyCin.style.background = "#F1F5F9";
+                    btnVerifyCin.style.color = "#64748B";
+                    btnVerifyCin.style.borderColor = "#CBD5E1";
+                    btnVerifyCin.style.cursor = "not-allowed";
+                }
+            } else {
+                if (iconCin) {
+                    iconCin.style.background = "";
+                    iconCin.style.borderColor = "";
+                }
+                if (titleCin) {
+                    titleCin.innerHTML = `MCA Certificate of Incorporation`;
+                }
+                if (taskCinVal) {
+                    taskCinVal.innerHTML = `CIN: ${identity.cin || 'U72200PN2021PTC198765'}`;
+                    taskCinVal.style.color = "";
+                    taskCinVal.style.fontStyle = "";
+                }
+                if (metaCin) {
+                    metaCin.textContent = "Method: MCA_REGISTRY (Ministry of Corporate Affairs)";
+                }
+                if (btnVerifyCin) {
+                    btnVerifyCin.disabled = false;
+                    btnVerifyCin.style.background = "";
+                    btnVerifyCin.style.color = "";
+                    btnVerifyCin.style.borderColor = "";
+                    btnVerifyCin.style.cursor = "";
+                }
+            }
+
+            // 2. FSSAI Food Safety Task Row
+            const rowFssai = document.getElementById('rowFssai');
+            if (rowFssai) {
+                rowFssai.style.display = fssaiApplicable ? 'flex' : 'none';
+                if (fssaiApplicable) {
+                    const taskFssaiVal = document.getElementById('taskFssaiVal');
+                    if (taskFssaiVal && identity.fssai) taskFssaiVal.textContent = `FSSAI: ${identity.fssai}`;
+                }
+            }
+
+            // 3. Owner Identity Proof Row
+            const rowOwnerId = document.getElementById('rowOwnerId');
+            if (rowOwnerId) {
+                rowOwnerId.style.display = ownerApplicable ? 'flex' : 'none';
+                if (ownerApplicable) {
+                    const taskOwnerVal = document.getElementById('taskOwnerVal');
+                    if (taskOwnerVal && identity.ownerId) taskOwnerVal.textContent = `UIDAI: ${identity.ownerId}`;
+                }
+            }
+
+            // 4. Shop & Establishment License Row
+            const rowShopLicense = document.getElementById('rowShopLicense');
+            if (rowShopLicense) {
+                rowShopLicense.style.display = shopApplicable ? 'flex' : 'none';
+                if (shopApplicable) {
+                    const taskShopLicenseVal = document.getElementById('taskShopLicenseVal');
+                    if (taskShopLicenseVal && identity.shopLicense) taskShopLicenseVal.textContent = `Trade License: ${identity.shopLicense}`;
+                }
+            }
+
+            // 5. Director KYC Row
+            const iconDirector = document.getElementById('iconDirector');
+            const btnVerifyDirector = document.getElementById('btnVerifyDirector');
+            if (!directorApplicable) {
+                if (iconDirector) {
+                    iconDirector.className = "task-status-icon na";
+                    iconDirector.textContent = "⊘";
+                    iconDirector.style.background = "#F1F5F9";
+                    iconDirector.style.color = "#64748B";
+                }
+                if (btnVerifyDirector) {
+                    btnVerifyDirector.className = "btn-verify-action disabled";
+                    btnVerifyDirector.textContent = "⊘ Exempt (N/A)";
+                    btnVerifyDirector.disabled = true;
+                    btnVerifyDirector.style.background = "#F1F5F9";
+                    btnVerifyDirector.style.color = "#64748B";
+                    btnVerifyDirector.style.cursor = "not-allowed";
+                }
+            } else {
+                if (iconDirector) iconDirector.style.background = "";
+                if (btnVerifyDirector) {
+                    btnVerifyDirector.disabled = false;
+                    btnVerifyDirector.style.background = "";
+                    btnVerifyDirector.style.color = "";
+                    btnVerifyDirector.style.cursor = "";
+                }
+            }
+
+            // Tier completion badges
+            updateTierBadge('badgeTierL1', calc.l1Passed);
+            updateTierBadge('badgeTierL2', calc.l2Passed);
+            updateTierBadge('badgeTierL3', calc.l3Passed);
+            updateTierBadge('badgeTierL4', calc.l4Passed);
+
+            // Render remaining requirements
+            renderRemainingRequirements(level, identity, profile);
+
+            // Render Timeline
+            renderTimeline();
+        }
+
+        // Helper: match actual document file in ohana_documents
+        function findDocumentForRequirement(key, docs) {
+            if (!Array.isArray(docs) || docs.length === 0) return null;
+            return docs.find(d => {
+                if (!d) return false;
+                const vType = (d.verificationType || '').toLowerCase();
+                const id = (d.id || '').toLowerCase();
+                const name = (d.name || '').toLowerCase();
+                const cat = (d.category || '').toLowerCase();
+                const ref = (d.ref || '').toLowerCase();
+
+                switch (key) {
+                    case 'cin':
+                        return vType === 'cin' || vType.includes('mca') || vType.includes('incorporation') ||
+                               id.includes('cin') || id === 'doc_01' || id === 'doc_tc_01' ||
+                               name.includes('incorporation') || name.includes('mca') || ref.includes('mca') || ref.includes('coi');
+                    case 'gst':
+                        return vType === 'gst' || vType.includes('gstn') || vType.includes('gst') ||
+                               id.includes('gst') || id === 'doc_02' || id === 'doc_tc_02' ||
+                               name.includes('gst') || ref.includes('gst');
+                    case 'pan':
+                        return vType === 'pan' || vType.includes('nsdl') || vType.includes('pan') ||
+                               id.includes('pan') || id === 'doc_03' || id === 'doc_tc_03' ||
+                               name.includes('pan') || ref.includes('pan');
+                    case 'fssai':
+                        return vType === 'fssai' || id.includes('fssai') ||
+                               name.includes('fssai') || name.includes('food') || ref.includes('fssai');
+                    case 'owner_id':
+                        return vType === 'owner_id' || vType === 'director_kyc' ||
+                               id.includes('owner') || id.includes('proprietor') ||
+                               name.includes('proprietor') || name.includes('owner') || name.includes('aadhaar') || name.includes('voter');
+                    case 'shop_license':
+                        return vType === 'shop_license' || vType === 'license' ||
+                               id.includes('lic') || id.includes('shop') ||
+                               name.includes('shop') || name.includes('trade license') || name.includes('establishment') || ref.includes('shop') || ref.includes('trade');
+                    case 'udyam':
+                        return vType === 'udyam' || vType.includes('msme') ||
+                               id.includes('udyam') || id.includes('udy') || id === 'doc_04' ||
+                               name.includes('udyam') || name.includes('msme') || ref.includes('udyam');
+                    case 'domain':
+                        return vType === 'domain' || vType.includes('dns') ||
+                               id.includes('dns') || id.includes('domain') || id === 'doc_05' || id === 'doc_tc_04' ||
+                               name.includes('domain') || name.includes('dns') || ref.includes('dns');
+                    case 'address':
+                        return vType === 'address' ||
+                               id.includes('adr') || id.includes('addr') ||
+                               name.includes('address') || name.includes('utility') || name.includes('electricity') || cat === 'address';
+                    case 'bank':
+                        return vType === 'bank' || vType.includes('penny') || vType.includes('ifsc') ||
+                               id.includes('bnk') || id.includes('bank') || id === 'doc_06' ||
+                               name.includes('bank') || name.includes('cheque') || ref.includes('hdfc') || ref.includes('bank');
+                    case 'financials':
+                        return vType === 'financials' || vType.includes('audit') ||
+                               id.includes('fin') ||
+                               name.includes('financial') || name.includes('balance sheet') || name.includes('ca certificate') || name.includes('audit');
+                    case 'director':
+                        return vType === 'director' || vType === 'director_kyc' ||
+                               id.includes('dir') ||
+                               name.includes('director') || name.includes('signatory');
+                    default:
+                        return vType === key;
+                }
+            }) || null;
+        }
+
+        // Unified Document Evidence Renderer enforcing Simple Rule
+        function renderDocumentEvidenceRows(docs, identity, profile) {
+            const cinApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('cin', identity)
+                : (profile.normalizedEntity !== 'Sole Proprietorship' && profile.normalizedEntity !== 'Partnership');
+
+            const fssaiApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('fssai', identity)
+                : (profile.normalizedBusiness === 'Food & Restaurant');
+
+            const ownerApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('owner_id', identity)
+                : (profile.normalizedEntity === 'Sole Proprietorship');
+
+            const shopApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('shop_license', identity)
+                : true;
+
+            const directorApplicable = (typeof isRequirementApplicable === 'function')
+                ? isRequirementApplicable('director_kyc', identity)
+                : (profile.normalizedEntity !== 'Sole Proprietorship' && profile.normalizedEntity !== 'Partnership');
+
+            const mappings = [
+                { key: 'cin', field: 'cinVerified', containerId: 'refCin', btnId: 'btnVerifyCin', iconId: 'iconCin', name: 'MCA Certificate of Incorporation', isApplicable: cinApplicable },
+                { key: 'gst', field: 'gstVerified', containerId: 'refGst', btnId: 'btnVerifyGst', iconId: 'iconGst', name: 'GST Certificate', isApplicable: true },
+                { key: 'pan', field: 'panVerified', containerId: 'refPan', btnId: 'btnVerifyPan', iconId: 'iconPan', name: 'Corporate PAN Card', isApplicable: true },
+                { key: 'fssai', field: 'fssaiVerified', containerId: 'refFssai', btnId: 'btnVerifyFssai', iconId: 'iconFssai', name: 'FSSAI License', isApplicable: fssaiApplicable },
+                { key: 'owner_id', field: 'ownerVerified', containerId: 'refOwner', btnId: 'btnVerifyOwner', iconId: 'iconOwner', name: 'Proprietor ID Proof', isApplicable: ownerApplicable },
+                { key: 'shop_license', field: 'shopLicenseVerified', containerId: 'refShopLicense', btnId: 'btnVerifyShopLicense', iconId: 'iconShopLicense', name: 'Trade License', isApplicable: shopApplicable },
+                { key: 'udyam', field: 'udyamVerified', containerId: 'refUdyam', btnId: 'btnVerifyUdyam', iconId: 'iconUdyam', name: 'Udyam Certificate', isApplicable: true },
+                { key: 'domain', field: 'domainVerified', containerId: 'refDomain', btnId: 'btnVerifyDomain', iconId: 'iconDomain', name: 'Corporate Domain DNS Proof', isApplicable: true },
+                { key: 'address', field: 'addressVerified', containerId: 'refAddress', btnId: 'btnVerifyAddress', iconId: 'iconAddress', name: 'Office Address Proof', isApplicable: true },
+                { key: 'bank', field: 'bankVerified', containerId: 'refBank', btnId: 'btnVerifyBank', iconId: 'iconBank', name: 'Bank Mandate', isApplicable: true },
+                { key: 'financials', field: 'auditFinancialsVerified', containerId: 'refFinancials', btnId: 'btnVerifyFinancials', iconId: 'iconFinancials', name: 'Audited Financial Statements', isApplicable: true },
+                { key: 'director', field: 'directorKycVerified', containerId: 'refDirector', btnId: 'btnVerifyDirector', iconId: 'iconDirector', name: 'Director KYC Proof', isApplicable: directorApplicable }
+            ];
+
+            mappings.forEach(m => {
+                const elContainer = document.getElementById(m.containerId);
+                const elBtn = document.getElementById(m.btnId);
+                const elIcon = document.getElementById(m.iconId);
+
+                // Case: Legally Exempt from Statutory Requirement
+                if (!m.isApplicable) {
+                    if (elContainer) {
+                        elContainer.innerHTML = `
+                            <div class="v-evidence-tag na" style="background:#F8FAFC; color:#64748B; border:1px dashed #CBD5E1; padding:2px 8px; border-radius:4px; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                                <span>⊘ Legally Exempt from Statutory Requirement</span>
+                            </div>
+                        `;
+                    }
+                    if (elIcon) {
+                        elIcon.className = "task-status-icon na";
+                        elIcon.textContent = "⊘";
+                        elIcon.style.background = "#F1F5F9";
+                        elIcon.style.color = "#64748B";
+                    }
+                    if (elBtn) {
+                        elBtn.className = "btn-verify-action disabled";
+                        elBtn.textContent = "⊘ Exempt (N/A)";
+                        elBtn.disabled = true;
+                        elBtn.style.background = "#F1F5F9";
+                        elBtn.style.color = "#64748B";
+                        elBtn.style.cursor = "not-allowed";
+                        elBtn.onclick = null;
+                    }
+                    verificationState[m.field] = false;
+                    return;
+                }
+
+                // Reset button & icon styles
+                if (elBtn) {
+                    elBtn.disabled = false;
+                    elBtn.style.cursor = "pointer";
+                    elBtn.style.background = "";
+                    elBtn.style.color = "";
+                    elBtn.style.borderColor = "";
+                }
+                if (elIcon) {
+                    elIcon.style.background = "";
+                    elIcon.style.color = "";
+                    elIcon.style.borderColor = "";
+                }
+
+                const matched = findDocumentForRequirement(m.key, docs);
+
+                if (!matched) {
+                    // 1. If actual document has NOT been uploaded:
+                    // Show "Document Missing" and "+ Upload"
+                    verificationState[m.field] = false;
+                    delete verificationState[m.field + '_inReview'];
+
+                    if (elContainer) {
+                        elContainer.innerHTML = `
+                            <div class="v-evidence-tag missing">
+                                <span>Document Missing</span>
+                                <span style="color:#CBD5E1;">•</span>
+                                <a href="documents.html?openUpload=true&assoc=${encodeURIComponent(m.key)}">+ Upload</a>
+                            </div>
+                        `;
+                    }
+                    if (elIcon) {
+                        elIcon.className = "task-status-icon unverified";
+                        elIcon.textContent = "○";
+                    }
+                    if (elBtn) {
+                        elBtn.className = "btn-verify-action";
+                        elBtn.textContent = "Upload Document";
+                        elBtn.onclick = function() {
+                            handleMissingDocClick(m.key, m.name);
+                        };
+                    }
+                } else {
+                    // Actual document exists in digital locker
+                    const docStatus = (matched.status || '').toLowerCase();
+                    const docLevel = (matched.verificationLevel || '').toLowerCase();
+                    const isStateVerified = Boolean(verificationState[m.field]);
+
+                    const isExplicitInReview = docStatus === 'in review' || docStatus === 'pending review' || docLevel.includes('in review') || Boolean(verificationState[m.field + '_inReview']);
+
+                    const isVerified = (docStatus === 'verified' || docStatus === 'active' || docLevel.includes('verified') || isStateVerified) && !isExplicitInReview;
+
+                    if (isVerified) {
+                        // 3. If uploaded document has gone through verification:
+                        // Show "✓ Verified" and "View Document"
+                        // NEVER show "Missing + Upload" when already Verified.
+                        verificationState[m.field] = true;
+                        delete verificationState[m.field + '_inReview'];
+
+                        if (elContainer) {
+                            elContainer.innerHTML = `
+                                <div class="v-evidence-tag verified">
+                                    <span>✓ Verified</span>
+                                    <span style="color:#86EFAC;">•</span>
+                                    <a href="documents.html?view=${encodeURIComponent(matched.id)}">View Document</a>
+                                    <span class="v-evidence-ref">(${matched.name || matched.id})</span>
+                                </div>
+                            `;
+                        }
+                        if (elIcon) {
+                            elIcon.className = "task-status-icon verified";
+                            elIcon.textContent = "✓";
+                        }
+                        if (elBtn) {
+                            elBtn.className = "btn-verify-action verified";
+                            elBtn.textContent = "✓ Verified";
+                            elBtn.onclick = function() {
+                                showToast(`${m.name} is verified against official records.`, 'success');
+                            };
+                        }
+                    } else if (isExplicitInReview) {
+                        // Submitted for verification:
+                        // Show "In Review" and "View Document"
+                        verificationState[m.field] = false;
+                        verificationState[m.field + '_inReview'] = true;
+
+                        if (elContainer) {
+                            elContainer.innerHTML = `
+                                <div class="v-evidence-tag in-review">
+                                    <span>In Review</span>
+                                    <span style="color:#FCD34D;">•</span>
+                                    <a href="documents.html?view=${encodeURIComponent(matched.id)}">View Document</a>
+                                    <span class="v-evidence-ref">(${matched.name || matched.id})</span>
+                                </div>
+                            `;
+                        }
+                        if (elIcon) {
+                            elIcon.className = "task-status-icon in-review";
+                            elIcon.textContent = "⏳";
+                        }
+                        if (elBtn) {
+                            elBtn.className = "btn-verify-action in-review";
+                            elBtn.textContent = "In Review";
+                            elBtn.onclick = function() {
+                                handleInReviewClick(m.key, m.field, m.name, matched.id);
+                            };
+                        }
+                    } else {
+                        // 2. If document has been uploaded (pending review submission):
+                        // Show "Uploaded" and "View Document"
+                        verificationState[m.field] = false;
+
+                        if (elContainer) {
+                            elContainer.innerHTML = `
+                                <div class="v-evidence-tag uploaded">
+                                    <span>Uploaded</span>
+                                    <span style="color:#93C5FD;">•</span>
+                                    <a href="documents.html?view=${encodeURIComponent(matched.id)}">View Document</a>
+                                    <span class="v-evidence-ref">(${matched.name || matched.id})</span>
+                                </div>
+                            `;
+                        }
+                        if (elIcon) {
+                            elIcon.className = "task-status-icon uploaded";
+                            elIcon.textContent = "📄";
+                        }
+                        if (elBtn) {
+                            elBtn.className = "btn-verify-action uploaded";
+                            elBtn.textContent = "Verify Document →";
+                            elBtn.onclick = function() {
+                                submitDocForVerification(m.key, m.field, m.name, matched.id);
+                            };
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderEvidenceLinks() {
+            let docs = [];
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) docs = JSON.parse(stored);
+            } catch(e) {}
+            let identity = {};
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) identity = JSON.parse(storedId);
+            } catch(e) {}
+            const profile = (typeof getBusinessRequirementProfile === 'function')
+                ? getBusinessRequirementProfile(identity)
+                : {};
+            renderDocumentEvidenceRows(docs, identity, profile);
+        }
+
+        function handleMissingDocClick(key, name) {
+            showToast(`Please upload ${name} in Documents Locker first. Verification cannot proceed without evidence.`, 'warning');
+            setTimeout(() => {
+                window.location.href = `documents.html?openUpload=true&assoc=${encodeURIComponent(key)}`;
+            }, 600);
+        }
+
+        // POINT 2B, 2C, 2D: Document-Specific Verification Trigger
+        function submitDocForVerification(key, field, name, docId) {
+            if (key === 'owner_id' || key === 'aadhaar') {
+                openAadhaarOtpModal(docId);
+                return;
+            }
+            if (key === 'domain') {
+                runDnsCheck();
+                return;
+            }
+            openDocVerifyModal(key, field, name, docId);
+        }
+
+        /* ==========================================================================
+           AADHAAR OTP VERIFICATION PROTOCOL (Point 2C)
+           ========================================================================== */
+        let activeAadhaarDocId = null;
+
+        function openAadhaarOtpModal(docId) {
+            activeAadhaarDocId = docId;
+            let identity = {};
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) identity = JSON.parse(storedId);
+            } catch(e) {}
+
+            const aadhaarInput = document.getElementById('aadhaarNumInput');
+            if (aadhaarInput) {
+                aadhaarInput.value = identity.ownerId || identity.aadhaar || '5482 9102 3847';
+            }
+
+            document.getElementById('aadhaarStep1').style.display = 'block';
+            document.getElementById('aadhaarStep2').style.display = 'none';
+
+            const modal = document.getElementById('aadhaarOtpModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAadhaarOtpModal() {
+            const modal = document.getElementById('aadhaarOtpModal');
+            if (modal) modal.style.display = 'none';
+            activeAadhaarDocId = null;
+        }
+
+        function sendAadhaarOtp() {
+            const num = (document.getElementById('aadhaarNumInput').value || '').trim();
+            if (num.replace(/\s/g, '').length < 12) {
+                showToast('Please enter a valid 12-digit Aadhaar number.', 'warning');
+                return;
+            }
+
+            document.getElementById('aadhaarStep1').style.display = 'none';
+            document.getElementById('aadhaarStep2').style.display = 'block';
+            showToast('Demo Aadhaar OTP: 782194 sent to registered mobile.', 'info');
+        }
+
+        function verifyAadhaarOtp() {
+            const otp = (document.getElementById('aadhaarOtpInput').value || '').trim();
+            if (otp !== '782194' && otp.length !== 6) {
+                showToast('Invalid OTP entered. Please enter 782194.', 'danger');
+                return;
+            }
+
+            let docs = [];
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) docs = JSON.parse(stored);
+            } catch(e) {}
+
+            let targetDoc = null;
+            if (activeAadhaarDocId) {
+                targetDoc = docs.find(d => d.id === activeAadhaarDocId);
+            }
+            if (!targetDoc) {
+                targetDoc = findDocumentForRequirement('owner_id', docs);
+            }
+
+            if (targetDoc) {
+                targetDoc.status = 'Verified';
+                targetDoc.verificationLevel = 'L2 Verified';
+                try {
+                    localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                } catch(e) {}
+            }
+
+            verificationState.ownerVerified = true;
+            delete verificationState.ownerVerified_inReview;
+            saveVerificationState();
+
+            addTimelineEvent('UIDAI Aadhaar OTP Authentication Verified', 'L2', 'EV-UIDAI-' + Math.floor(1000 + Math.random() * 9000));
+            showToast('Aadhaar successfully verified via OTP!', 'success');
+
+            closeAadhaarOtpModal();
+            recalculateAndRender();
+        }
+
+        /* ==========================================================================
+           DOCUMENT-SPECIFIC VERIFICATION PROTOCOL (Point 2D)
+           ========================================================================== */
+        let currentDocVerifyContext = null;
+
+        function openDocVerifyModal(key, field, name, docId) {
+            let docs = [];
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) docs = JSON.parse(stored);
+            } catch(e) {}
+            let identity = {};
+            try {
+                const storedId = localStorage.getItem('ohana_business_identity');
+                if (storedId) identity = JSON.parse(storedId);
+            } catch(e) {}
+
+            const matched = docs.find(d => d.id === docId) || findDocumentForRequirement(key, docs);
+            if (!matched) {
+                handleMissingDocClick(key, name);
+                return;
+            }
+
+            let authority = 'Authorized Regulatory Authority';
+            let identifier = matched.ref || 'DOC-REG-VALID';
+            let icon = '📄';
+
+            switch (key) {
+                case 'pan':
+                    authority = 'NSDL / Income Tax Department API Registry';
+                    identifier = identity.pan ? `PAN: ${identity.pan}` : (matched.ref || 'PAN: ABCDE1234F');
+                    icon = '🪪';
+                    break;
+                case 'gst':
+                    authority = 'GSTN / Central Board of Indirect Taxes & Customs (CBIC)';
+                    identifier = identity.gstin ? `GSTIN: ${identity.gstin}` : (matched.ref || 'GSTIN: 27ABCDE1234F1Z5');
+                    icon = '🧾';
+                    break;
+                case 'cin':
+                    authority = 'Ministry of Corporate Affairs (MCA V3 Registry)';
+                    identifier = identity.cin ? `CIN: ${identity.cin}` : (matched.ref || 'CIN: U72200PN2021PTC198765');
+                    icon = '🏛️';
+                    break;
+                case 'udyam':
+                    authority = 'Ministry of Micro, Small & Medium Enterprises (MSME)';
+                    identifier = identity.udyam ? `Udyam: ${identity.udyam}` : (matched.ref || 'UDYAM-MH-26-0019284');
+                    icon = '📜';
+                    break;
+                case 'fssai':
+                    authority = 'Food Safety & Standards Authority of India (FOSCOS)';
+                    identifier = identity.fssai ? `FSSAI: ${identity.fssai}` : (matched.ref || 'FSSAI: 11522001000987');
+                    icon = '🥗';
+                    break;
+                case 'shop_license':
+                    authority = 'Municipal Corporation / State Labour Department';
+                    identifier = identity.shopLicense ? `Trade License: ${identity.shopLicense}` : (matched.ref || 'MH-PUN-SHOP-44910');
+                    icon = '🏢';
+                    break;
+                case 'bank':
+                    authority = 'National Payments Corporation of India (Penny-Drop IFSC Check)';
+                    identifier = matched.ref || 'HDFC Bank · A/C 50200019283741';
+                    icon = '🏦';
+                    break;
+                case 'address':
+                    authority = 'Municipal Property Tax & Commercial Utility Register';
+                    identifier = identity.address || matched.ref || 'Tech Park One, Cyber City, Pune';
+                    icon = '📍';
+                    break;
+                case 'financials':
+                    authority = 'Institute of Chartered Accountants of India (ICAI UDIN Check)';
+                    identifier = matched.ref || 'CA UDIN Attestation 2026';
+                    icon = '📊';
+                    break;
+                case 'director':
+                    authority = 'MCA Director Identification Number (DIN) & Biometric KYC';
+                    identifier = matched.ref || 'DIN: 08912401';
+                    icon = '👤';
+                    break;
+            }
+
+            currentDocVerifyContext = { key, field, name, docId: matched.id, identifier, authority };
+
+            document.getElementById('dvmIcon').textContent = icon;
+            document.getElementById('dvmTitle').textContent = `${name} Verification`;
+            document.getElementById('dvmSubtitle').textContent = `Method: ${authority}`;
+            document.getElementById('dvmIdentifier').textContent = identifier;
+            document.getElementById('dvmAuthority').textContent = authority;
+            document.getElementById('dvmSourceDoc').textContent = matched.name || matched.fileName;
+
+            document.getElementById('dvmLoading').style.display = 'none';
+            document.getElementById('dvmSuccess').style.display = 'none';
+            document.getElementById('dvmActions').style.display = 'flex';
+            document.getElementById('dvmConfirmBtn').disabled = false;
+            document.getElementById('dvmConfirmBtn').textContent = 'Run Verification Check';
+
+            const modal = document.getElementById('docVerifyModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeDocVerifyModal() {
+            const modal = document.getElementById('docVerifyModal');
+            if (modal) modal.style.display = 'none';
+            currentDocVerifyContext = null;
+        }
+
+        function executeDocSpecificVerification() {
+            if (!currentDocVerifyContext) return;
+            const { key, field, name, docId, authority } = currentDocVerifyContext;
+
+            const btn = document.getElementById('dvmConfirmBtn');
+            if (btn) btn.disabled = true;
+            document.getElementById('dvmLoading').style.display = 'block';
+            document.getElementById('dvmLoadingText').textContent = `Querying ${authority}...`;
+
+            setTimeout(() => {
+                document.getElementById('dvmLoading').style.display = 'none';
+                document.getElementById('dvmSuccess').style.display = 'block';
+
+                let docs = [];
+                try {
+                    const stored = localStorage.getItem('ohana_documents');
+                    if (stored) docs = JSON.parse(stored);
+                } catch(e) {}
+
+                const targetDoc = docs.find(d => d.id === docId);
+                if (targetDoc) {
+                    targetDoc.status = 'Verified';
+                    targetDoc.verificationLevel = 'L2 Verified';
+                    try {
+                        localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                    } catch(e) {}
+                }
+
+                verificationState[field] = true;
+                delete verificationState[field + '_inReview'];
+                saveVerificationState();
+
+                addTimelineEvent(`${name} Verified via ${authority}`, "L2", "EV-OK-" + Math.floor(1000 + Math.random() * 9000));
+                showToast(`${name} verified with 100% data integrity!`, 'success');
+
+                setTimeout(() => {
+                    closeDocVerifyModal();
+                    recalculateAndRender();
+                }, 600);
+            }, 700);
+        }
+
+        function handleInReviewClick(key, field, name, docId) {
+            const doFastTrack = confirm(`${name} is currently In Review by compliance team.\n\nSimulate Admin Approval now for this demo?`);
+            if (doFastTrack) {
+                approveDocDemo(key, field, name, docId);
+            } else {
+                showToast(`${name} is currently under verification review. Approval is managed in Admin Review.`, 'info');
+            }
+        }
+
+        function approveDocDemo(key, field, name, docId) {
+            let docs = [];
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) docs = JSON.parse(stored);
+            } catch(e) {}
+
+            const targetDoc = docs.find(d => d.id === docId);
+            if (targetDoc) {
+                targetDoc.status = 'Verified';
+                targetDoc.verificationLevel = 'L2 Verified';
+                try {
+                    localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                } catch(e) {}
+            }
+
+            verificationState[field] = true;
+            delete verificationState[field + '_inReview'];
+            saveVerificationState();
+
+            addTimelineEvent(`${name} Verified (Admin Approved)`, "L2", "EV-OK-" + Math.floor(1000 + Math.random() * 9000));
+            showToast(`${name} approved and verified!`, 'success');
+            recalculateAndRender();
+        }
+
+        function updateTaskRowUI(iconId, btnId, isDone) {
+            const icon = document.getElementById(iconId);
+            const btn = document.getElementById(btnId);
+            if (!icon || !btn) return;
+
+            if (isDone) {
+                icon.className = "task-status-icon verified";
+                icon.textContent = "✓";
+                btn.className = "btn-verify-action verified";
+                btn.textContent = "✓ Verified";
+            } else {
+                icon.className = "task-status-icon unverified";
+                icon.textContent = "○";
+                btn.className = "btn-verify-action";
+                btn.textContent = "Verify Now →";
+            }
+        }
+
+        function updateTierBadge(badgeId, isDone) {
+            const b = document.getElementById(badgeId);
+            if (!b) return;
+            if (isDone) {
+                b.className = "badge badge-verified";
+                b.textContent = "✓ Verified";
+            } else {
+                b.className = "badge badge-warning";
+                b.textContent = "Pending Proofs";
+            }
+        }
+
+        function renderRemainingRequirements(level, customIdentity, customProfile) {
+            const container = document.getElementById('remainingRequirementsList');
+            const remCountText = document.getElementById('vRemainingText');
+            if (!container) return;
+
+            const identity = customIdentity || JSON.parse(localStorage.getItem('ohana_business_identity') || '{}');
+            const profile = customProfile || (typeof getBusinessRequirementProfile === 'function' ? getBusinessRequirementProfile(identity) : {});
+            const isSoleProp = (profile.normalizedEntity === "Sole Proprietorship");
+            const isFood = (profile.normalizedBusiness === "Food & Restaurant");
+
+            let remaining = [];
+
+            if (level === "L0") {
+                if (!verificationState.emailVerified) remaining.push("Official Email OTP verification");
+                if (!verificationState.phoneVerified) remaining.push("Official Business Phone OTP verification");
+            } else if (level === "L1") {
+                if (!verificationState.panVerified) remaining.push("Income Tax PAN Card validation");
+                if (isSoleProp) {
+                    if (!verificationState.ownerVerified) remaining.push("Proprietor Aadhaar / Voter ID KYC");
+                    if (isFood && !verificationState.fssaiVerified) remaining.push("FSSAI Food Safety License");
+                    if (!verificationState.shopLicenseVerified) remaining.push("Shop & Establishment Trade License");
+                } else {
+                    if (!verificationState.cinVerified) remaining.push("MCA Certificate of Incorporation");
+                    if (!verificationState.gstVerified) remaining.push("GSTIN Tax Portal registration");
+                }
+            } else if (level === "L2") {
+                if (!verificationState.bankVerified) remaining.push("Commercial Bank Account IFSC confirmation");
+                if (!verificationState.addressVerified) remaining.push("Business Operating Address Geo-tag verification");
+                if (!isSoleProp && !verificationState.domainVerified) remaining.push("Corporate Domain DNS TXT verification");
+            } else if (level === "L3") {
+                if (!verificationState.auditFinancialsVerified) remaining.push("Audited Financial Statements upload");
+                if (!isSoleProp && !verificationState.directorKycVerified) remaining.push("Executive Director Video / Biometric KYC");
+                if (!verificationState.enterpriseAssured) remaining.push("Enterprise Assurance compliance audit");
+            }
+
+            if (remCountText) {
+                remCountText.textContent = remaining.length > 0 
+                    ? `${remaining.length} Requirement${remaining.length === 1 ? '' : 's'} Remaining` 
+                    : "All requirements met!";
+            }
+
+            if (remaining.length === 0) {
+                container.innerHTML = `
+                    <div style="padding:8px 10px; background:#DCFCE7; border:1px solid #86EFAC; border-radius:6px; color:#15803D; font-weight:600; font-size:11.5px; display:flex; align-items:center; gap:6px;">
+                        <span>✓</span> <span>All requirements completed for top assurance tier!</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = remaining.map(r => `
+                <div class="v-req-item">
+                    <span class="v-req-bullet">○</span>
+                    <span class="v-req-label">${r}</span>
+                </div>
+            `).join('');
+        }
+
+        // State & Profile Simulator Switcher (QA Scenarios A, B, C, D)
+        function switchVerificationProfile(presetKey) {
+            let identity = {};
+            try {
+                const stored = localStorage.getItem('ohana_business_identity');
+                if (stored) identity = JSON.parse(stored);
+            } catch(e) {}
+
+            if (presetKey === 'sole_food') {
+                identity = {
+                    legalName: "Ganesh Vadapav & Snacks",
+                    tradeName: "Ganesh Vadapav",
+                    entityType: "Sole Proprietorship",
+                    businessType: "Food & Restaurant",
+                    pan: "AKZPM1029F",
+                    fssai: "11522001000987",
+                    shopLicense: "MH-PUN-SHOP-44910",
+                    ownerId: "AADHAAR-89012345",
+                    cin: "", // Explicitly empty and exempt
+                    gstin: "27AKZPM1029F1Z0",
+                    address: "Shop 4, Station Road, Pune 411001",
+                    email: "orders@ganeshvadapav.in",
+                    phone: "+91 98230 11223"
+                };
+
+                // Sole Prop Food state: PAN, Owner ID, FSSAI, Shop License, Bank, Address verified. CIN is NOT applicable.
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.panVerified = true;
+                verificationState.ownerVerified = true;
+                verificationState.fssaiVerified = true;
+                verificationState.shopLicenseVerified = true;
+                verificationState.cinVerified = false; // Exempt
+                verificationState.gstVerified = false; // Optional
+                verificationState.bankVerified = true;
+                verificationState.addressVerified = true;
+                verificationState.domainVerified = false;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (presetKey === 'pvt_ltd') {
+                identity = {
+                    legalName: "ABC Technologies Private Limited",
+                    tradeName: "ABC Technologies",
+                    entityType: "Private Limited",
+                    businessType: "Service Business",
+                    cin: "U72200PN2021PTC198765",
+                    gstin: "27ABCDE1234F1Z5",
+                    pan: "ABCDE1234F",
+                    udyam: "UDYAM-MH-26-0019284",
+                    address: "Unit 402, Tech Park One, Pune 411006",
+                    email: "compliance@abctechnologies.io",
+                    phone: "+91 20 6712 3400"
+                };
+
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.cinVerified = true;
+                verificationState.gstVerified = true;
+                verificationState.panVerified = true;
+                verificationState.udyamVerified = true;
+                verificationState.domainVerified = true;
+                verificationState.addressVerified = true;
+                verificationState.bankVerified = true;
+                verificationState.fssaiVerified = false;
+                verificationState.ownerVerified = false;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (presetKey === 'sole_retail') {
+                identity = {
+                    legalName: "Om Sai Retail Mart",
+                    tradeName: "Om Sai Retail Mart",
+                    entityType: "Sole Proprietorship",
+                    businessType: "Retail Shop",
+                    pan: "BKLPR9812G",
+                    shopLicense: "MH-MUM-SHOP-90112",
+                    ownerId: "AADHAAR-11223344",
+                    cin: "", // Exempt
+                    address: "Shop 12, Market Yard, Mumbai 400001",
+                    email: "contact@omsairetail.in",
+                    phone: "+91 99201 55443"
+                };
+
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.panVerified = true;
+                verificationState.ownerVerified = true;
+                verificationState.shopLicenseVerified = true;
+                verificationState.fssaiVerified = false; // Non-food exempt
+                verificationState.cinVerified = false; // Exempt
+                verificationState.gstVerified = false;
+                verificationState.bankVerified = true;
+                verificationState.addressVerified = true;
+                verificationState.domainVerified = false;
+            }
+
+            localStorage.setItem('ohana_business_identity', JSON.stringify(identity));
+            saveVerificationState();
+            recalculateAndRender();
+
+            if (typeof showToast === 'function') {
+                showToast(`Profile preset loaded: ${identity.tradeName} (${identity.entityType} • ${identity.businessType})`, 'success');
+            }
+        }
+
+        function renderTimeline() {
+            const list = document.getElementById('timelineList');
+            if (!list) return;
+
+            const history = verificationState.verificationHistory || [];
+            if (history.length === 0) {
+                list.innerHTML = `<div style="font-size:11.5px; color:#64748B; padding:10px; background:#F8FAFC; border-radius:6px; border:1px dashed #CBD5E1; text-align:center;">No verification evidence submitted.</div>`;
+                return;
+            }
+
+            list.innerHTML = history.slice(0, 8).map(h => `
+                <div class="v-timeline-item">
+                    <div class="v-timeline-dot"></div>
+                    <div class="v-timeline-title">${h.event}</div>
+                    <div class="v-timeline-meta">
+                        <span>${h.date}</span> • <span class="badge" style="font-size:9.5px; padding:1px 5px;">${h.level}</span>
+                    </div>
+                    <code class="v-timeline-code">${h.ref}</code>
+                </div>
+            `).join('');
+        }
+
+        // Action Handlers
+        function openOtpModal(channel) {
+            currentTargetOtpChannel = channel;
+            document.getElementById('otpModalTitle').textContent = channel === 'email' ? 'Verify Corporate Email' : 'Verify Business Mobile';
+            document.getElementById('otpModalSub').textContent = `Enter the 6-digit prototype verification token for ${channel}:`;
+            document.getElementById('otpCodeInput').value = channel === 'email' ? '849201' : '618290';
+            document.getElementById('otpModal').style.display = 'flex';
+        }
+
+        function closeOtpModal() {
+            document.getElementById('otpModal').style.display = 'none';
+        }
+
+        function confirmOtp() {
+            closeOtpModal();
+            const now = new Date();
+            const timeStr = `${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} IST`;
+
+            if (currentTargetOtpChannel === 'email') {
+                verificationState.emailVerified = true;
+                addTimelineEvent("Corporate Email OTP Confirmed", "L1", "EV-EML-" + Math.floor(1000 + Math.random() * 9000));
+                showToast("Official corporate email verified successfully!", "success");
+            } else {
+                verificationState.phoneVerified = true;
+                addTimelineEvent("Corporate Phone OTP Confirmed", "L1", "EV-PHN-" + Math.floor(1000 + Math.random() * 9000));
+                showToast("Official business phone verified successfully!", "success");
+            }
+
+            recalculateAndRender();
+        }
+
+        function runDnsCheck() {
+            showToast("Querying DNS TXT records for corporate domain...", "info");
+            setTimeout(() => {
+                verificationState.domainVerified = true;
+                delete verificationState.domainVerified_inReview;
+                let docs = [];
+                try {
+                    const stored = localStorage.getItem('ohana_documents');
+                    if (stored) docs = JSON.parse(stored);
+                } catch(e) {}
+                let domDoc = findDocumentForRequirement('domain', docs);
+                if (!domDoc) {
+                    docs.push({
+                        id: 'DOC-DNS-01',
+                        name: 'Corporate Domain SSL & DNS Attestation',
+                        category: 'compliance',
+                        ref: 'DNS-TXT-CRYPTOGRAPHIC',
+                        uploadedDate: new Date().toLocaleDateString('en-GB'),
+                        status: 'Verified',
+                        verificationLevel: 'L3 Verified',
+                        verificationType: 'domain',
+                        fileName: 'domain_dns_attestation.pdf',
+                        icon: '🌐'
+                    });
+                } else {
+                    domDoc.status = 'Verified';
+                    domDoc.verificationLevel = 'L3 Verified';
+                }
+                try {
+                    localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                } catch(e) {}
+                addTimelineEvent("Corporate Domain DNS TXT Verified", "L3", "EV-DNS-" + Math.floor(1000 + Math.random() * 9000));
+                showToast("DNS TXT token validated with 100% cryptographic match!", "success");
+                recalculateAndRender();
+            }, 800);
+        }
+
+        function toggleTask(field, label) {
+            let docs = [];
+            try {
+                const stored = localStorage.getItem('ohana_documents');
+                if (stored) docs = JSON.parse(stored);
+            } catch(e) {}
+
+            const fieldToKey = {
+                'cinVerified': 'cin',
+                'gstVerified': 'gst',
+                'panVerified': 'pan',
+                'fssaiVerified': 'fssai',
+                'ownerVerified': 'owner_id',
+                'shopLicenseVerified': 'shop_license',
+                'udyamVerified': 'udyam',
+                'domainVerified': 'domain',
+                'addressVerified': 'address',
+                'bankVerified': 'bank',
+                'auditFinancialsVerified': 'financials',
+                'directorKycVerified': 'director'
+            };
+
+            const key = fieldToKey[field];
+            if (key) {
+                const matched = findDocumentForRequirement(key, docs);
+                if (!matched) {
+                    handleMissingDocClick(key, label);
+                    return;
+                }
+                if (key === 'owner_id' || key === 'aadhaar') {
+                    if (verificationState.ownerVerified) {
+                        showToast(`${label} is already verified via UIDAI OTP.`, 'info');
+                    } else {
+                        openAadhaarOtpModal(matched.id);
+                    }
+                    return;
+                }
+                if (key === 'domain') {
+                    runDnsCheck();
+                    return;
+                }
+                if (verificationState[field]) {
+                    showToast(`${label} is verified against official records.`, 'info');
+                } else {
+                    openDocVerifyModal(key, field, label, matched.id);
+                }
+                return;
+            } else {
+                verificationState[field] = !verificationState[field];
+                if (verificationState[field]) {
+                    addTimelineEvent(`${label} Verified`, "L1", "EV-REF-" + Math.floor(1000 + Math.random() * 9000));
+                    showToast(`${label} marked as Verified!`, "success");
+                } else {
+                    showToast(`${label} reset to Unverified`, "info");
+                }
+            }
+
+            recalculateAndRender();
+        }
+
+        function requestEnterpriseAudit() {
+            showToast("Submitting application for L4 Enterprise Assurance audit...", "info");
+            setTimeout(() => {
+                verificationState.auditFinancialsVerified = true;
+                verificationState.directorKycVerified = true;
+                verificationState.enterpriseAssured = true;
+                delete verificationState.auditFinancialsVerified_inReview;
+                delete verificationState.directorKycVerified_inReview;
+
+                let docs = [];
+                try {
+                    const stored = localStorage.getItem('ohana_documents');
+                    if (stored) docs = JSON.parse(stored);
+                } catch(e) {}
+
+                let finDoc = findDocumentForRequirement('financials', docs);
+                if (!finDoc) {
+                    docs.push({
+                        id: 'DOC-FIN-99',
+                        name: 'Audited Financial Statements FY 2025-26',
+                        category: 'Bank & Financial',
+                        ref: 'CA-AUDIT-2026-99',
+                        uploadedDate: new Date().toLocaleDateString('en-GB'),
+                        status: 'Verified',
+                        verificationLevel: 'L4 Verified',
+                        verificationType: 'financials',
+                        fileName: 'audited_financials_2026.pdf',
+                        icon: '📊'
+                    });
+                } else {
+                    finDoc.status = 'Verified';
+                    finDoc.verificationLevel = 'L4 Verified';
+                }
+
+                let dirDoc = findDocumentForRequirement('director', docs);
+                if (!dirDoc) {
+                    docs.push({
+                        id: 'DOC-DIR-99',
+                        name: 'Director KYC & Biometric Attestation',
+                        category: 'Business Identity',
+                        ref: 'DIR-KYC-2026-99',
+                        uploadedDate: new Date().toLocaleDateString('en-GB'),
+                        status: 'Verified',
+                        verificationLevel: 'L4 Verified',
+                        verificationType: 'director',
+                        fileName: 'director_kyc_attestation.pdf',
+                        icon: '🪪'
+                    });
+                } else {
+                    dirDoc.status = 'Verified';
+                    dirDoc.verificationLevel = 'L4 Verified';
+                }
+
+                try {
+                    localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                } catch(e) {}
+
+                addTimelineEvent("Enterprise Assurance Audit Approved", "L4", "EV-ENT-9941");
+                showToast("L4 Enterprise Assured attestation granted!", "success");
+                recalculateAndRender();
+            }, 900);
+        }
+
+        function addTimelineEvent(event, level, ref) {
+            const now = new Date();
+            const timeStr = `${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} IST`;
+            if (!verificationState.verificationHistory) verificationState.verificationHistory = [];
+            verificationState.verificationHistory.unshift({
+                event: event,
+                date: timeStr,
+                level: level,
+                status: "Verified",
+                ref: ref
+            });
+        }
+
+        function clearTimeline() {
+            if (confirm("Reset verification timeline history?")) {
+                verificationState.verificationHistory = [];
+                recalculateAndRender();
+                showToast("Verification timeline cleared", "info");
+            }
+        }
+
+        // Preset simulator
+        function presetLevel(lvl) {
+            if (lvl === 'L0') {
+                verificationState.emailVerified = false;
+                verificationState.phoneVerified = false;
+                verificationState.cinVerified = false;
+                verificationState.gstVerified = false;
+                verificationState.panVerified = false;
+                verificationState.udyamVerified = false;
+                verificationState.domainVerified = false;
+                verificationState.addressVerified = false;
+                verificationState.bankVerified = false;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (lvl === 'L1') {
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.cinVerified = false;
+                verificationState.gstVerified = false;
+                verificationState.panVerified = false;
+                verificationState.udyamVerified = false;
+                verificationState.domainVerified = false;
+                verificationState.addressVerified = false;
+                verificationState.bankVerified = false;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (lvl === 'L2') {
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.cinVerified = true;
+                verificationState.gstVerified = true;
+                verificationState.panVerified = true;
+                verificationState.udyamVerified = true;
+                verificationState.domainVerified = false;
+                verificationState.addressVerified = false;
+                verificationState.bankVerified = false;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (lvl === 'L3') {
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.cinVerified = true;
+                verificationState.gstVerified = true;
+                verificationState.panVerified = true;
+                verificationState.udyamVerified = true;
+                verificationState.domainVerified = true;
+                verificationState.addressVerified = true;
+                verificationState.bankVerified = true;
+                verificationState.auditFinancialsVerified = false;
+                verificationState.directorKycVerified = false;
+                verificationState.enterpriseAssured = false;
+            } else if (lvl === 'L4') {
+                verificationState.emailVerified = true;
+                verificationState.phoneVerified = true;
+                verificationState.cinVerified = true;
+                verificationState.gstVerified = true;
+                verificationState.panVerified = true;
+                verificationState.udyamVerified = true;
+                verificationState.domainVerified = true;
+                verificationState.addressVerified = true;
+                verificationState.bankVerified = true;
+                verificationState.auditFinancialsVerified = true;
+                verificationState.directorKycVerified = true;
+                verificationState.enterpriseAssured = true;
+            }
+
+            addTimelineEvent(`Verification tier set to ${lvl}`, lvl, "EV-SIM-AUTO");
+            recalculateAndRender();
+            showToast(`Prototype verification state switched to ${lvl}!`, "success");
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Integrations | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ECOSYSTEM & CONNECTIVITY</span>
+                <h1>Integrations</h1>
+                <p class="subtitle">Connect Ohana Business Locker with your existing tools.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn outline" onclick="showToast('Browsing Ohana Integration Marketplace...', 'info')">Explore Marketplace</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats">
+            <div class="stat">
+                <small>Connected Tools</small>
+                <b>05 / 07</b>
+                <span class="positive">● Real-time data synchronization</span>
+            </div>
+            <div class="stat">
+                <small>Active API Webhooks</small>
+                <b>04</b>
+                <span>Zero failed webhook events</span>
+            </div>
+            <div class="stat">
+                <small>Automated Vault Backups</small>
+                <b>Daily</b>
+                <span>Encrypted AWS S3 snapshot</span>
+            </div>
+            <div class="stat">
+                <small>Monthly API Calls</small>
+                <b>18.4k</b>
+                <span>Of 100,000 allowance</span>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="toolbar-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterIntegrations('all', this)">All Integrations (7)</button>
+                <button class="filter-tab" onclick="filterIntegrations('connected', this)">Connected (5)</button>
+                <button class="filter-tab" onclick="filterIntegrations('available', this)">Available (2)</button>
+            </div>
+            <span class="muted" style="font-size:13px;">SOC-2 Type II Certified Connectors</span>
+        </div>
+
+        <!-- Integrations Card Grid -->
+        <div class="integrations-grid" id="integrationsGrid" style="margin-bottom:30px;">
+            <!-- 1. Google Drive -->
+            <div class="integration-card" data-status="connected">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#ea4335;">📁</div>
+                        <div>
+                            <h3 class="integration-title">Google Drive</h3>
+                            <span class="integration-category">Cloud Storage</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Automatically synchronize verified business documents and renewal notices directly to your Google Workspace drive.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-verified">● Connected</span>
+                    <button class="btn-action" onclick="toggleConnect(this, 'Google Drive')">Configure</button>
+                </div>
+            </div>
+
+            <!-- 2. Microsoft 365 -->
+            <div class="integration-card" data-status="connected">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#0078d4;">🏢</div>
+                        <div>
+                            <h3 class="integration-title">Microsoft 365</h3>
+                            <span class="integration-category">Enterprise Suite</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Single Sign-On (SSO) with Azure Active Directory and automated compliance archival to OneDrive & SharePoint.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-verified">● Connected</span>
+                    <button class="btn-action" onclick="toggleConnect(this, 'Microsoft 365')">Configure</button>
+                </div>
+            </div>
+
+            <!-- 3. AWS S3 -->
+            <div class="integration-card" data-status="connected">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#ff9900;">☁️</div>
+                        <div>
+                            <h3 class="integration-title">Amazon Web Services (AWS)</h3>
+                            <span class="integration-category">Cloud Infrastructure</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Cold-storage document replication with KMS encryption for enterprise business disaster recovery compliance.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-verified">● Connected</span>
+                    <button class="btn-action" onclick="toggleConnect(this, 'AWS')">Configure</button>
+                </div>
+            </div>
+
+            <!-- 4. Slack -->
+            <div class="integration-card" data-status="connected">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#4a154b;">💬</div>
+                        <div>
+                            <h3 class="integration-title">Slack</h3>
+                            <span class="integration-category">Team Communication</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Receive real-time alerts in your compliance channel for expiring renewals, new audit logs, and KYC approvals.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-verified">● Connected</span>
+                    <button class="btn-action" onclick="toggleConnect(this, 'Slack')">Configure</button>
+                </div>
+            </div>
+
+            <!-- 5. CRM (Salesforce / HubSpot) -->
+            <div class="integration-card" data-status="available">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#00a1e0;">👥</div>
+                        <div>
+                            <h3 class="integration-title">Salesforce & HubSpot CRM</h3>
+                            <span class="integration-category">Customer Relationship</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Embed verified business trust badges and compliance passports into customer proposals and B2B vendor onboarding.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-neutral">Not Connected</span>
+                    <button class="btn btn-sm" onclick="toggleConnect(this, 'CRM')">Connect</button>
+                </div>
+            </div>
+
+            <!-- 6. ERP (SAP / Zoho) -->
+            <div class="integration-card" data-status="available">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#0f172a;">📊</div>
+                        <div>
+                            <h3 class="integration-title">SAP & Zoho ERP</h3>
+                            <span class="integration-category">Enterprise Resource Planning</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Sync vendor GST reconciliations, PO approvals, and company asset inventory directly into your core ERP database.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-neutral">Not Connected</span>
+                    <button class="btn btn-sm" onclick="toggleConnect(this, 'ERP')">Connect</button>
+                </div>
+            </div>
+
+            <!-- 7. Accounting Software -->
+            <div class="integration-card" data-status="connected">
+                <div>
+                    <div class="integration-head">
+                        <div class="integration-icon" style="color:#10b981;">🧾</div>
+                        <div>
+                            <h3 class="integration-title">Tally & QuickBooks</h3>
+                            <span class="integration-category">Financial Accounting</span>
+                        </div>
+                    </div>
+                    <p class="integration-desc">Automated tax filing challan imports, e-way bill reconciliation, and annual balance sheet validation check.</p>
+                </div>
+                <div class="integration-foot">
+                    <span class="badge badge-verified">● Connected</span>
+                    <button class="btn-action" onclick="toggleConnect(this, 'Accounting')">Configure</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Access Section -->
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0 0 4px;">Developer & API Access</h3>
+                    <p class="muted" style="margin:0;font-size:13px;">Automate organization verification, documents and asset sync via REST API</p>
+                </div>
+                <span class="badge badge-info">v1.2 REST API</span>
+            </div>
+
+            <div style="margin-top:18px;display:flex;flex-direction:column;gap:16px;">
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                        <span style="font-size:13px;font-weight:700;color:var(--text-main);">Production Secret API Key</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="btn-action" onclick="copyApiKey()">Copy API Key</button>
+                            <button class="btn-action" onclick="showToast('Regenerating API Key requires admin authorization', 'warning')">Regenerate</button>
+                        </div>
+                    </div>
+                    <div style="font-family:monospace;background:#ffffff;border:1px solid #cbd5e1;padding:10px 14px;border-radius:8px;font-size:13px;color:#0f172a;display:flex;justify-content:space-between;align-items:center;">
+                        <span id="apiKeyText">ohn_live_9f81a7b84c3e21d09e5fa418cb2026</span>
+                        <span style="color:#16A34A;font-size:12px;font-weight:700;">● Active</span>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-top:8px;">
+                    <div style="padding:14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;">
+                        <b style="font-size:13.5px;display:block;margin-bottom:4px;">Endpoint Base URL</b>
+                        <code style="font-size:12.5px;color:#FF2028;">https://api.ohana.io/v1</code>
+                    </div>
+                    <div style="padding:14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;">
+                        <b style="font-size:13.5px;display:block;margin-bottom:4px;">Rate Limiting</b>
+                        <span style="font-size:13px;color:#64748b;">1,200 req / minute</span>
+                    </div>
+                    <div style="padding:14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;">
+                        <b style="font-size:13.5px;display:block;margin-bottom:4px;">Documentation</b>
+                        <a href="support.html" style="font-size:13px;color:#FF2028;font-weight:600;text-decoration:none;">View API Docs →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function filterIntegrations(status, btn) {
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('.integration-card');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'flex';
+                } else {
+                    const cardStatus = card.getAttribute('data-status');
+                    card.style.display = (cardStatus === status) ? 'flex' : 'none';
+                }
+            });
+        }
+
+        function toggleConnect(btn, name) {
+            const card = btn.closest('.integration-card');
+            const statusBadge = card.querySelector('.badge');
+            if (card.getAttribute('data-status') === 'connected') {
+                showToast(name + ' configuration panel opened', 'info');
+            } else {
+                card.setAttribute('data-status', 'connected');
+                statusBadge.className = 'badge badge-verified';
+                statusBadge.textContent = '● Connected';
+                btn.className = 'btn-action';
+                btn.textContent = 'Configure';
+                showToast('Successfully connected ' + name + ' to Ohana Locker', 'success');
+            }
+        }
+
+        function copyApiKey() {
+            const key = document.getElementById('apiKeyText').innerText;
+            navigator.clipboard.writeText(key).then(() => {
+                showToast('API Key copied to clipboard!', 'success');
+            });
+        }
+    </script>
+</body>
+
+</html>

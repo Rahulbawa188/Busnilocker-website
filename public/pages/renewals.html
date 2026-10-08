@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Renewals Centre | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong>ABC Technologies</strong>
+            <span>✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a class="active" href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">AUTOMATED COMPLIANCE &amp; EXPIRY ENGINE</span>
+                <h1>Renewals Centre</h1>
+                <p class="subtitle">Renewals are automatically tracked from your business documents. Expiry dates, compliance cycles, and timely email reminders are maintained in real time.</p>
+            </div>
+            <div class="header-actions">
+                <a href="documents.html?openUpload=true" class="btn" style="text-decoration:none;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    + Upload Document
+                </a>
+                <button type="button" class="btn outline" onclick="openAddRenewalModal()" title="Add manual renewal only when unlinked to a document" style="font-size:12.5px;">
+                    + Add Manually
+                </button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Dynamic Notice Banner -->
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:12px 18px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">⚡</span>
+                <div>
+                    <strong style="color:#166534; font-size:13.5px; display:block;">Automatic Document-Linked Renewals Active</strong>
+                    <span style="color:#15803D; font-size:12.5px;">Whenever a document with an expiry date is uploaded or updated in your Document Locker, its renewal deadline is automatically registered here.</span>
+                </div>
+            </div>
+            <a href="documents.html" class="btn outline btn-sm" style="background:#fff; white-space:nowrap; text-decoration:none;">View Vault Documents</a>
+        </div>
+
+        <!-- Stats Overview Cards (Point 1 & Point 3: Email Only) -->
+        <div class="stats" style="grid-template-columns: repeat(4, 1fr); margin-bottom:24px;">
+            <div class="stat">
+                <small>Total Tracked Deadlines</small>
+                <b id="totalRenewalsCount">00</b>
+                <span id="statTrackedDesc">From verified documents &amp; filings</span>
+            </div>
+            <div class="stat">
+                <small>Urgent Attention (&lt; 30 Days)</small>
+                <b style="color:#dc2626;" id="urgentCount">00</b>
+                <span class="warning" id="statUrgentDesc"><span class="pulse-dot-amber"></span> None due immediately</span>
+            </div>
+            <div class="stat">
+                <small>Upcoming (&lt; 60 Days)</small>
+                <b style="color:#d97706;" id="upcomingCount">00</b>
+                <span id="statUpcomingDesc">Filings &amp; licenses</span>
+            </div>
+            <div class="stat">
+                <small>Auto-Reminder Dispatch</small>
+                <b style="color:#059669;">Active</b>
+                <span class="positive">● Email Alerts</span>
+            </div>
+        </div>
+
+        <!-- View Switcher & Toolbar -->
+        <div class="toolbar-bar" style="margin-bottom:18px;">
+            <div class="filter-tabs">
+                <button class="filter-tab active" id="tabListView" onclick="switchView('list')">List View (<span id="tabListCounter">0</span>)</button>
+                <button class="filter-tab" id="tabCalView" onclick="switchView('calendar')">Calendar View</button>
+                <button class="filter-tab" id="tabNotifView" onclick="switchView('notifications')">Notification History</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="muted" style="font-size:13px;">Reminder Engine: Automated 90d, 60d, 30d, 7d Email alerts</span>
+            </div>
+        </div>
+
+        <!-- 1. LIST VIEW SECTION -->
+        <section class="panel" id="viewSectionList" style="margin-bottom:24px;">
+            <div class="toolbar-bar" style="border-bottom:1px solid #f1f5f9; padding-bottom:12px; margin-bottom:14px;">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="renewalSearch" placeholder="Search by item, source document or category..." onkeyup="filterRenewalsTable()">
+                </div>
+                <div class="filter-tabs" id="renewalCategoryTabs">
+                    <button class="filter-tab active" onclick="setRenewalCatFilter('all', this)">All Categories</button>
+                    <button class="filter-tab" onclick="setRenewalCatFilter('License', this)">Licenses &amp; Permits</button>
+                    <button class="filter-tab" onclick="setRenewalCatFilter('Statutory', this)">Statutory</button>
+                    <button class="filter-tab" onclick="setRenewalCatFilter('Digital', this)">Digital Assets</button>
+                    <button class="filter-tab" onclick="setRenewalCatFilter('Insurance', this)">Insurance</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none; border:none;">
+                <table class="saas-table" id="renewalsTable">
+                    <thead>
+                        <tr>
+                            <th>Item &amp; Purpose</th>
+                            <th>Category</th>
+                            <th>Expiry Date</th>
+                            <th>Urgency / Days Left</th>
+                            <th>Owner / Assignee</th>
+                            <th>Reminder Rule</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="renewalsTableBody">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. CALENDAR VIEW SECTION -->
+        <section class="panel" id="viewSectionCalendar" style="display:none; margin-bottom:24px;">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">Statutory Expiry Calendar</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Visual timeline of compliance deadlines and license renewals derived from your documents</p>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <span class="badge badge-warning">⚡ Due &lt; 30 Days</span>
+                    <span class="badge badge-verified">✓ Scheduled</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Monthly Calendar Cards -->
+            <div id="calendarMonthsGrid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:14px;">
+                <!-- Populated dynamically via renderCalendarView() -->
+            </div>
+        </section>
+
+        <!-- 3. NOTIFICATION HISTORY SECTION (POINT 3: EMAIL ONLY) -->
+        <section class="panel" id="viewSectionNotif" style="display:none; margin-bottom:24px;">
+            <div class="section-head">
+                <div>
+                    <h3 style="margin:0;">Dispatched Renewal Email Notifications</h3>
+                    <p class="muted" style="margin:2px 0 0; font-size:12.5px;">Audit log of reminders sent via Email and Dashboard notifications (90d, 60d, 30d, 7d schedule)</p>
+                </div>
+                <span class="badge badge-verified">100% Email Delivery SLA</span>
+            </div>
+
+            <div class="table-container" style="box-shadow:none; border:none;">
+                <table class="saas-table">
+                    <thead>
+                        <tr>
+                            <th>Recipient</th>
+                            <th>Reminder Event</th>
+                            <th>Dispatched Via</th>
+                            <th>Timestamp</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notifHistoryBody">
+                        <tr>
+                            <td><b>Rahul Bawa (Owner)</b><br><small class="muted">rahul.bawa@abctech.com</small></td>
+                            <td>30-Day Expiry Warning: Primary Domain abctechnologies.io</td>
+                            <td>Email Alert</td>
+                            <td>Today, 09:00 AM</td>
+                            <td><span class="badge badge-verified">✓ Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Priya Sharma (Admin)</b><br><small class="muted">priya.sharma@abctech.com</small></td>
+                            <td>60-Day Notice: GSTIN Quarterly Filing Acknowledgement</td>
+                            <td>Email Alert</td>
+                            <td>28 Sep 2026, 10:30 AM</td>
+                            <td><span class="badge badge-verified">✓ Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Amit Kulkarni (IT Lead)</b><br><small class="muted">amit.k@abctech.com</small></td>
+                            <td>Hardware AMC Renewal Notice for Dell Precision Servers</td>
+                            <td>Email Alert</td>
+                            <td>20 Sep 2026, 02:15 PM</td>
+                            <td><span class="badge badge-verified">✓ Delivered</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal 1: Mark as Renewed -->
+    <div class="modal-overlay" id="renewModal" style="display:none;">
+        <div class="modal-box" style="width:min(480px, 95%);">
+            <div class="modal-header">
+                <div>
+                    <span class="eyebrow" style="font-size:11px; color:#16A34A; font-weight:700;">UPDATE COMPLIANCE RECORD</span>
+                    <h3 style="margin:2px 0 0; font-size:19px;">Mark as Renewed</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeRenewModal()">&times;</button>
+            </div>
+            <form id="renewForm" onsubmit="handleRenewSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+                <input type="hidden" id="renewItemId">
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Item Name</label>
+                    <input type="text" id="renewItemName" readonly style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; background:#f8fafc; font-weight:600;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">New Expiration Date *</label>
+                    <input type="date" id="renewNewDate" required style="width:100%; padding:9px 12px; border:1.5px solid #059669; border-radius:8px; font-size:13.5px;">
+                </div>
+                <div style="background:#F0FDF4; border:1px solid #DCFCE7; border-radius:8px; padding:10px 12px; font-size:12px; color:#166534;">
+                    📄 <b>Document Sync:</b> Updating this expiry date will automatically update the linked document record in your vault.
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                    <button type="button" class="btn outline btn-sm" onclick="closeRenewModal()">Cancel</button>
+                    <button type="submit" class="btn btn-sm">Confirm Renewal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add Manual Renewal Deadline (Secondary Fallback only) -->
+    <div class="modal-overlay" id="addRenewalModal" style="display:none;">
+        <div class="modal-box" style="width:min(520px, 95%);">
+            <div class="modal-header">
+                <div>
+                    <span class="eyebrow" style="font-size:11px; color:#FF2028; font-weight:700;">MANUAL ENTRY FALLBACK</span>
+                    <h3 style="margin:2px 0 0; font-size:19px;">Add Manual Renewal Deadline</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeAddRenewalModal()">&times;</button>
+            </div>
+            <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:10px 14px; font-size:12px; color:#92400E; margin-bottom:12px;">
+                💡 <b>Notice:</b> Renewals are automatically tracked from your business documents. Use manual entry only when a document has no expiry date or the document file is not yet uploaded.
+            </div>
+            <form id="addRenewalForm" onsubmit="handleAddRenewalSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Item Title *</label>
+                    <input type="text" id="arTitle" placeholder="e.g. ISO 27001 Surveillance Audit, Trademark Renewal" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Category *</label>
+                        <select id="arCategory" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; background:#fff;">
+                            <option value="Statutory">Statutory Filing</option>
+                            <option value="License">Commercial License / Permit</option>
+                            <option value="Digital">Digital Asset / Domain</option>
+                            <option value="Insurance">Corporate Insurance</option>
+                            <option value="AMC">Vendor AMC</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Expiry Date *</label>
+                        <input type="date" id="arDate" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px;">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Assignee / Owner *</label>
+                        <select id="arOwner" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; background:#fff;">
+                            <option value="Rahul Bawa">Rahul Bawa (Owner)</option>
+                            <option value="Priya Sharma">Priya Sharma (Admin)</option>
+                            <option value="Amit Kulkarni">Amit Kulkarni (IT Lead)</option>
+                            <option value="Sneha Joshi">Sneha Joshi (Finance)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:4px;">Email Reminder Rule *</label>
+                        <select id="arRule" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; background:#fff;">
+                            <option value="30 days before">30 days before (Email)</option>
+                            <option value="60 days before">60 days before (Email)</option>
+                            <option value="90 days before">90 days before (Email)</option>
+                            <option value="7 days before">7 days before (Email)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                    <button type="button" class="btn outline btn-sm" onclick="closeAddRenewalModal()">Cancel</button>
+                    <button type="submit" class="btn btn-sm">Add Deadline</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client-Side Engine for Renewals -->
+    <script>
+        let renewalsData = [];
+        let currentCatFilter = 'all';
+
+        function loadRenewalsData() {
+            try {
+                // POINT 1: Sync renewals from the actual documents store
+                let docs = [];
+                const storedDocs = localStorage.getItem('ohana_documents');
+                if (storedDocs) {
+                    try { docs = JSON.parse(storedDocs); } catch(e) {}
+                }
+
+                if (window.syncRenewalsWithDocuments) {
+                    renewalsData = window.syncRenewalsWithDocuments(docs);
+                } else {
+                    const stored = localStorage.getItem('ohana_renewals_data');
+                    renewalsData = stored ? JSON.parse(stored) : [];
+                }
+            } catch (e) {
+                console.error("Error loading renewals data:", e);
+                renewalsData = [];
+            }
+
+            // Recalculate days remaining for all records based on actual current date
+            renewalsData.forEach(r => {
+                if (window.computeDaysRemaining) {
+                    r.days = window.computeDaysRemaining(r.expiry);
+                }
+                if (r.days <= 0) {
+                    r.status = 'Expired';
+                } else if (r.days <= 30) {
+                    r.status = 'Critical';
+                } else if (r.days <= 60) {
+                    r.status = 'Upcoming';
+                } else if (r.status !== 'Renewed') {
+                    r.status = 'Active';
+                }
+            });
+
+            // Sort by urgency (soonest expiry first)
+            renewalsData.sort((a, b) => a.days - b.days);
+
+            renderRenewalsTable(renewalsData);
+            renderCalendarView(renewalsData);
+        }
+
+        function saveRenewalsData() {
+            try {
+                localStorage.setItem('ohana_renewals_data', JSON.stringify(renewalsData));
+            } catch (e) {
+                console.error('Error saving renewals to localStorage', e);
+            }
+        }
+
+        function renderRenewalsTable(items) {
+            const tbody = document.getElementById('renewalsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            let urgent = 0;
+            let upcoming = 0;
+
+            const filtered = items.filter(r => {
+                if (currentCatFilter === 'all') return true;
+                return r.cat && r.cat.toLowerCase().includes(currentCatFilter.toLowerCase());
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:48px 16px; color:#64748B;">
+                            <div style="font-size:32px; margin-bottom:8px;">📅</div>
+                            <b style="font-size:15px; color:#0B1F3A;">No renewals found.</b>
+                            <p style="margin:4px 0 14px; font-size:12.5px; color:#64748B;">Upload documents with validity dates or add manual deadlines.</p>
+                            <a href="documents.html?openUpload=true" class="btn btn-sm" style="text-decoration:none;">+ Upload Document</a>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                filtered.forEach(r => {
+                    const daysLeft = window.computeDaysRemaining ? window.computeDaysRemaining(r.expiry) : r.days;
+
+                    if (daysLeft <= 30) urgent++;
+                    else if (daysLeft <= 60) upcoming++;
+
+                    const tr = document.createElement('tr');
+                    tr.setAttribute('data-cat', r.cat);
+
+                    // Urgency pill styling (calculated dynamically)
+                    let urgencyBadge = '';
+                    if (daysLeft <= 0) {
+                        urgencyBadge = `<span class="badge badge-danger" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">⚠ Expired (${Math.abs(daysLeft)}d ago)</span>`;
+                    } else if (daysLeft <= 30) {
+                        urgencyBadge = `<span class="badge badge-warning" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">⚡ ${daysLeft} days remaining</span>`;
+                    } else if (daysLeft <= 60) {
+                        urgencyBadge = `<span class="badge badge-warning">⚡ ${daysLeft} days</span>`;
+                    } else {
+                        urgencyBadge = `<span class="badge badge-verified">✓ ${daysLeft} days</span>`;
+                    }
+
+                    let statusBadge = '<span class="badge badge-verified">Active</span>';
+                    if (daysLeft <= 0 || r.status === 'Expired') {
+                        statusBadge = '<span class="badge badge-danger">Expired</span>';
+                    } else if (r.status === 'Critical' || daysLeft <= 30) {
+                        statusBadge = '<span class="badge badge-danger">Due Soon</span>';
+                    } else if (r.status === 'Upcoming' || daysLeft <= 60) {
+                        statusBadge = '<span class="badge badge-pending">Upcoming</span>';
+                    } else if (r.status === 'Renewed') {
+                        statusBadge = '<span class="badge badge-verified">✓ Renewed</span>';
+                    }
+
+                    // Source badge
+                    let sourceIndicator = '';
+                    if (r.sourceDocId) {
+                        sourceIndicator = `<span style="display:inline-block; margin-top:3px; font-size:10.5px; color:#1D4ED8; background:#EFF6FF; padding:1px 6px; border-radius:4px; border:1px solid #DBEAFE;">📄 Linked Document</span>`;
+                    } else {
+                        sourceIndicator = `<span style="display:inline-block; margin-top:3px; font-size:10.5px; color:#475569; background:#F1F5F9; padding:1px 6px; border-radius:4px;">✍ Manual Entry</span>`;
+                    }
+
+                    tr.innerHTML = `
+                        <td>
+                            <div style="font-weight:700; color:#0B1F3A;">${r.item}</div>
+                            <small class="muted" style="font-size:12px; display:block;">${r.sub || 'Statutory validity'}</small>
+                            ${sourceIndicator}
+                        </td>
+                        <td><span class="badge badge-neutral">${r.cat}</span></td>
+                        <td><b style="font-size:13.5px; color:#0f172a;">${r.expiry}</b></td>
+                        <td>${urgencyBadge}</td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="user-avatar" style="width:26px; height:26px; font-size:10px; background:#0B1F3A;">${r.avatar || 'AB'}</div>
+                                <span style="font-size:13px; font-weight:600;">${r.owner || 'Compliance Team'}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span style="font-size:12px; color:#1E293B; background:#F8FAFC; padding:3px 8px; border-radius:6px; border:1px solid #E2E8F0;">
+                                ✉ ${r.rule || '30 days before'}
+                            </span>
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            <button type="button" class="btn-action resolve" onclick="openRenewModal('${r.id}')">Renew</button>
+                            <button type="button" class="btn-action" onclick="editReminderRule('${r.id}')">Rule</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Update stats
+            const total = items.length;
+            document.getElementById('totalRenewalsCount').textContent = String(total).padStart(2, '0');
+            document.getElementById('urgentCount').textContent = String(urgent).padStart(2, '0');
+            document.getElementById('upcomingCount').textContent = String(upcoming).padStart(2, '0');
+            const tabCounter = document.getElementById('tabListCounter');
+            if (tabCounter) tabCounter.textContent = total;
+
+            const statUrgentDesc = document.getElementById('statUrgentDesc');
+            if (statUrgentDesc) {
+                if (urgent > 0) {
+                    const mostUrgent = items.find(i => (window.computeDaysRemaining ? window.computeDaysRemaining(i.expiry) : i.days) <= 30);
+                    statUrgentDesc.innerHTML = `<span class="pulse-dot-amber"></span> ${mostUrgent ? mostUrgent.item.split('(')[0].trim() : 'Due Soon'}`;
+                } else {
+                    statUrgentDesc.innerHTML = `<span class="pulse-dot-amber"></span> All deadlines clear (&gt; 30d)`;
+                }
+            }
+        }
+
+        // POINT 1: Calendar View dynamically rendered from actual renewalsData
+        function renderCalendarView(items) {
+            const grid = document.getElementById('calendarMonthsGrid');
+            if (!grid) return;
+
+            if (items.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:32px; color:#64748B;">No scheduled renewal deadlines on calendar.</div>`;
+                return;
+            }
+
+            // Group by Month Year
+            const monthGroups = {};
+            items.forEach(r => {
+                let mKey = 'Upcoming Deadlines';
+                try {
+                    const d = new Date(r.expiry);
+                    if (!isNaN(d.getTime())) {
+                        mKey = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                    }
+                } catch(e) {}
+                if (!monthGroups[mKey]) monthGroups[mKey] = [];
+                monthGroups[mKey].push(r);
+            });
+
+            grid.innerHTML = '';
+            Object.keys(monthGroups).forEach(mKey => {
+                const groupItems = monthGroups[mKey];
+                const card = document.createElement('div');
+                card.style.background = '#f8fafc';
+                card.style.border = '1px solid #e2e8f0';
+                card.style.borderRadius = '12px';
+                card.style.padding = '16px';
+
+                let itemsHtml = '';
+                groupItems.forEach(item => {
+                    const daysLeft = window.computeDaysRemaining ? window.computeDaysRemaining(item.expiry) : item.days;
+                    const isUrgent = daysLeft <= 30;
+                    itemsHtml += `
+                        <div style="background:${isUrgent ? '#fff7ed' : '#ffffff'}; border:${isUrgent ? '1px solid #fed7aa' : '1px solid #e2e8f0'}; ${isUrgent ? 'border-left:4px solid #ea580c;' : ''} padding:10px; border-radius:8px; margin-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <b style="font-size:13px; color:${isUrgent ? '#9a3412' : '#0f172a'};">${item.expiry}</b>
+                                <span style="font-size:11px; font-weight:700; color:${isUrgent ? '#c2410c' : '#059669'};">${daysLeft}d left</span>
+                            </div>
+                            <div style="font-size:13px; font-weight:600; color:#172033; margin-top:2px;">${item.item}</div>
+                            <small class="muted" style="display:block; font-size:11.5px;">Owner: ${item.owner || 'Compliance'}</small>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #cbd5e1; padding-bottom:8px;">
+                        <b style="font-size:15px; color:#0B1F3A;">${mKey}</b>
+                        <span class="badge ${groupItems.some(i => i.days <= 30) ? 'badge-warning' : 'badge-neutral'}" style="font-size:11px;">${groupItems.length} Deadlines</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column;">
+                        ${itemsHtml}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterRenewalsTable() {
+            const query = (document.getElementById('renewalSearch').value || '').toLowerCase();
+            const rows = document.querySelectorAll('#renewalsTableBody tr');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function setRenewalCatFilter(cat, btn) {
+            if (btn && btn.parentElement) {
+                btn.parentElement.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            currentCatFilter = cat;
+            renderRenewalsTable(renewalsData);
+        }
+
+        function switchView(viewName) {
+            document.getElementById('tabListView').classList.toggle('active', viewName === 'list');
+            document.getElementById('tabCalView').classList.toggle('active', viewName === 'calendar');
+            document.getElementById('tabNotifView').classList.toggle('active', viewName === 'notifications');
+
+            document.getElementById('viewSectionList').style.display = (viewName === 'list') ? 'block' : 'none';
+            document.getElementById('viewSectionCalendar').style.display = (viewName === 'calendar') ? 'block' : 'none';
+            document.getElementById('viewSectionNotif').style.display = (viewName === 'notifications') ? 'block' : 'none';
+        }
+
+        function openRenewModal(id) {
+            const r = renewalsData.find(item => item.id === id);
+            if (!r) return;
+
+            document.getElementById('renewItemId').value = r.id;
+            document.getElementById('renewItemName').value = r.item;
+            
+            // Set default date to 1 year ahead
+            const future = new Date();
+            future.setFullYear(future.getFullYear() + 1);
+            document.getElementById('renewNewDate').value = future.toISOString().split('T')[0];
+
+            const modal = document.getElementById('renewModal');
+            modal.style.display = 'grid';
+            modal.classList.add('active');
+        }
+
+        function closeRenewModal() {
+            const modal = document.getElementById('renewModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        }
+
+        // POINT 1: Updating renewal also updates linked document expiry date
+        function handleRenewSubmit(event) {
+            event.preventDefault();
+            const id = document.getElementById('renewItemId').value;
+            const newDate = document.getElementById('renewNewDate').value;
+
+            const r = renewalsData.find(item => item.id === id);
+            if (r) {
+                const formatted = new Date(newDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                r.expiry = formatted;
+                r.days = window.computeDaysRemaining ? window.computeDaysRemaining(formatted) : 365;
+                r.status = 'Renewed';
+                saveRenewalsData();
+
+                // If linked to a source document, update that document too
+                if (r.sourceDocId) {
+                    try {
+                        const docs = JSON.parse(localStorage.getItem('ohana_documents') || '[]');
+                        const targetDoc = docs.find(d => d.id === r.sourceDocId);
+                        if (targetDoc) {
+                            targetDoc.expiryDate = formatted;
+                            localStorage.setItem('ohana_documents', JSON.stringify(docs));
+                        }
+                    } catch(e) {}
+                }
+
+                loadRenewalsData();
+                closeRenewModal();
+                showToast(`"${r.item}" marked as renewed through ${formatted}!`, 'success');
+            }
+        }
+
+        function editReminderRule(id) {
+            const r = renewalsData.find(item => item.id === id);
+            if (!r) return;
+
+            const choice = prompt(`Configure automated Email reminder rule for:\n"${r.item}"\nCurrent rule: ${r.rule}\n\nEnter days before expiry (7, 30, 60, or 90):`, "30");
+            if (choice) {
+                const cleanDays = choice.replace(/[^0-9]/g, '');
+                r.rule = `${cleanDays || '30'} days before (Email)`;
+                saveRenewalsData();
+                renderRenewalsTable(renewalsData);
+                showToast(`Email reminder rule updated to "${r.rule}" for ${r.item}`, 'info');
+            }
+        }
+
+        function openAddRenewalModal() {
+            const modal = document.getElementById('addRenewalModal');
+            modal.style.display = 'grid';
+            modal.classList.add('active');
+        }
+
+        function closeAddRenewalModal() {
+            const modal = document.getElementById('addRenewalModal');
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        }
+
+        function handleAddRenewalSubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('arTitle').value.trim();
+            const category = document.getElementById('arCategory').value;
+            const dateVal = document.getElementById('arDate').value;
+            const owner = document.getElementById('arOwner').value;
+            const rule = document.getElementById('arRule').value;
+
+            const initials = owner.split(' ').map(n => n[0]).join('');
+            const formatted = new Date(dateVal).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const daysLeft = window.computeDaysRemaining ? window.computeDaysRemaining(formatted) : 60;
+
+            const newItem = {
+                id: 'rn_' + Date.now(),
+                item: title,
+                sub: `${category} Compliance Deadline`,
+                cat: category,
+                expiry: formatted,
+                days: daysLeft,
+                owner: owner,
+                avatar: initials,
+                rule: rule,
+                status: daysLeft <= 0 ? 'Expired' : (daysLeft <= 30 ? 'Critical' : (daysLeft <= 60 ? 'Upcoming' : 'Active')),
+                isManual: true
+            };
+
+            renewalsData.unshift(newItem);
+            saveRenewalsData();
+            loadRenewalsData();
+            closeAddRenewalModal();
+            showToast(`Added manual renewal deadline for "${title}"!`, 'success');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRenewalsData();
+        });
+    </script>
+</body>
+
+</html>

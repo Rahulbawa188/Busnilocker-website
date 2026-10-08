@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Assets | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+
+<body class="app">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="security.html">⚙ Settings</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">ASSET INVENTORY</span>
+                <h1>Assets</h1>
+                <p class="subtitle">Manage and track your organization’s physical, digital, and intellectual property assets.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn" onclick="openAddAssetModal()">+ Add Asset</button>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Stats Overview Cards -->
+        <div class="stats" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="stat">
+                <small>Total Assets</small>
+                <b id="statTotalAssets">6</b>
+                <span>Registered in roster</span>
+            </div>
+            <div class="stat">
+                <small>Laptops</small>
+                <b id="statLaptops">2</b>
+                <span class="positive">● 100% assigned</span>
+            </div>
+            <div class="stat">
+                <small>Mobiles</small>
+                <b id="statMobiles">2</b>
+                <span>QA &amp; executive</span>
+            </div>
+            <div class="stat">
+                <small>Domains</small>
+                <b id="statDomains">1</b>
+                <span class="warning" id="statDomainSub">DNS validated</span>
+            </div>
+            <div class="stat">
+                <small>Software Licenses</small>
+                <b id="statSoftware">1</b>
+                <span>SaaS &amp; tools</span>
+            </div>
+        </div>
+
+        <!-- Asset Roster Section -->
+        <section class="panel">
+            <div class="toolbar-bar">
+                <div class="search-input-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="assetSearch" placeholder="Search by asset name, tag, or assignee..." onkeyup="filterAssets()">
+                </div>
+                <div class="filter-tabs" id="assetFilterTabs">
+                    <button class="filter-tab active" onclick="setAssetFilter('all', this)">All Assets (<span id="countAllAssets">6</span>)</button>
+                    <button class="filter-tab" onclick="setAssetFilter('Laptop', this)">Laptops</button>
+                    <button class="filter-tab" onclick="setAssetFilter('Mobile', this)">Mobiles</button>
+                    <button class="filter-tab" onclick="setAssetFilter('Domain', this)">Domains</button>
+                    <button class="filter-tab" onclick="setAssetFilter('Software', this)">Licenses</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="box-shadow:none;border:none;">
+                <table class="saas-table" id="assetTable">
+                    <thead>
+                        <tr>
+                            <th>Asset Name &amp; Tag</th>
+                            <th>Category</th>
+                            <th>Assigned To</th>
+                            <th>Status</th>
+                            <th>Added Date</th>
+                            <th>Renewal / Warranty</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assetTableBody">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Asset Modal -->
+    <div class="modal-overlay" id="addAssetModal" style="display:none; position:fixed; inset:0; background:rgba(11,31,58,0.6); backdrop-filter:blur(4px); z-index:1000; align-items:center; justify-content:center; padding:20px;">
+        <div class="modal-box" style="background:#fff; width:min(560px, 95%); border-radius:14px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                <div>
+                    <span class="eyebrow" style="color:var(--primary); font-size:11px; font-weight:700;">INVENTORY ROSTER</span>
+                    <h3 style="margin:2px 0 0; font-size:18px; color:var(--navy);">Register Business Asset</h3>
+                </div>
+                <button type="button" class="modal-close" onclick="closeAddAssetModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b;">&times;</button>
+            </div>
+
+            <form id="addAssetForm" onsubmit="handleAddAssetSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Asset Name / Model *</label>
+                    <input type="text" id="astName" placeholder="e.g. Lenovo ThinkPad X1 Carbon Gen 11" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Category *</label>
+                        <select id="astCategory" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box; background:#fff;">
+                            <option value="Laptop">Laptop / Workstation</option>
+                            <option value="Mobile">Mobile Device</option>
+                            <option value="Domain">Domain Name / DNS</option>
+                            <option value="Software">Software License / SaaS</option>
+                            <option value="Peripheral">Office Equipment</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Asset Tag / Barcode</label>
+                        <input type="text" id="astTag" placeholder="e.g. LP-012" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Assigned Person / Dept *</label>
+                        <input type="text" id="astAssignee" placeholder="e.g. Rohit Verma" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Operational Status *</label>
+                        <select id="astStatus" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box; background:#fff;">
+                            <option value="In Use">In Use</option>
+                            <option value="Available">Available (Unassigned)</option>
+                            <option value="Expiring Soon">Expiring Soon</option>
+                            <option value="Under Maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Serial Number / Contract ID</label>
+                        <input type="text" id="astSerial" placeholder="e.g. SN-8829104A" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+
+                    <div>
+                        <label style="display:block; font-size:12.5px; font-weight:600; color:#475569; margin-bottom:4px;">Warranty / Expiry Date</label>
+                        <input type="text" id="astWarranty" placeholder="e.g. Dec 2028 or 14 Oct 2026" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; box-sizing:border-box;">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+                    <button type="button" class="btn outline" onclick="closeAddAssetModal()">Cancel</button>
+                    <button type="submit" class="btn">Register Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client-Side Engine for Assets -->
+    <script>
+        const DEFAULT_ASSETS = [
+            {
+                id: "AST-LP-010",
+                name: 'Apple MacBook Pro 16" (M2 Max)',
+                category: "Laptop",
+                tag: "LP-010",
+                serial: "C02G4589MD6R",
+                assignedTo: "Rahul Bawa",
+                assigneeInitials: "RB",
+                status: "In Use",
+                addedDate: "15 Jan 2026",
+                warranty: "AppleCare (Jan 2029)",
+                icon: "💻"
+            },
+            {
+                id: "AST-LP-008",
+                name: "Dell XPS 15 (i9 32GB)",
+                category: "Laptop",
+                tag: "LP-008",
+                serial: "7H81K23DL",
+                assignedTo: "Priya Sharma",
+                assigneeInitials: "PS",
+                status: "In Use",
+                addedDate: "20 Feb 2026",
+                warranty: "ProSupport (Feb 2028)",
+                icon: "💻"
+            },
+            {
+                id: "AST-MB-004",
+                name: "Apple iPhone 15 Pro (256GB)",
+                category: "Mobile",
+                tag: "MB-004",
+                serial: "356891024810294",
+                assignedTo: "Amit Kulkarni",
+                assigneeInitials: "AK",
+                status: "In Use",
+                addedDate: "10 Mar 2026",
+                warranty: "AppleCare+ (Mar 2028)",
+                icon: "📱"
+            },
+            {
+                id: "AST-DOM-001",
+                name: "abctechnologies.io (Primary Domain)",
+                category: "Domain",
+                tag: "DOM-01",
+                serial: "Cloudflare DNS",
+                assignedTo: "Infrastructure Pool",
+                assigneeInitials: "IT",
+                status: "Expiring Soon",
+                addedDate: "14 Oct 2025",
+                warranty: "14 Oct 2026 (28 days)",
+                icon: "🌐"
+            },
+            {
+                id: "AST-SFT-001",
+                name: "Google Workspace Enterprise (15 Seats)",
+                category: "Software",
+                tag: "SFT-GW15",
+                serial: "Contract #GW-2026-918",
+                assignedTo: "Organization Wide",
+                assigneeInitials: "OP",
+                status: "Active",
+                addedDate: "01 Jan 2026",
+                warranty: "31 Dec 2026",
+                icon: "🔐"
+            },
+            {
+                id: "AST-MB-007",
+                name: "Samsung Galaxy S24 Ultra (Testing)",
+                category: "Mobile",
+                tag: "MB-007",
+                serial: "QA Pool",
+                assignedTo: "QA Test Pool",
+                assigneeInitials: "QA",
+                status: "Available",
+                addedDate: "12 Apr 2026",
+                warranty: "Warranty (Apr 2027)",
+                icon: "📱"
+            }
+        ];
+
+        let assetsData = [];
+        let currentAssetFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAssetsData();
+        });
+
+        function loadAssetsData() {
+            try {
+                const stored = localStorage.getItem('ohana_assets');
+                if (stored) {
+                    assetsData = JSON.parse(stored);
+                } else {
+                    assetsData = JSON.parse(JSON.stringify(DEFAULT_ASSETS));
+                    saveAssetsData();
+                }
+            } catch(e) {
+                assetsData = JSON.parse(JSON.stringify(DEFAULT_ASSETS));
+            }
+            updateAssetStats();
+            renderAssetTable();
+        }
+
+        function saveAssetsData() {
+            try {
+                localStorage.setItem('ohana_assets', JSON.stringify(assetsData));
+            } catch(e) {}
+        }
+
+        function updateAssetStats() {
+            const total = assetsData.length;
+            const laptops = assetsData.filter(a => a.category === 'Laptop').length;
+            const mobiles = assetsData.filter(a => a.category === 'Mobile').length;
+            const domains = assetsData.filter(a => a.category === 'Domain').length;
+            const software = assetsData.filter(a => a.category === 'Software').length;
+
+            document.getElementById('statTotalAssets').textContent = total;
+            document.getElementById('statLaptops').textContent = laptops;
+            document.getElementById('statMobiles').textContent = mobiles;
+            document.getElementById('statDomains').textContent = domains;
+            document.getElementById('statSoftware').textContent = software;
+            document.getElementById('countAllAssets').textContent = total;
+        }
+
+        function renderAssetTable() {
+            const tbody = document.getElementById('assetTableBody');
+            const searchVal = (document.getElementById('assetSearch').value || '').toLowerCase().trim();
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            const filtered = assetsData.filter(ast => {
+                const matchesFilter = (currentAssetFilter === 'all') || (ast.category === currentAssetFilter);
+                const matchesSearch = !searchVal ||
+                    ast.name.toLowerCase().includes(searchVal) ||
+                    (ast.tag && ast.tag.toLowerCase().includes(searchVal)) ||
+                    (ast.assignedTo && ast.assignedTo.toLowerCase().includes(searchVal)) ||
+                    ast.category.toLowerCase().includes(searchVal);
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                const emptyMsg = assetsData.length === 0 ? "No assets added yet." : "No assets match your search or filter.";
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:48px 16px; color:#64748B;">
+                            <div style="font-size:32px; margin-bottom:8px;">💻</div>
+                            <b style="font-size:15px; color:var(--navy);">${emptyMsg}</b>
+                            <p style="margin:4px 0 16px; font-size:12.5px;">Register corporate laptops, mobile devices, domains, and cloud licenses in your inventory.</p>
+                            <button class="btn" onclick="openAddAssetModal()">+ Add Asset</button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(ast => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-cat', ast.category);
+
+                let badgeStatus = '<span class="badge badge-verified">● In Use</span>';
+                if (ast.status === 'Expiring Soon') {
+                    badgeStatus = '<span class="badge badge-expiring">⚠ Expiring Soon</span>';
+                } else if (ast.status === 'Available') {
+                    badgeStatus = '<span class="badge badge-neutral">Available</span>';
+                } else if (ast.status === 'Active') {
+                    badgeStatus = '<span class="badge badge-verified">● Active</span>';
+                }
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="font-size:20px;">${ast.icon || '💻'}</span>
+                            <div>
+                                <b>${ast.name}</b>
+                                <p class="muted" style="margin:0;font-size:12px;">Tag: ${ast.tag || 'N/A'} · SN: ${ast.serial || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-neutral">${ast.category}</span></td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="width:28px;height:28px;font-size:11px;background:#059669;">${ast.assigneeInitials || (ast.assignedTo ? ast.assignedTo.substring(0,2).toUpperCase() : 'NA')}</div>
+                            <span style="font-size:13px;font-weight:600;">${ast.assignedTo}</span>
+                        </div>
+                    </td>
+                    <td>${badgeStatus}</td>
+                    <td>${ast.addedDate}</td>
+                    <td>${ast.warranty || 'Active'}</td>
+                    <td style="text-align:right; white-space:nowrap;">
+                        <button class="btn-action" onclick="showToast('Viewing specifications for ${ast.name}', 'info')">View</button>
+                        <button class="btn-action" style="color:#DC2626;" onclick="deleteAsset('${ast.id}')" title="Delete Asset">✕</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterAssets() {
+            renderAssetTable();
+        }
+
+        function setAssetFilter(cat, btn) {
+            document.querySelectorAll('#assetFilterTabs .filter-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            currentAssetFilter = cat;
+            renderAssetTable();
+        }
+
+        function openAddAssetModal() {
+            const modal = document.getElementById('addAssetModal');
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function closeAddAssetModal() {
+            const modal = document.getElementById('addAssetModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handleAddAssetSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('astName').value.trim();
+            const category = document.getElementById('astCategory').value;
+            const tag = document.getElementById('astTag').value.trim() || `AST-${Math.floor(100 + Math.random() * 900)}`;
+            const assignee = document.getElementById('astAssignee').value.trim();
+            const status = document.getElementById('astStatus').value;
+            const serial = document.getElementById('astSerial').value.trim() || 'SN-' + Math.random().toString(36).substring(2,8).toUpperCase();
+            const warranty = document.getElementById('astWarranty').value.trim() || 'Active';
+
+            let icon = '💻';
+            if (category === 'Mobile') icon = '📱';
+            else if (category === 'Domain') icon = '🌐';
+            else if (category === 'Software') icon = '🔐';
+            else if (category === 'Peripheral') icon = '🖨️';
+
+            const initials = assignee.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'AS';
+            const todayStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const newAsset = {
+                id: 'AST-' + Date.now(),
+                name: name,
+                category: category,
+                tag: tag,
+                serial: serial,
+                assignedTo: assignee,
+                assigneeInitials: initials,
+                status: status,
+                addedDate: todayStr,
+                warranty: warranty,
+                icon: icon
+            };
+
+            assetsData.unshift(newAsset);
+            saveAssetsData();
+            updateAssetStats();
+            renderAssetTable();
+            closeAddAssetModal();
+            document.getElementById('addAssetForm').reset();
+            showToast(`Asset "${name}" added to inventory roster!`, 'success');
+        }
+
+        function deleteAsset(id) {
+            const ast = assetsData.find(a => a.id === id);
+            if (!ast) return;
+
+            if (confirm(`Remove asset "${ast.name}" from inventory?`)) {
+                assetsData = assetsData.filter(a => a.id !== id);
+                saveAssetsData();
+                updateAssetStats();
+                renderAssetTable();
+                showToast(`Asset "${ast.name}" removed from inventory.`, 'info');
+            }
+        }
+    </script>
+</body>
+
+</html>
