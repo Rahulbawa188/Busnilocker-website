@@ -25,6 +25,20 @@ export default function PageRenderer({ data }) {
       document.body.removeAttribute('id');
     }
 
+    // 1.5. Inject page-specific styles if present
+    let styleEl = null;
+    if (data.style && data.style.trim()) {
+      try {
+        styleEl = document.createElement('style');
+        styleEl.type = 'text/css';
+        styleEl.setAttribute('data-ohana-style', data.slug);
+        styleEl.textContent = data.style;
+        document.head.appendChild(styleEl);
+      } catch (err) {
+        console.error(`[Ohana] Error executing styles for ${data.slug}:`, err);
+      }
+    }
+
     // 2. Execute page-specific inline script in browser global context
     let scriptEl = null;
     if (data.script && data.script.trim()) {
@@ -36,6 +50,11 @@ export default function PageRenderer({ data }) {
         document.body.appendChild(scriptEl);
       } catch (err) {
         console.error(`[Ohana] Error executing script for ${data.slug}:`, err);
+        try {
+          (0, eval)(data.script);
+        } catch (evalErr) {
+          console.error(`[Ohana] Error executing script fallback for ${data.slug}:`, evalErr);
+        }
       }
     }
 
@@ -69,6 +88,9 @@ export default function PageRenderer({ data }) {
 
     // Cleanup when navigating away
     return () => {
+      if (styleEl && styleEl.parentNode) {
+        styleEl.parentNode.removeChild(styleEl);
+      }
       if (scriptEl && scriptEl.parentNode) {
         scriptEl.parentNode.removeChild(scriptEl);
       }

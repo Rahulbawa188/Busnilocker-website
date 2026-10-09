@@ -2,7 +2,9 @@ import fs from 'fs';
 import path from 'path';
 
 const ROOT_DIR = process.cwd();
-const PAGES_DIR = path.join(ROOT_DIR, 'pages');
+const PAGES_DIR = fs.existsSync(path.join(ROOT_DIR, 'legacy-html-pages'))
+  ? path.join(ROOT_DIR, 'legacy-html-pages')
+  : path.join(ROOT_DIR, 'pages');
 const SRC_DIR = path.join(ROOT_DIR, 'src');
 const DATA_DIR = path.join(SRC_DIR, 'data', 'pages');
 const APP_DIR = path.join(SRC_DIR, 'app');
@@ -53,6 +55,10 @@ function normalizeHtml(html) {
   res = res.replace(/href=["'](?:\.\.\/)?index\.html(["'#?])/g, 'href="/$1');
   res = res.replace(/href=["']index\.html(["'#?])/g, 'href="/$1');
 
+  // Normalize inline location.href in onclick attributes
+  res = res.replace(/location\.href\s*=\s*['"]index\.html['"]/g, "location.href='/'");
+  res = res.replace(/location\.href\s*=\s*['"]\.\.\/index\.html['"]/g, "location.href='/'");
+
   // Normalize pages/*.html links
   Object.keys(routeMapping).forEach(filename => {
     if (filename === 'index.html') return;
@@ -60,7 +66,21 @@ function normalizeHtml(html) {
     // replace href="pages/filename" or href="../pages/filename" or href="filename"
     const pattern = new RegExp(`href=["'](?:(?:\\.\\.\\/)?pages\\/|\\.\\.\\/)?${filename.replace('.', '\\.')}(["'#?])`, 'g');
     res = res.replace(pattern, `href="${route}$1`);
+
+    // replace location.href='filename'
+    const locPattern = new RegExp(`location\\.href\\s*=\\s*['"](?:(?:\\.\\.\\/)?pages\\/|\\.\\.\\/)?${filename.replace('.', '\\.')}(['"\\?])`, 'g');
+    res = res.replace(locPattern, `location.href='${route}$1`);
   });
+
+  // Explicit fallback attributes for profile progress circle SVG
+  res = res.replace(
+    /<circle class="circle-bg" cx="29" cy="29" r="25"><\/circle>/g,
+    '<circle class="circle-bg" cx="29" cy="29" r="25" fill="none" stroke="#FFE5E7" stroke-width="5"></circle>'
+  );
+  res = res.replace(
+    /<circle class="circle-bar" id="dashProfileBar" cx="29" cy="29" r="25"><\/circle>/g,
+    '<circle class="circle-bar" id="dashProfileBar" cx="29" cy="29" r="25" fill="none" stroke="#FF2028" stroke-width="5" stroke-linecap="round" stroke-dasharray="157.08" stroke-dashoffset="157.08"></circle>'
+  );
 
   return res;
 }
@@ -78,6 +98,15 @@ Object.keys(routeMapping).forEach(filename => {
   const rawContent = fs.readFileSync(filePath, 'utf8');
   const titleMatch = rawContent.match(/<title>([^<]*)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : 'Ohana Busnilocker';
+
+  // Extract head styles if present
+  const headMatch = rawContent.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+  const inlineStyles = [];
+  if (headMatch) {
+    const styleMatches = [...headMatch[1].matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)];
+    styleMatches.forEach(m => inlineStyles.push(m[1].trim()));
+  }
+  const combinedStyle = inlineStyles.join('\n\n');
 
   const bodyMatch = rawContent.match(/<body([^>]*)>([\s\S]*?)<\/body>/i);
   if (!bodyMatch) {
@@ -115,6 +144,7 @@ Object.keys(routeMapping).forEach(filename => {
     title: title,
     bodyClass: bodyClass,
     bodyId: bodyId,
+    style: combinedStyle,
     html: normalizedHtml,
     script: combinedScript,
   };

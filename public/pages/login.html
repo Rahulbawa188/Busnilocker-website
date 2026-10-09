@@ -358,35 +358,46 @@
             }
         }
 
-        function getLoginRedirectTarget() {
+                function getLoginRedirectTarget() {
             try {
+                const isNextApp = typeof window !== 'undefined' && (
+                    !!document.querySelector('.ohana-nextjs-page-root') ||
+                    !window.location.pathname.endsWith('.html')
+                );
                 const params = new URLSearchParams(window.location.search);
                 const redir = params.get('redirect');
                 if (redir) {
-                    const clean = decodeURIComponent(redir).replace(/^[/\\]+/, '');
-                    const allowedPages = [
-                        'dashboard.html',
-                        'identity.html',
-                        'documents.html',
-                        'business-passport.html',
-                        'assets.html',
-                        'renewals.html',
-                        'share-room.html',
-                        'compliance.html',
-                        'verification.html',
-                        'analytics.html',
-                        'activity.html',
-                        'billing.html',
-                        'support.html',
-                        'team.html',
-                        'trust-center.html',
-                        'public-profile.html',
-                        'onboarding.html'
+                    const decoded = decodeURIComponent(redir);
+                    const cleanSlug = decoded.trim().replace(/^\/+/, '').split('?')[0].replace(/\.html$/, '');
+                    const allowedSlugs = [
+                        'dashboard',
+                        'identity',
+                        'documents',
+                        'business-passport',
+                        'company-assets',
+                        'assets',
+                        'renewals',
+                        'share-room',
+                        'compliance',
+                        'verification',
+                        'analytics',
+                        'activity',
+                        'billing',
+                        'support',
+                        'team',
+                        'trust-center',
+                        'public-profile',
+                        'onboarding'
                     ];
-                    if (allowedPages.includes(clean)) {
-                        return clean;
+                    if (allowedSlugs.includes(cleanSlug)) {
+                        const queryPart = decoded.includes('?') ? '?' + decoded.split('?')[1] : '';
+                        if (isNextApp) {
+                            return (cleanSlug === 'assets' ? '/company-assets' : ('/' + cleanSlug)) + queryPart;
+                        }
+                        return cleanSlug + '.html' + queryPart;
                     }
                 }
+                if (isNextApp) return '/dashboard';
             } catch(e) {}
             return 'dashboard.html';
         }

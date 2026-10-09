@@ -198,21 +198,39 @@ function initSidebarIcons() {
     'documents.html': 'Documents',
     'renewals.html': 'Renewals',
     'billing.html': 'Billing & Plans',
-    'support.html': 'Help & Support'
+    'support.html': 'Help & Support',
+    'dashboard': 'Dashboard',
+    'business-passport': 'Business Passport',
+    'documents': 'Documents',
+    'renewals': 'Renewals',
+    'billing': 'Billing & Plans',
+    'support': 'Help & Support'
   };
 
+  const isNextApp = typeof window !== 'undefined' && (
+    !!document.querySelector('.ohana-nextjs-page-root') ||
+    !window.location.pathname.endsWith('.html')
+  );
+  const isPagesDir = window.location.pathname.includes('/pages/');
   const currentPath = (window.location.pathname.split('/').pop().split('?')[0] || 'dashboard').replace(/\.html$/, '');
 
+  const profileHref = isNextApp ? '/public-profile' : (isPagesDir ? 'public-profile.html' : 'pages/public-profile.html');
+  const settingsHref = isNextApp ? '/security' : (isPagesDir ? 'security.html' : 'pages/security.html');
+  const logoutHref = isNextApp ? '/' : (isPagesDir ? '../index.html' : 'index.html');
+
   sidebar.querySelectorAll('nav a').forEach(a => {
-    const href = a.getAttribute('href');
-    const rawKey = href ? href.split('/').pop().split('?')[0] : '';
+    const href = a.getAttribute('href') || '';
+    const rawKey = href.split('/').pop().split('?')[0];
     const cleanKey = rawKey.replace(/\.html$/, '');
     const lookupKey = rawKey.endsWith('.html') ? rawKey : `${cleanKey}.html`;
-    const label = labels[lookupKey] || a.textContent.replace(/[⌂◉▣✓▤↻⇧◎🛡👥🕒🔔📊🔒🔌❓💳🪪⚙↪]/g, '').trim();
-    if (icons[lookupKey]) {
-      a.innerHTML = `${icons[lookupKey]} <span>${label}</span>`;
+    const label = labels[lookupKey] || labels[cleanKey] || a.textContent.replace(/[⌂◉▣✓▤↻⇧◎🛡👥🕒🔔📊🔒🔌❓💳🪪⚙↪]/g, '').trim();
+    if (icons[lookupKey] || icons[cleanKey]) {
+      a.innerHTML = `${icons[lookupKey] || icons[cleanKey]} <span>${label}</span>`;
     }
-    if (cleanKey === currentPath || (currentPath === '' && cleanKey === 'dashboard')) {
+    if (isNextApp && !href.startsWith('/')) {
+      a.href = `/${cleanKey}`;
+    }
+    if (cleanKey === currentPath || (cleanKey === 'dashboard' && (currentPath === '' || currentPath === 'dashboard'))) {
       a.classList.add('active');
     } else {
       a.classList.remove('active');
@@ -222,24 +240,25 @@ function initSidebarIcons() {
   sidebar.querySelectorAll('.side-bottom a').forEach(a => {
     const text = a.textContent.toLowerCase();
     const href = a.getAttribute('href') || '';
-    if (text.includes('profile') || href.includes('public-profile.html')) {
+    if (text.includes('profile') || href.includes('public-profile')) {
       a.innerHTML = `${icons['profile']} <span>Profile</span>`;
-      a.href = isPagesDir ? 'public-profile.html' : 'pages/public-profile.html';
-      if (currentPath === 'public-profile.html') {
+      a.href = profileHref;
+      if (currentPath === 'public-profile') {
         a.classList.add('active');
       } else {
         a.classList.remove('active');
       }
-    } else if (text.includes('setting') || href.includes('security.html')) {
+    } else if (text.includes('setting') || href.includes('security')) {
       a.innerHTML = `${icons['settings']} <span>Settings</span>`;
-      a.href = isPagesDir ? 'security.html' : 'pages/security.html';
-      if (currentPath === 'security.html') {
+      a.href = settingsHref;
+      if (currentPath === 'security') {
         a.classList.add('active');
       } else {
         a.classList.remove('active');
       }
-    } else if (text.includes('logout') || href.includes('index.html')) {
+    } else if (text.includes('logout') || href.endsWith('index.html') || href === '/') {
       a.innerHTML = `${icons['logout']} <span>Logout</span>`;
+      a.href = logoutHref;
     }
   });
 
@@ -1805,6 +1824,9 @@ function renderUserProfileChips(user) {
     if (!user) user = getCurrentOhanaUser();
     if (!user) return;
 
+    const displayName = user.fullName || user.name || (user.email ? user.email.split('@')[0] : 'User');
+    const initials = user.initials || (typeof computeInitials === 'function' ? computeInitials(displayName) : (displayName ? displayName.charAt(0).toUpperCase() : 'U'));
+
     const chips = document.querySelectorAll('.profile-chip');
     chips.forEach(chip => {
         let avatar = chip.querySelector('.avatar');
@@ -1813,7 +1835,7 @@ function renderUserProfileChips(user) {
             avatar.className = 'avatar';
             chip.prepend(avatar);
         }
-        avatar.textContent = user.initials || 'U';
+        avatar.textContent = initials;
 
         // Remove plain text nodes
         Array.from(chip.childNodes).forEach(node => {
@@ -1822,8 +1844,8 @@ function renderUserProfileChips(user) {
             }
         });
 
-        chip.appendChild(document.createTextNode(' ' + user.fullName));
-        chip.setAttribute('title', `Signed in as ${user.fullName} (${user.email})`);
+        chip.appendChild(document.createTextNode(' ' + displayName));
+        chip.setAttribute('title', `Signed in as ${displayName} (${user.email || ''})`);
         chip.style.cursor = 'pointer';
         if (!chip.getAttribute('data-profile-bound')) {
             chip.setAttribute('data-profile-bound', 'true');
@@ -1836,7 +1858,7 @@ function renderUserProfileChips(user) {
     // Also update any other user profile representations across pages
     document.querySelectorAll('.user-name').forEach(el => {
         if (el.textContent.includes('(You)')) {
-            el.textContent = `${user.fullName} (You)`;
+            el.textContent = `${displayName} (You)`;
         }
     });
 }
@@ -2711,6 +2733,12 @@ function syncOhanaGlobalState() {
 function cleanupSidebarNav() {
     try {
         const allowedNavKeys = [
+            'dashboard',
+            'business-passport',
+            'documents',
+            'renewals',
+            'billing',
+            'support',
             'dashboard.html',
             'business-passport.html',
             'documents.html',
@@ -2733,16 +2761,37 @@ function cleanupSidebarNav() {
             'share-room.html',
             'analytics.html',
             'identity.html',
-            'public-profile.html'
+            'public-profile.html',
+            'trust-center',
+            'admin-review',
+            'company-assets',
+            'team',
+            'activity',
+            'notifications',
+            'security',
+            'integrations',
+            'compliance',
+            'verification',
+            'share-room',
+            'analytics',
+            'identity',
+            'public-profile'
         ];
 
         const sidebar = document.querySelector('.sidebar');
         if (!sidebar) return;
 
+        const isNextApp = typeof window !== 'undefined' && (
+            !!document.querySelector('.ohana-nextjs-page-root') ||
+            !window.location.pathname.endsWith('.html')
+        );
+        const isPages = window.location.pathname.includes('/pages/');
+
         // Clean nav links
         sidebar.querySelectorAll('nav a').forEach(a => {
             const href = a.getAttribute('href') || '';
-            const key = href.split('/').pop().split('?')[0];
+            const rawKey = href.split('/').pop().split('?')[0];
+            const cleanKey = rawKey.replace(/\.html$/, '');
             const text = a.textContent.toLowerCase().trim();
 
             const isForbidden = hiddenItems.some(item => href.endsWith(item) || href.includes('/' + item)) ||
@@ -2762,8 +2811,12 @@ function cleanupSidebarNav() {
                                 text.includes('notifications') ||
                                 text.includes('public profile');
 
-            if (isForbidden || !allowedNavKeys.includes(key)) {
+            const isAllowed = allowedNavKeys.includes(rawKey) || allowedNavKeys.includes(cleanKey);
+
+            if (isForbidden || !isAllowed) {
                 a.remove();
+            } else if (isNextApp && !href.startsWith('/')) {
+                a.href = '/' + cleanKey;
             }
         });
 
@@ -2773,58 +2826,55 @@ function cleanupSidebarNav() {
             sideBottom.querySelectorAll('a').forEach(a => {
                 const text = a.textContent.toLowerCase();
                 const href = a.getAttribute('href') || '';
-                const isProfile = text.includes('profile') || href.includes('public-profile.html');
-                const isSettings = text.includes('setting') || href.includes('security.html');
-                const isLogout = text.includes('logout') || href.includes('index.html');
+                const isProfile = text.includes('profile') || href.includes('public-profile');
+                const isSettings = text.includes('setting') || href.includes('security');
+                const isLogout = text.includes('logout') || href.includes('index.html') || href === '/';
                 if (!isProfile && !isSettings && !isLogout) {
                     a.remove();
                 }
             });
 
-            const isPages = window.location.pathname.includes('/pages/');
-            const profileHref = isPages ? 'public-profile.html' : 'pages/public-profile.html';
-            const settingsHref = isPages ? 'security.html' : 'pages/security.html';
-            const logoutHref = isPages ? '../index.html' : 'index.html';
+            const profileHref = isNextApp ? '/public-profile' : (isPages ? 'public-profile.html' : 'pages/public-profile.html');
+            const settingsHref = isNextApp ? '/security' : (isPages ? 'security.html' : 'pages/security.html');
+            const logoutHref = isNextApp ? '/' : (isPages ? '../index.html' : 'index.html');
 
             let profileLink = Array.from(sideBottom.querySelectorAll('a')).find(a => 
-                a.textContent.toLowerCase().includes('profile') || (a.getAttribute('href') || '').includes('public-profile.html')
+                a.textContent.toLowerCase().includes('profile') || (a.getAttribute('href') || '').includes('public-profile')
             );
             let settingsLink = Array.from(sideBottom.querySelectorAll('a')).find(a => 
-                a.textContent.toLowerCase().includes('setting') || (a.getAttribute('href') || '').includes('security.html')
+                a.textContent.toLowerCase().includes('setting') || (a.getAttribute('href') || '').includes('security')
             );
             let logoutLink = Array.from(sideBottom.querySelectorAll('a')).find(a => 
-                a.textContent.toLowerCase().includes('logout') || (a.getAttribute('href') || '').includes('index.html')
+                a.textContent.toLowerCase().includes('logout') || (a.getAttribute('href') || '').includes('index.html') || (a.getAttribute('href') || '') === '/'
             );
 
             if (!profileLink) {
                 profileLink = document.createElement('a');
-                profileLink.href = profileHref;
                 profileLink.innerHTML = `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span>Profile</span>`;
-            } else {
-                profileLink.href = profileHref;
             }
+            profileLink.href = profileHref;
 
             if (!settingsLink) {
                 settingsLink = document.createElement('a');
-                settingsLink.href = settingsHref;
                 settingsLink.innerHTML = `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> <span>Settings</span>`;
-            } else {
-                settingsLink.href = settingsHref;
             }
+            settingsLink.href = settingsHref;
 
             if (!logoutLink) {
                 logoutLink = document.createElement('a');
-                logoutLink.href = logoutHref;
                 logoutLink.innerHTML = `<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg> <span>Logout</span>`;
-            } else {
-                logoutLink.href = logoutHref;
             }
+            logoutLink.href = logoutHref;
 
             logoutLink.onclick = (e) => {
                 e.preventDefault();
                 logoutOhanaUser();
-                const isPages = window.location.pathname.includes('/pages/');
-                window.location.href = isPages ? '../index.html' : 'index.html';
+                if (isNextApp) {
+                    window.location.href = '/';
+                } else {
+                    const isPages = window.location.pathname.includes('/pages/');
+                    window.location.href = isPages ? '../index.html' : 'index.html';
+                }
             };
 
             // Ensure exact order: Profile above Settings, then Logout
@@ -2833,13 +2883,13 @@ function cleanupSidebarNav() {
             sideBottom.appendChild(settingsLink);
             sideBottom.appendChild(logoutLink);
 
-            const curPage = window.location.pathname.split('/').pop().split('?')[0];
-            if (curPage === 'public-profile.html') {
+            const curPage = (window.location.pathname.split('/').pop().split('?')[0] || '').replace(/\.html$/, '');
+            if (curPage === 'public-profile') {
                 profileLink.classList.add('active');
             } else {
                 profileLink.classList.remove('active');
             }
-            if (curPage === 'security.html') {
+            if (curPage === 'security') {
                 settingsLink.classList.add('active');
             } else {
                 settingsLink.classList.remove('active');

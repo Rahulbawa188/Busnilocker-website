@@ -10338,3 +10338,59 @@ body.auth-page-body {
     align-items: center;
     gap: 10px;
 }
+
+
+/* ==========================================================================
+   OHANA Dashboard Profile Completion Circular Indicator
+   ========================================================================== */
+.welcome-profile-widget {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-progress-circle {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-progress-svg {
+    transform: rotate(-90deg);
+    width: 58px;
+    height: 58px;
+}
+
+.profile-progress-circle .circle-bg,
+.profile-progress-svg .circle-bg {
+    fill: none !important;
+    stroke: #FFE5E7 !important;
+    stroke-width: 5 !important;
+}
+
+.profile-progress-circle .circle-bar,
+.profile-progress-svg .circle-bar {
+    fill: none !important;
+    stroke: #FF2028 !important;
+    stroke-width: 5 !important;
+    stroke-linecap: round !important;
+    stroke-dasharray: 157.08 !important;
+    stroke-dashoffset: 157.08;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.profile-progress-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #0B1F3A;
+    letter-spacing: -0.2px;
+}
