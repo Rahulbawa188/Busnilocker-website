@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ohana Business Locker – Business Passport
 
 ## Structure
@@ -18,3 +19,6 @@
 - pages/contact.html — Contact
 
 This is a frontend prototype. Forms/buttons use demo navigation; backend/database/authentication are not connected yet.
+=======
+# Busnilocker-website
+>>>>>>> 5d04b78c73be3d067a8d864a53d49b569154a8ec
