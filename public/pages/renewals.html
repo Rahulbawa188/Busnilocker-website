@@ -91,10 +91,24 @@
                 <b style="color:#d97706;" id="upcomingCount">00</b>
                 <span id="statUpcomingDesc">Filings &amp; licenses</span>
             </div>
-            <div class="stat">
-                <small>Auto-Reminder Dispatch</small>
-                <b style="color:#059669;">Active</b>
-                <span class="positive">● Email Alerts</span>
+            <div class="stat" id="statAutoReminder">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <small id="autoReminderTitle" style="margin:0; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px;">Auto Reminder: Active</small>
+                    <label class="system-notif-switch" title="Toggle System Notifications ON / OFF">
+                        <input type="checkbox" id="systemNotifToggle" checked onchange="handleSystemNotifToggle(this)">
+                        <span class="system-notif-slider">
+                            <span class="toggle-state-text" id="toggleStateText">ON</span>
+                        </span>
+                    </label>
+                </div>
+                <div style="display:flex; align-items:baseline; justify-content:space-between; margin:10px 0 8px;">
+                    <b id="autoReminderStatusVal" style="color:#059669; font-size:36px; margin:0; line-height:1;">Active</b>
+                    <span class="badge" id="systemNotifBadge" style="font-size:11px; padding:3px 8px; background:#DCFCE7; color:#15803D; border:1px solid #BBF7D0; border-radius:4px; font-weight:700;">System: ON</span>
+                </div>
+                <span class="positive" id="autoReminderSubtext" style="font-size:12.5px; display:inline-flex; align-items:center; gap:5px;">
+                    <span id="autoReminderDot" style="width:7px; height:7px; border-radius:50%; background:#16A34A; display:inline-block;"></span>
+                    <span id="autoReminderSubLabel">System &amp; Email Alerts Active</span>
+                </span>
             </div>
         </div>
 
@@ -685,7 +699,79 @@
             showToast(`Added manual renewal deadline for "${title}"!`, 'success');
         }
 
+        
+        function handleSystemNotifToggle(checkbox) {
+            const isChecked = checkbox ? checkbox.checked : true;
+            updateSystemNotifUI(isChecked);
+            try {
+                localStorage.setItem('ohana_system_notifications', isChecked ? 'true' : 'false');
+            } catch(e) {}
+            if (typeof showToast === 'function') {
+                if (isChecked) {
+                    showToast('System notifications enabled! Auto-reminders active for all deadlines.', 'success');
+                } else {
+                    showToast('System notifications turned off. Auto-reminders are paused.', 'warning');
+                }
+            }
+        }
+
+        function updateSystemNotifUI(enabled) {
+            const toggle = document.getElementById('systemNotifToggle');
+            if (toggle && toggle.checked !== enabled) toggle.checked = enabled;
+
+            const stateText = document.getElementById('toggleStateText');
+            const title = document.getElementById('autoReminderTitle');
+            const statusVal = document.getElementById('autoReminderStatusVal');
+            const badge = document.getElementById('systemNotifBadge');
+            const dot = document.getElementById('autoReminderDot');
+            const subLabel = document.getElementById('autoReminderSubLabel');
+
+            if (enabled) {
+                if (stateText) stateText.textContent = 'ON';
+                if (title) title.textContent = 'Auto Reminder: Active';
+                if (statusVal) {
+                    statusVal.textContent = 'Active';
+                    statusVal.style.color = '#059669';
+                }
+                if (badge) {
+                    badge.textContent = 'System: ON';
+                    badge.style.background = '#DCFCE7';
+                    badge.style.color = '#15803D';
+                    badge.style.borderColor = '#BBF7D0';
+                }
+                if (dot) dot.style.background = '#16A34A';
+                if (subLabel) subLabel.textContent = 'System & Email Alerts Active';
+            } else {
+                if (stateText) stateText.textContent = 'OFF';
+                if (title) title.textContent = 'Auto Reminder: Paused';
+                if (statusVal) {
+                    statusVal.textContent = 'Paused';
+                    statusVal.style.color = '#94A3B8';
+                }
+                if (badge) {
+                    badge.textContent = 'System: OFF';
+                    badge.style.background = '#F1F5F9';
+                    badge.style.color = '#64748B';
+                    badge.style.borderColor = '#CBD5E1';
+                }
+                if (dot) dot.style.background = '#94A3B8';
+                if (subLabel) subLabel.textContent = 'System Notifications Muted';
+            }
+        }
+
+        function loadSystemNotifState() {
+            let enabled = true;
+            try {
+                const stored = localStorage.getItem('ohana_system_notifications');
+                if (stored !== null) {
+                    enabled = stored === 'true';
+                }
+            } catch(e) {}
+            updateSystemNotifUI(enabled);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            loadSystemNotifState();
             loadRenewalsData();
         });
     </script>

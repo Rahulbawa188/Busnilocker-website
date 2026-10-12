@@ -3,8 +3,1262 @@ export const pageData = {
   "route": "/identity",
   "title": "Business Identity | Ohana Busnilocker",
   "bodyClass": "app",
-  "bodyId": "",
-  "style": "",
-  "html": "\n    <aside class=\"sidebar\">\n        <a class=\"brand sidebar-brand\" href=\"/dashboard\">\n            <span class=\"ohana-inline-brand oib-dark\">\n                <span class=\"oib-icon\" aria-hidden=\"true\"><img src=\"/assets/ohana-brand-logo.png\" alt=\"Ohana Busnilocker Logo\" class=\"oib-brand-img\" style=\"height: 36px;\"></span>\n                <span class=\"oib-text\">\n                    <span class=\"oib-wordmark\"><span class=\"oib-ohana\">Ohana</span><span class=\"oib-biz\">Busnilocker</span></span>\n                    <span class=\"oib-sub\">BUSINESS PASSPORT &bull; VERIFIED</span>\n                </span>\n            </span>\n        </a>\n        <div class=\"org\">\n            <small>ACTIVE ORGANIZATION</small>\n            <strong id=\"sidebarOrgName\">ABC Technologies</strong>\n            <span id=\"sidebarTrustLevel\">✓ L3 Verified</span>\n        </div>\n        <nav>\n            <a href=\"/dashboard\">⌂ &nbsp; Dashboard</a>\n            <a href=\"/business-passport\">🪪 &nbsp; Business Passport</a>\n            <a href=\"/documents\">▣ &nbsp; Documents</a>\n            <a href=\"/renewals\">↻ &nbsp; Renewals</a>\n            <a href=\"/billing\">💳 &nbsp; Billing & Plans</a>\n            <a href=\"/support\">❓ &nbsp; Help & Support</a>\n        </nav>\n        <div class=\"side-bottom\">\n            <a href=\"/public-profile\">Profile</a>\n            <a href=\"/\">↪ Logout</a>\n        </div>\n    </aside>\n\n    <main class=\"content\">\n        <header class=\"app-header\">\n            <div>\n                <span class=\"eyebrow\">BUSINESS PROFILE &amp; VERIFICATION</span>\n                <h1>Business Identity</h1>\n                <p class=\"subtitle\">Manage statutory records, official registry identifiers, and verified business presence.</p>\n            </div>\n            <div class=\"header-actions\">\n                <a href=\"/public-profile\" class=\"btn outline\" style=\"text-decoration:none; display:inline-flex; align-items:center; gap:6px;\">← Back to Public Profile</a>\n                <button type=\"button\" class=\"btn\" id=\"btnSaveTop\" onclick=\"saveBusinessIdentity()\">\n                    <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n                        <path d=\"M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z\"></path>\n                        <polyline points=\"17 21 17 13 7 13 7 21\"></polyline>\n                        <polyline points=\"7 3 7 8 15 8\"></polyline>\n                    </svg>\n                    Save Changes\n                </button>\n                <div class=\"profile-chip\"><span class=\"avatar\">--</span> Profile</div>\n            </div>\n        </header>\n\n        <!-- Stats Overview Banner -->\n        <div class=\"stats\" style=\"grid-template-columns: repeat(4, 1fr);\">\n            <div class=\"stat\">\n                <small>Trust Level <span class=\"badge badge-verified\">Active</span></small>\n                <b>L3</b>\n                <span class=\"positive\">● Enhanced Verified</span>\n            </div>\n            <div class=\"stat\">\n                <small>GSTIN Status</small>\n                <b style=\"font-size: 24px; margin: 16px 0 12px; font-family: monospace;\">27ABCDE1234F1Z5</b>\n                <span class=\"positive\">✓ Active &amp; Validated</span>\n            </div>\n            <div class=\"stat\">\n                <small>PAN Entity</small>\n                <b style=\"font-size: 24px; margin: 16px 0 12px; font-family: monospace;\">ABCDE1234F</b>\n                <span class=\"positive\">✓ NSDL Attested</span>\n            </div>\n            <div class=\"stat\">\n                <small>Official Presence</small>\n                <b>100%</b>\n                <span>Domain, Email, Phone Verified</span>\n            </div>\n        </div>\n\n        <form id=\"identityForm\" onsubmit=\"event.preventDefault(); saveBusinessIdentity();\" style=\"display:flex; flex-direction:column; gap:24px;\">\n\n            <!-- 1. Corporate Legal Identity Card -->\n            <section class=\"panel\">\n                <div class=\"section-head\">\n                    <div>\n                        <h3 style=\"margin:0;\">1. Corporate Legal Entity</h3>\n                        <p class=\"muted\" style=\"margin:2px 0 0; font-size:12.5px;\">Statutory corporate registration and legal entity attributes</p>\n                    </div>\n                    <span class=\"badge badge-verified\">✓ MCA Incorporated</span>\n                </div>\n\n                <!-- Logo & Basic Row -->\n                <div style=\"display:flex; gap:28px; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap;\">\n                    <!-- Logo Upload / Preview Box -->\n                    <div style=\"display:flex; flex-direction:column; align-items:center; gap:10px; width:140px;\">\n                        <div style=\"width:120px; height:120px; border-radius:16px; border:2px dashed #cbd5e1; display:grid; place-items:center; background:#f8fafc; overflow:hidden; position:relative;\" id=\"logoPreviewWrap\">\n                            <img id=\"logoImg\" src=\"/assets/logo.png\" alt=\"Company Logo\" style=\"max-width:90%; max-height:90%; object-fit:contain;\">\n                        </div>\n                        <label for=\"logoFileInput\" class=\"btn-action\" style=\"cursor:pointer; font-size:11.5px; width:100%; justify-content:center;\">\n                            Change Logo\n                            <input type=\"file\" id=\"logoFileInput\" accept=\"image/*\" style=\"display:none;\" onchange=\"handleLogoUpload(event)\">\n                        </label>\n                    </div>\n\n                    <!-- Fields beside logo -->\n                    <div style=\"flex:1; min-width:300px; display:grid; grid-template-columns:1fr 1fr; gap:16px;\">\n                        <div>\n                            <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">\n                                Legal Business Name *\n                            </label>\n                            <input type=\"text\" id=\"legalName\" required style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; font-weight:600; color:#0B1F3A;\">\n                        </div>\n                        <div>\n                            <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">\n                                Trade Name / DBA\n                            </label>\n                            <input type=\"text\" id=\"tradeName\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; color:#0B1F3A;\">\n                        </div>\n                        <div>\n                            <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">\n                                Entity Type *\n                            </label>\n                            <select id=\"entityType\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; color:#0B1F3A; background:#ffffff;\">\n                                <option value=\"Private Limited Company\">Private Limited Company (Pvt. Ltd.)</option>\n                                <option value=\"Public Limited Company\">Public Limited Company (Ltd.)</option>\n                                <option value=\"Limited Liability Partnership\">Limited Liability Partnership (LLP)</option>\n                                <option value=\"Partnership Firm\">Partnership Firm</option>\n                                <option value=\"Sole Proprietorship\">Sole Proprietorship</option>\n                                <option value=\"One Person Company\">One Person Company (OPC)</option>\n                            </select>\n                        </div>\n                        <div>\n                            <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">\n                                Date of Incorporation\n                            </label>\n                            <input type=\"date\" id=\"incDate\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; color:#0B1F3A;\">\n                        </div>\n                    </div>\n                </div>\n\n                <!-- CIN Row -->\n                <div style=\"display:grid; grid-template-columns:1fr 1fr; gap:16px;\">\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">Corporate Identification Number (CIN / LLPIN)</label>\n                            <span class=\"badge badge-verified\">✓ Verified</span>\n                        </div>\n                        <div style=\"position:relative;\">\n                            <input type=\"text\" id=\"cinNumber\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; font-family:monospace; font-weight:700; text-transform:uppercase;\">\n                        </div>\n                        <small class=\"muted\" style=\"display:block; margin-top:4px;\">Cross-referenced against MCA Master Data repository.</small>\n                    </div>\n\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">RoC Jurisdiction</label>\n                            <span class=\"badge badge-neutral\">Registrar</span>\n                        </div>\n                        <input type=\"text\" id=\"rocOffice\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                        <small class=\"muted\" style=\"display:block; margin-top:4px;\">Registrar of Companies jurisdiction.</small>\n                    </div>\n                </div>\n            </section>\n\n            <!-- 2. Statutory Tax & Government Registrations -->\n            <section class=\"panel\">\n                <div class=\"section-head\">\n                    <div>\n                        <h3 style=\"margin:0;\">2. Statutory Tax &amp; Government Registrations</h3>\n                        <p class=\"muted\" style=\"margin:2px 0 0; font-size:12.5px;\">Authoritative Indian identifiers verified for B2B due diligence</p>\n                    </div>\n                    <span class=\"badge badge-verified\">3/3 Registrations Active</span>\n                </div>\n\n                <div class=\"grid-3\" style=\"margin-top:0; margin-bottom:12px;\">\n                    <!-- GSTIN -->\n                    <div style=\"background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#0B1F3A;\">GSTIN (Goods &amp; Services Tax)</label>\n                            <span class=\"badge badge-verified\">✓ Verified</span>\n                        </div>\n                        <input type=\"text\" id=\"gstin\" maxlength=\"15\" style=\"width:100%; padding:10px 12px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:monospace; font-weight:700; text-transform:uppercase;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:#059669;\">\n                            <span>Active · Filing Regular</span>\n                            <a href=\"/documents\" style=\"color:#FF2028; text-decoration:none; font-weight:600;\">View REG-06 →</a>\n                        </div>\n                    </div>\n\n                    <!-- PAN -->\n                    <div style=\"background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#0B1F3A;\">Business PAN (Income Tax)</label>\n                            <span class=\"badge badge-verified\">✓ Verified</span>\n                        </div>\n                        <input type=\"text\" id=\"panNumber\" maxlength=\"10\" style=\"width:100%; padding:10px 12px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:monospace; font-weight:700; text-transform:uppercase;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:#059669;\">\n                            <span>NSDL Entity Match</span>\n                            <a href=\"/documents\" style=\"color:#FF2028; text-decoration:none; font-weight:600;\">View PAN →</a>\n                        </div>\n                    </div>\n\n                    <!-- Udyam -->\n                    <div style=\"background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#0B1F3A;\">Udyam MSME Registration</label>\n                            <span class=\"badge badge-verified\">✓ Verified</span>\n                        </div>\n                        <input type=\"text\" id=\"udyamNumber\" style=\"width:100%; padding:10px 12px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:monospace; font-weight:700; text-transform:uppercase;\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:#059669;\">\n                            <span>Small Enterprise · Services</span>\n                            <a href=\"/documents\" style=\"color:#FF2028; text-decoration:none; font-weight:600;\">View MSME →</a>\n                        </div>\n                    </div>\n                </div>\n            </section>\n\n            <!-- 3. Official Business Presence & Channels -->\n            <section class=\"panel\">\n                <div class=\"section-head\">\n                    <div>\n                        <h3 style=\"margin:0;\">3. Official Business Channels &amp; Presence</h3>\n                        <p class=\"muted\" style=\"margin:2px 0 0; font-size:12.5px;\">Authentic digital presence and communication channels verified on Ohana</p>\n                    </div>\n                    <span class=\"badge badge-verified\">Digital Channels Live</span>\n                </div>\n\n                <div class=\"form-grid\" style=\"margin-top:0;\">\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">Official Website</label>\n                            <span class=\"badge badge-verified\">✓ DNS Verified</span>\n                        </div>\n                        <input type=\"url\" id=\"officialWebsite\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">Official Business Email</label>\n                            <span class=\"badge badge-verified\">✓ Domain Mailbox</span>\n                        </div>\n                        <input type=\"email\" id=\"officialEmail\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">Official Phone (HQ Landline)</label>\n                            <span class=\"badge badge-verified\">✓ OTP Checked</span>\n                        </div>\n                        <input type=\"tel\" id=\"officialPhone\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">WhatsApp Business Number</label>\n                            <span class=\"badge badge-warning\" id=\"whatsappBadge\">⚠ Pending OTP</span>\n                        </div>\n                        <div style=\"display:flex; gap:8px;\">\n                            <input type=\"tel\" id=\"whatsappBusiness\" style=\"flex:1; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                            <button type=\"button\" class=\"btn-action\" onclick=\"verifyWhatsApp()\">Verify</button>\n                        </div>\n                    </div>\n\n                    <div class=\"full-span\">\n                        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;\">\n                            <label style=\"font-size:13px; font-weight:700; color:#334155;\">Google Maps Listing / Business URL</label>\n                            <span class=\"badge badge-verified\">✓ Location Confirmed</span>\n                        </div>\n                        <input type=\"url\" id=\"googleMapsUrl\" placeholder=\"https://maps.google.com/?cid=...\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n                </div>\n            </section>\n\n            <!-- 4. Registered Office & Operating Location -->\n            <section class=\"panel\">\n                <div class=\"section-head\">\n                    <div>\n                        <h3 style=\"margin:0;\">4. Registered Office &amp; Physical Location</h3>\n                        <p class=\"muted\" style=\"margin:2px 0 0; font-size:12.5px;\">Physical operating location verified against commercial utility bills</p>\n                    </div>\n                    <span class=\"badge badge-verified\">✓ Physical Address Confirmed</span>\n                </div>\n\n                <div class=\"form-grid\" style=\"margin-top:0;\">\n                    <div class=\"full-span\">\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Address Line 1 *</label>\n                        <input type=\"text\" id=\"address1\" required style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div class=\"full-span\">\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Address Line 2 (Building / Landmark)</label>\n                        <input type=\"text\" id=\"address2\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">City *</label>\n                        <input type=\"text\" id=\"city\" required style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">State *</label>\n                        <input type=\"text\" id=\"state\" required style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">PIN Code *</label>\n                        <input type=\"text\" id=\"pincode\" maxlength=\"6\" required style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; font-family:monospace;\">\n                    </div>\n\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Country</label>\n                        <input type=\"text\" id=\"country\" value=\"India\" readonly style=\"width:100%; padding:11px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px; background:#f8fafc; color:#64748b;\">\n                    </div>\n                </div>\n            </section>\n\n            <!-- 5. Business Summary & Industry Profile -->\n            <section class=\"panel\">\n                <div class=\"section-head\">\n                    <div>\n                        <h3 style=\"margin:0;\">5. Business Description &amp; Category</h3>\n                        <p class=\"muted\" style=\"margin:2px 0 0; font-size:12.5px;\">Public facts published to your Ohana Business Passport</p>\n                    </div>\n                    <span class=\"badge badge-info\">Passport Public Layer</span>\n                </div>\n\n                <div class=\"form-grid\" style=\"margin-top:0;\">\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Primary Industry Sector</label>\n                        <input type=\"text\" id=\"industryCategory\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px;\">\n                    </div>\n\n                    <div>\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Operating Scale</label>\n                        <select id=\"companySize\" style=\"width:100%; padding:11px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; background:#ffffff;\">\n                            <option value=\"1-10 Employees\">1-10 Employees (Micro)</option>\n                            <option value=\"11-50 Employees\">11-50 Employees (Small)</option>\n                            <option value=\"51-200 Employees\" selected>51-200 Employees (Mid-Size SME)</option>\n                            <option value=\"201-500 Employees\">201-500 Employees (Large Enterprise)</option>\n                            <option value=\"500+ Employees\">500+ Employees (Corporate)</option>\n                        </select>\n                    </div>\n\n                    <div class=\"full-span\">\n                        <label style=\"display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;\">Executive Business Overview</label>\n                        <textarea id=\"businessBio\" rows=\"4\" style=\"width:100%; padding:12px 14px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; font-family:inherit; line-height:1.6;\"></textarea>\n                    </div>\n                </div>\n\n                <div style=\"display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid #f1f5f9; flex-wrap:wrap; gap:12px;\">\n                    <span style=\"font-size:13px; color:#64748b;\">\n                        Last verified against MCA Master Data on <b>18 Feb 2026</b>\n                    </span>\n                    <button type=\"submit\" class=\"btn\" style=\"padding:12px 28px;\">\n                        Save Identity Profile\n                    </button>\n                </div>\n            </section>\n        </form>\n    </main>\n\n    <!-- Client-Side Storage & Interactivity Engine -->\n    \n",
-  "script": "\n        const DEFAULT_IDENTITY = {\n            legalName: \"ABC Technologies Pvt. Ltd.\",\n            tradeName: \"ABC Tech Solutions\",\n            entityType: \"Private Limited Company\",\n            incDate: \"2021-01-15\",\n            cinNumber: \"U72200PN2021PTC198765\",\n            rocOffice: \"RoC Pune (Maharashtra)\",\n            gstin: \"27ABCDE1234F1Z5\",\n            panNumber: \"ABCDE1234F\",\n            udyamNumber: \"UDYAM-MH-26-0019284\",\n            officialWebsite: \"https://abctechnologies.io\",\n            officialEmail: \"info@abctechnologies.io\",\n            officialPhone: \"+91 20 6712 8900\",\n            whatsappBusiness: \"+91 98230 12345\",\n            googleMapsUrl: \"https://maps.google.com/?cid=1029384756\",\n            address1: \"4th Floor, Tech Park One, Airport Road\",\n            address2: \"Yerawada Industrial Area\",\n            city: \"Pune\",\n            state: \"Maharashtra\",\n            pincode: \"411006\",\n            industryCategory: \"Information Technology & Enterprise SaaS\",\n            companySize: \"51-200 Employees\",\n            businessBio: \"Audited provider of enterprise cloud operations, data engineering, and managed trust infrastructure services. Operating under verified statutory compliance on the Ohana Trust Protocol.\",\n            logoUrl: \"../assets/logo.png\"\n        };\n\n        function loadBusinessIdentity() {\n            let data = null;\n            try {\n                const stored = localStorage.getItem('ohana_business_identity');\n                if (stored) data = JSON.parse(stored);\n            } catch (e) {\n                console.error('Error loading identity from localStorage', e);\n            }\n\n            if (!data) {\n                const currentUser = (typeof getCurrentOhanaUser === 'function') ? getCurrentOhanaUser() : null;\n                if (currentUser && currentUser.email && currentUser.email.includes('vikram')) {\n                    data = {\n                        legalName: \"TechCorp Solutions Global Private Limited\",\n                        tradeName: \"TechCorp Global\",\n                        entityType: \"Private Limited Company\",\n                        incDate: \"2022-06-20\",\n                        cinNumber: \"U74999KA2022PTC162840\",\n                        rocOffice: \"RoC Bangalore (Karnataka)\",\n                        gstin: \"29AABCT8842K1Z9\",\n                        panNumber: \"AABCT8842K\",\n                        udyamNumber: \"UDYAM-KR-03-0048123\",\n                        officialWebsite: \"https://techcorpglobal.com\",\n                        officialEmail: \"vikram@techcorp.com\",\n                        officialPhone: \"+91 80 4123 7700\",\n                        whatsappBusiness: \"+91 98450 67890\",\n                        googleMapsUrl: \"https://maps.google.com/?q=TechCorp+Global\",\n                        address1: \"Level 6, Brigade Tech Gardens, Brookefield\",\n                        address2: \"Whitefield Road\",\n                        city: \"Bengaluru\",\n                        state: \"Karnataka\",\n                        pincode: \"560037\",\n                        industryCategory: \"Cloud Computing & Cybersecurity Solutions\",\n                        companySize: \"201-500 Employees\",\n                        businessBio: \"Enterprise cloud migration, identity security architecture, and automated compliance solutions for modern digital infrastructure.\",\n                        logoUrl: \"../assets/logo.png\"\n                    };\n                } else if (currentUser && currentUser.email && currentUser.email.includes('rahul')) {\n                    data = DEFAULT_IDENTITY;\n                } else if (currentUser) {\n                    data = {\n                        legalName: currentUser.orgName || \"Enterprise\",\n                        tradeName: currentUser.orgName || \"Enterprise\",\n                        entityType: \"Private Limited Company\",\n                        incDate: new Date().toISOString().split('T')[0],\n                        cinNumber: \"\",\n                        rocOffice: \"\",\n                        gstin: \"\",\n                        panNumber: \"\",\n                        udyamNumber: \"\",\n                        officialWebsite: \"\",\n                        officialEmail: currentUser.email || \"\",\n                        officialPhone: \"\",\n                        whatsappBusiness: \"\",\n                        googleMapsUrl: \"\",\n                        address1: \"\",\n                        address2: \"\",\n                        city: \"\",\n                        state: \"\",\n                        pincode: \"\",\n                        industryCategory: \"Technology & Professional Services\",\n                        companySize: \"1-10 Employees\",\n                        businessBio: `Official business entity profile for ${currentUser.orgName || 'Enterprise'}.`,\n                        logoUrl: \"../assets/logo.png\"\n                    };\n                } else {\n                    data = DEFAULT_IDENTITY;\n                }\n            }\n\n            // Populate form fields\n            Object.keys(data).forEach(key => {\n                const el = document.getElementById(key);\n                if (el) el.value = data[key];\n            });\n\n            if (data.logoUrl) {\n                const logoImg = document.getElementById('logoImg');\n                if (logoImg) logoImg.src = data.logoUrl;\n            }\n\n            // Sync sidebar organization name & dynamic level\n            const orgNameEl = document.getElementById('sidebarOrgName');\n            if (orgNameEl && data.legalName) {\n                orgNameEl.textContent = data.tradeName || data.legalName.replace(' Pvt. Ltd.', '').replace(' Private Limited', '');\n            }\n            try {\n                const storedV = localStorage.getItem('ohana_verification_state');\n                const v = storedV ? JSON.parse(storedV) : {};\n                const calc = typeof computeOhanaVerificationLevel === 'function' ? computeOhanaVerificationLevel(v) : { level: v.currentLevel || \"L3\" };\n                const lvlEl = document.getElementById('sidebarTrustLevel');\n                if (lvlEl) lvlEl.textContent = `✓ ${calc.level} Verified`;\n            } catch(e) {}\n        }\n\n        function saveBusinessIdentity() {\n            const formData = {\n                legalName: document.getElementById('legalName').value.trim(),\n                tradeName: document.getElementById('tradeName').value.trim(),\n                entityType: document.getElementById('entityType').value,\n                incDate: document.getElementById('incDate').value,\n                cinNumber: document.getElementById('cinNumber').value.trim(),\n                rocOffice: document.getElementById('rocOffice').value.trim(),\n                gstin: document.getElementById('gstin').value.trim(),\n                panNumber: document.getElementById('panNumber').value.trim(),\n                udyamNumber: document.getElementById('udyamNumber').value.trim(),\n                officialWebsite: document.getElementById('officialWebsite').value.trim(),\n                officialEmail: document.getElementById('officialEmail').value.trim(),\n                officialPhone: document.getElementById('officialPhone').value.trim(),\n                whatsappBusiness: document.getElementById('whatsappBusiness').value.trim(),\n                googleMapsUrl: document.getElementById('googleMapsUrl').value.trim(),\n                address1: document.getElementById('address1').value.trim(),\n                address2: document.getElementById('address2').value.trim(),\n                city: document.getElementById('city').value.trim(),\n                state: document.getElementById('state').value.trim(),\n                pincode: document.getElementById('pincode').value.trim(),\n                industryCategory: document.getElementById('industryCategory').value.trim(),\n                companySize: document.getElementById('companySize').value,\n                businessBio: document.getElementById('businessBio').value.trim(),\n                logoUrl: document.getElementById('logoImg').src\n            };\n\n            try {\n                localStorage.setItem('ohana_business_identity', JSON.stringify(formData));\n                if (typeof persistCurrentAccountData === 'function') persistCurrentAccountData();\n                if (typeof syncOhanaGlobalState === 'function') syncOhanaGlobalState();\n            } catch (e) {\n                console.error('Error saving identity to localStorage', e);\n            }\n\n            // Update sidebar org name\n            const orgNameEl = document.getElementById('sidebarOrgName');\n            if (orgNameEl && formData.legalName) {\n                orgNameEl.textContent = formData.tradeName || formData.legalName.replace(' Pvt. Ltd.', '').replace(' Private Limited', '');\n            }\n\n            showToast('Business identity saved! All updates persisted securely.', 'success');\n        }\n\n        function handleLogoUpload(event) {\n            const file = event.target.files[0];\n            if (!file) return;\n\n            const reader = new FileReader();\n            reader.onload = function(e) {\n                document.getElementById('logoImg').src = e.target.result;\n                showToast('Company logo updated! Click Save Changes to persist.', 'info');\n            };\n            reader.readAsDataURL(file);\n        }\n\n        function verifyWhatsApp() {\n            const num = document.getElementById('whatsappBusiness').value.trim();\n            if (!num) {\n                showToast('Please enter a WhatsApp Business phone number first.', 'warning');\n                return;\n            }\n            showToast('Sending OTP to ' + num + '...', 'info');\n            setTimeout(() => {\n                const badge = document.getElementById('whatsappBadge');\n                if (badge) {\n                    badge.className = 'badge badge-verified';\n                    badge.textContent = '✓ Verified';\n                }\n                showToast('WhatsApp Business number verified successfully!', 'success');\n            }, 1200);\n        }\n\n        document.addEventListener('DOMContentLoaded', () => {\n            loadBusinessIdentity();\n        });\n    "
+  "bodyId": "identityBody",
+  "style": `
+    /* Official Government Registration Document Styles */
+    .content.gov-page-wrap {
+      background: #F1F5F9;
+      padding: 24px 32px 64px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .gov-form-document {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 2px;
+      padding: 36px 44px 44px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      font-family: inherit;
+      color: #0F172A;
+    }
+
+    /* Masthead / Official Header */
+    .gov-doc-header {
+      border-bottom: 2px solid #0B1F3A;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }
+
+    .gov-emblem-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .gov-doc-seal {
+      width: 52px;
+      height: 52px;
+      border: 1px solid #CBD5E1;
+      border-radius: 2px;
+      display: grid;
+      place-items: center;
+      background: #F8FAFC;
+      flex-shrink: 0;
+    }
+
+    .gov-doc-titles {
+      flex: 1;
+    }
+
+    .gov-doc-sup {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #475569;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .gov-doc-h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0B1F3A;
+      margin: 0 0 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .gov-doc-sub {
+      font-size: 12.5px;
+      color: #64748B;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .gov-doc-meta-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+      padding: 10px 14px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      font-size: 11.5px;
+      color: #475569;
+    }
+
+    .gov-doc-meta-strip span {
+      display: block;
+      font-size: 10.5px;
+      color: #64748B;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .gov-doc-meta-strip strong {
+      color: #0B1F3A;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    /* Section Divisions */
+    .gov-section {
+      margin-bottom: 24px;
+    }
+
+    .gov-section-header {
+      background: #F1F5F9;
+      border-top: 2px solid #0B1F3A;
+      border-bottom: 1px solid #CBD5E1;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #0B1F3A;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .gov-sec-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #64748B;
+      letter-spacing: 1px;
+    }
+
+    /* Grid Layouts */
+    .gov-grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .gov-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 20px;
+      margin-bottom: 14px;
+    }
+
+    .gov-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px 18px;
+      margin-bottom: 14px;
+    }
+
+    .gov-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    /* Fields, Labels, Inputs */
+    .gov-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .gov-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1E293B;
+      letter-spacing: 0.1px;
+      margin: 0;
+    }
+
+    .gov-label .req {
+      color: #DC2626;
+      font-weight: 800;
+      margin-left: 2px;
+    }
+
+    .gov-field-desc {
+      font-size: 11px;
+      color: #64748B;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    .gov-input,
+    .gov-select,
+    .gov-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #FFFFFF;
+      border: 1px solid #94A3B8;
+      border-radius: 3px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #0F172A;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+
+    .gov-input:focus,
+    .gov-select:focus,
+    .gov-textarea:focus {
+      border-color: #0B1F3A;
+      outline: none;
+      box-shadow: 0 0 0 1px #0B1F3A;
+    }
+
+    .gov-mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .gov-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .gov-stamp-badge {
+      position: absolute;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #475569;
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      padding: 2px 6px;
+      border-radius: 2px;
+      pointer-events: none;
+      text-transform: uppercase;
+    }
+
+    /* Logo Uploader */
+    .gov-logo-control {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .gov-logo-thumb {
+      width: 58px;
+      height: 58px;
+      border: 1px solid #CBD5E1;
+      background: #F8FAFC;
+      display: grid;
+      place-items: center;
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .gov-logo-thumb img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    /* Inline OTP Controls */
+    .gov-inline-otp-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .gov-btn-inline {
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      border-radius: 3px;
+      padding: 7px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #0B1F3A;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .gov-btn-inline:hover {
+      background: #E2E8F0;
+    }
+
+    .gov-btn-inline-primary {
+      background: #0B1F3A;
+      color: #FFFFFF;
+      border: 1px solid #0B1F3A;
+      border-radius: 3px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .gov-btn-inline-primary:hover {
+      background: #1E3A8A;
+    }
+
+    .gov-verify-status {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #16A34A;
+      white-space: nowrap;
+    }
+
+    .gov-otp-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding: 6px 10px;
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: 3px;
+      flex-wrap: wrap;
+    }
+
+    .gov-otp-prompt {
+      font-size: 11px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .gov-input-sm {
+      width: 84px;
+      padding: 5px 8px;
+      border: 1px solid #94A3B8;
+      border-radius: 3px;
+      font-size: 12.5px;
+    }
+
+    /* Google Maps Location Bar */
+    .gov-map-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      border-radius: 2px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .gov-map-info {
+      font-size: 11.5px;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .gov-map-info strong {
+      color: #0B1F3A;
+    }
+
+    .gov-map-picker-panel {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 2px;
+    }
+
+    .gov-map-picker-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0B1F3A;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .gov-close-btn {
+      background: none;
+      border: none;
+      font-size: 16px;
+      line-height: 1;
+      color: #64748B;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .gov-map-opt {
+      padding: 8px 10px;
+      border: 1px solid #E2E8F0;
+      border-radius: 2px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 11.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .gov-map-opt:hover {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+    }
+
+    .gov-map-opt strong {
+      color: #0B1F3A;
+      font-size: 12px;
+    }
+
+    .gov-map-opt span {
+      color: #64748B;
+    }
+
+    /* Bottom Declaration & Actions */
+    .gov-declaration-box {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 2px solid #CBD5E1;
+    }
+
+    .gov-decl-check {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .gov-decl-check input[type="checkbox"] {
+      width: 16px !important;
+      min-width: 16px !important;
+      max-width: 16px !important;
+      height: 16px !important;
+      flex: 0 0 16px !important;
+      margin: 3px 0 0 0 !important;
+      padding: 0 !important;
+      cursor: pointer;
+    }
+
+    .gov-decl-check label {
+      flex: 1 1 auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+      color: #475569 !important;
+      line-height: 1.55 !important;
+    }
+
+    .gov-form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .gov-btn-back {
+      text-decoration: none;
+      padding: 9px 18px;
+      border: 1px solid #94A3B8;
+      background: #FFFFFF;
+      color: #0B1F3A;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .gov-btn-back:hover {
+      background: #F1F5F9;
+    }
+
+    .gov-btn-submit {
+      padding: 10px 28px;
+      border: none;
+      background: #FF2028;
+      color: #FFFFFF;
+      font-size: 13.5px;
+      font-weight: 700;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .gov-btn-submit:hover {
+      background: #E01B22;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content.gov-page-wrap {
+        padding: 16px 12px 48px;
+      }
+      .gov-form-document {
+        padding: 20px 16px 24px;
+      }
+      .gov-doc-meta-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+      .gov-grid-2,
+      .gov-grid-3,
+      .gov-grid-4 {
+        grid-template-columns: 1fr;
+      }
+      .gov-emblem-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .gov-inline-otp-group {
+        flex-wrap: wrap;
+      }
+    }
+  `,
+  "html": `
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="/dashboard">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="/assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTrustLevel">✓ L3 Verified</span>
+        </div>
+        <nav>
+            <a href="/dashboard">⌂ &nbsp; Dashboard</a>
+            <a href="/business-passport">🪪 &nbsp; Business Passport</a>
+            <a href="/documents">▣ &nbsp; Documents</a>
+            <a href="/renewals">↻ &nbsp; Renewals</a>
+            <a href="/billing">💳 &nbsp; Billing & Plans</a>
+            <a href="/support">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="/public-profile">Profile</a>
+            <a href="/">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content gov-page-wrap">
+        <!-- Formal Government Document Application Form Sheet -->
+        <div class="gov-form-document">
+
+            <!-- Official Form Masthead -->
+            <div class="gov-doc-header">
+                <div class="gov-emblem-row">
+                    <div class="gov-doc-seal">
+                        <img src="/assets/ohana-brand-logo.png" alt="Emblem" style="height:40px;">
+                    </div>
+                    <div class="gov-doc-titles">
+                        <span class="gov-doc-sup">OHANA STATUTORY BUSINESS IDENTITY &bull; REGISTRATION DIRECTORATE</span>
+                        <h1 class="gov-doc-h1">FORM BL-1: BUSINESS IDENTITY REGISTRATION &amp; ATTESTATION</h1>
+                        <p class="gov-doc-sub">Statutory Application for Registration, Continuous Maintenance, and Public Attestation of Legal Business Identity</p>
+                    </div>
+                </div>
+
+                <div class="gov-doc-meta-strip">
+                    <div><span>Application Form:</span> <strong>FORM BL-1 [Rule 4(1)]</strong></div>
+                    <div><span>Filing Type:</span> <strong>Statutory Corporate Master Record</strong></div>
+                    <div><span>Current Status:</span> <strong id="govMetaTier">L3 Enhanced Verified</strong></div>
+                    <div><span>Attestation Authority:</span> <strong>Ohana Trust Protocol</strong></div>
+                </div>
+            </div>
+
+            <form id="identityForm" onsubmit="event.preventDefault(); saveBusinessIdentity();">
+
+                <!-- 1. Applicant and Business Details -->
+                <section class="gov-section">
+                    <div class="gov-section-header">
+                        <span>1. APPLICANT AND BUSINESS DETAILS</span>
+                        <span class="gov-sec-tag">PART I</span>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <div class="gov-field">
+                            <label class="gov-label" for="username">
+                                1.1 Authorized Signatory / Username <span class="req">*</span>
+                            </label>
+                            <input type="text" id="username" class="gov-input" required placeholder="Full name of authorized representative">
+                            <span class="gov-field-desc">Authorized officer executing this statutory profile declaration.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="legalName">
+                                1.2 Legal Business Name (as registered with Registrar / MCA) <span class="req">*</span>
+                            </label>
+                            <input type="text" id="legalName" class="gov-input" required placeholder="Exact legal entity name (e.g. ABC Technologies Pvt. Ltd.)">
+                            <span class="gov-field-desc">Corporate name appearing on Certificate of Incorporation / Charter.</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <div class="gov-field">
+                            <label class="gov-label" for="tradeName">
+                                1.3 Trade Name / Doing Business As (DBA)
+                            </label>
+                            <input type="text" id="tradeName" class="gov-input" placeholder="Operational trade or brand name">
+                            <span class="gov-field-desc">Commercial trade designation recognized by vendors and clients.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="entityType">
+                                1.4 Constitution / Entity Legal Structure <span class="req">*</span>
+                            </label>
+                            <select id="entityType" class="gov-select" required>
+                                <option value="Private Limited Company">Private Limited Company (Pvt. Ltd.)</option>
+                                <option value="Public Limited Company">Public Limited Company (Ltd.)</option>
+                                <option value="Limited Liability Partnership">Limited Liability Partnership (LLP)</option>
+                                <option value="Partnership Firm">Partnership Firm</option>
+                                <option value="Sole Proprietorship">Sole Proprietorship</option>
+                                <option value="One Person Company">One Person Company (OPC)</option>
+                            </select>
+                            <span class="gov-field-desc">Legal entity category under the Companies Act / Partnership Act.</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <div class="gov-field">
+                            <label class="gov-label" for="incDate">
+                                1.5 Date of Incorporation / Commencement of Business <span class="req">*</span>
+                            </label>
+                            <input type="date" id="incDate" class="gov-input" required>
+                            <span class="gov-field-desc">Date of corporate registration or initial commercial licensing.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label">
+                                1.6 Official Corporate Seal / Logo
+                            </label>
+                            <div class="gov-logo-control">
+                                <div class="gov-logo-thumb" id="logoPreviewWrap">
+                                    <img id="logoImg" src="/assets/logo.png" alt="Company Seal">
+                                </div>
+                                <div>
+                                    <label for="logoFileInput" class="gov-btn-inline" style="cursor:pointer; display:inline-block;">Upload Seal / Logo</label>
+                                    <input type="file" id="logoFileInput" accept="image/*" style="display:none;" onchange="handleLogoUpload(event)">
+                                    <span class="gov-field-desc" style="display:block;">Emblem attached to verified public Business Passport.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Business Registration Details -->
+                <section class="gov-section">
+                    <div class="gov-section-header">
+                        <span>2. BUSINESS REGISTRATION DETAILS</span>
+                        <span class="gov-sec-tag">PART II</span>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <div class="gov-field">
+                            <label class="gov-label" for="cinNumber">
+                                2.1 Corporate Identification Number (CIN) / LLPIN
+                            </label>
+                            <div class="gov-input-wrap">
+                                <input type="text" id="cinNumber" class="gov-input gov-mono" placeholder="U72200PN2021PTC198765" maxlength="21">
+                                <span class="gov-stamp-badge">MCA Record</span>
+                            </div>
+                            <span class="gov-field-desc">21-character alphanumeric identifier issued by Ministry of Corporate Affairs.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="rocOffice">
+                                2.2 Registrar of Companies (RoC) Jurisdiction
+                            </label>
+                            <input type="text" id="rocOffice" class="gov-input" placeholder="e.g. RoC Pune (Maharashtra)">
+                            <span class="gov-field-desc">Official registry jurisdiction where the company is registered.</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-3">
+                        <div class="gov-field">
+                            <label class="gov-label" for="gstin">
+                                2.3 GSTIN (Goods &amp; Services Tax)
+                            </label>
+                            <div class="gov-input-wrap">
+                                <input type="text" id="gstin" class="gov-input gov-mono" maxlength="15" placeholder="27ABCDE1234F1Z5">
+                                <span class="gov-stamp-badge">GSTN</span>
+                            </div>
+                            <span class="gov-field-desc">15-digit State Goods and Services Tax Identification Number.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="panNumber">
+                                2.4 Business PAN (Income Tax)
+                            </label>
+                            <div class="gov-input-wrap">
+                                <input type="text" id="panNumber" class="gov-input gov-mono" maxlength="10" placeholder="ABCDE1234F">
+                                <span class="gov-stamp-badge">NSDL</span>
+                            </div>
+                            <span class="gov-field-desc">10-character Permanent Account Number of the business entity.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="udyamNumber">
+                                2.5 Udyam MSME Registration Number
+                            </label>
+                            <div class="gov-input-wrap">
+                                <input type="text" id="udyamNumber" class="gov-input gov-mono" placeholder="UDYAM-MH-26-0019284">
+                                <span class="gov-stamp-badge">MSME</span>
+                            </div>
+                            <span class="gov-field-desc">Ministry of Micro, Small and Medium Enterprises registration.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Contact Information -->
+                <section class="gov-section">
+                    <div class="gov-section-header">
+                        <span>3. CONTACT INFORMATION</span>
+                        <span class="gov-sec-tag">PART III</span>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <!-- Personal Email with inline OTP -->
+                        <div class="gov-field">
+                            <label class="gov-label" for="personalEmail">
+                                3.1 Authorized Signatory Personal Email <span class="req">*</span>
+                            </label>
+                            <div class="gov-inline-otp-group">
+                                <input type="email" id="personalEmail" class="gov-input" required placeholder="representative@gmail.com">
+                                <button type="button" class="gov-btn-inline" id="btnPersonalOtp" onclick="sendEmailOtp('personal')">Send OTP</button>
+                                <span class="gov-verify-status" id="statusPersonalEmail">✓ Verified</span>
+                            </div>
+                            <div id="otpRowPersonal" class="gov-otp-box" style="display:none;">
+                                <span class="gov-otp-prompt">Enter 6-digit OTP code:</span>
+                                <input type="text" id="otpCodePersonal" maxlength="6" placeholder="123456" class="gov-input-sm gov-mono">
+                                <button type="button" class="gov-btn-inline-primary" onclick="verifyEmailOtp('personal')">Confirm OTP</button>
+                            </div>
+                            <span class="gov-field-desc">Individual email for two-factor verification and executive identity notices.</span>
+                        </div>
+
+                        <!-- Business Email with inline OTP -->
+                        <div class="gov-field">
+                            <label class="gov-label" for="officialEmail">
+                                3.2 Official Corporate Business Email <span class="req">*</span>
+                            </label>
+                            <div class="gov-inline-otp-group">
+                                <input type="email" id="officialEmail" class="gov-input" required placeholder="info@abctechnologies.io">
+                                <button type="button" class="gov-btn-inline" id="btnOfficialOtp" onclick="sendEmailOtp('official')">Send OTP</button>
+                                <span class="gov-verify-status" id="statusOfficialEmail">✓ Verified</span>
+                            </div>
+                            <div id="otpRowOfficial" class="gov-otp-box" style="display:none;">
+                                <span class="gov-otp-prompt">Enter 6-digit OTP code:</span>
+                                <input type="text" id="otpCodeOfficial" maxlength="6" placeholder="123456" class="gov-input-sm gov-mono">
+                                <button type="button" class="gov-btn-inline-primary" onclick="verifyEmailOtp('official')">Confirm OTP</button>
+                            </div>
+                            <span class="gov-field-desc">Official domain mailbox used for statutory e-notices and B2B audit packs.</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-3">
+                        <div class="gov-field">
+                            <label class="gov-label" for="officialPhone">
+                                3.3 Official Telephone (Landline / HQ) <span class="req">*</span>
+                            </label>
+                            <input type="tel" id="officialPhone" class="gov-input" required placeholder="+91 20 6712 8900">
+                            <span class="gov-field-desc">Registered commercial contact line.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="whatsappBusiness">
+                                3.4 Mobile / WhatsApp Business Number
+                            </label>
+                            <div class="gov-inline-otp-group">
+                                <input type="tel" id="whatsappBusiness" class="gov-input" placeholder="+91 98230 12345">
+                                <button type="button" class="gov-btn-inline" onclick="verifyWhatsApp()">Verify</button>
+                                <span class="gov-verify-status" id="whatsappBadge">✓ Verified</span>
+                            </div>
+                            <span class="gov-field-desc">Mobile communication channel for priority alerts.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="officialWebsite">
+                                3.5 Official Corporate Website
+                            </label>
+                            <input type="url" id="officialWebsite" class="gov-input" placeholder="https://abctechnologies.io">
+                            <span class="gov-field-desc">Domain name ownership cross-referenced against DNS records.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Registered Business Address -->
+                <section class="gov-section">
+                    <div class="gov-section-header">
+                        <span>4. REGISTERED BUSINESS ADDRESS</span>
+                        <span class="gov-sec-tag">PART IV</span>
+                    </div>
+
+                    <!-- Google Maps Location Selection Control -->
+                    <div class="gov-map-bar">
+                        <div class="gov-map-info">
+                            <strong>Official Location Coordinates &amp; Maps Selection:</strong>
+                            <span>Select a verified commercial location to automatically populate the address fields below.</span>
+                        </div>
+                        <button type="button" class="gov-btn-inline" onclick="toggleLocationPicker()">
+                            📍 Select Location from Google Maps
+                        </button>
+                    </div>
+
+                    <!-- Simple dropdown / selector for verified Google Maps locations -->
+                    <div id="mapLocationPicker" class="gov-map-picker-panel" style="display:none;">
+                        <div class="gov-map-picker-head">
+                            <span>Select Verified Commercial Location to Auto-Populate:</span>
+                            <button type="button" class="gov-close-btn" onclick="toggleLocationPicker()">&times;</button>
+                        </div>
+                        <div class="gov-map-opt" onclick="applyPresetLocation('pune')">
+                            <strong>Pune Head Office</strong>
+                            <span>4th Floor, Tech Park One, Airport Road, Yerawada, Pune, Maharashtra - 411006</span>
+                        </div>
+                        <div class="gov-map-opt" onclick="applyPresetLocation('bangalore')">
+                            <strong>Bengaluru Branch Office</strong>
+                            <span>Level 6, Brigade Tech Gardens, Brookefield, Whitefield, Bengaluru, Karnataka - 560037</span>
+                        </div>
+                        <div class="gov-map-opt" onclick="applyPresetLocation('mumbai')">
+                            <strong>Mumbai Registered Office</strong>
+                            <span>Unit 802, One BKC, C-Wing, Bandra Kurla Complex, Mumbai, Maharashtra - 400051</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-1">
+                        <div class="gov-field">
+                            <label class="gov-label" for="address1">
+                                4.1 Address Line 1 (Building / Flat / Floor / Premises) <span class="req">*</span>
+                            </label>
+                            <input type="text" id="address1" class="gov-input" required placeholder="Floor, Wing, Building Name, Plot / Survey No.">
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="address2">
+                                4.2 Address Line 2 (Road / Street / Industrial Estate / Landmark)
+                            </label>
+                            <input type="text" id="address2" class="gov-input" placeholder="Street Name, Sector, Industrial Area, Landmark">
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-4">
+                        <div class="gov-field">
+                            <label class="gov-label" for="city">
+                                4.3 City / District <span class="req">*</span>
+                            </label>
+                            <input type="text" id="city" class="gov-input" required placeholder="City">
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="state">
+                                4.4 State / Union Territory <span class="req">*</span>
+                            </label>
+                            <input type="text" id="state" class="gov-input" required placeholder="State">
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="pincode">
+                                4.5 Postal PIN Code <span class="req">*</span>
+                            </label>
+                            <input type="text" id="pincode" class="gov-input gov-mono" maxlength="6" required placeholder="6-digit PIN">
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="country">
+                                4.6 Country
+                            </label>
+                            <input type="text" id="country" class="gov-input" value="India" readonly style="background:#F1F5F9; color:#475569;">
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-1" style="margin-top:8px;">
+                        <div class="gov-field">
+                            <label class="gov-label" for="googleMapsUrl">
+                                4.7 Google Maps Listing / Business URL / Place ID
+                            </label>
+                            <input type="url" id="googleMapsUrl" class="gov-input" placeholder="https://maps.google.com/?cid=1029384756">
+                            <span class="gov-field-desc">Geocoded physical presence reference cross-checked against municipal utility bills.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Operational Particulars & Category -->
+                <section class="gov-section">
+                    <div class="gov-section-header">
+                        <span>5. OPERATIONAL PARTICULARS &amp; BUSINESS SCOPE</span>
+                        <span class="gov-sec-tag">PART V</span>
+                    </div>
+
+                    <div class="gov-grid-2">
+                        <div class="gov-field">
+                            <label class="gov-label" for="industryCategory">
+                                5.1 Primary Industry Sector / NIC Classification
+                            </label>
+                            <input type="text" id="industryCategory" class="gov-input" placeholder="e.g. Information Technology &amp; Enterprise SaaS">
+                            <span class="gov-field-desc">Standard industrial category for corporate peer benchmarking.</span>
+                        </div>
+
+                        <div class="gov-field">
+                            <label class="gov-label" for="companySize">
+                                5.2 Operating Scale / Workforce Classification
+                            </label>
+                            <select id="companySize" class="gov-select">
+                                <option value="1-10 Employees">1-10 Employees (Micro Enterprise)</option>
+                                <option value="11-50 Employees">11-50 Employees (Small Enterprise)</option>
+                                <option value="51-200 Employees" selected>51-200 Employees (Medium Enterprise - SME)</option>
+                                <option value="201-500 Employees">201-500 Employees (Large Enterprise)</option>
+                                <option value="500+ Employees">500+ Employees (Corporate / Conglomerate)</option>
+                            </select>
+                            <span class="gov-field-desc">Enterprise scale categorization according to statutory MSME guidelines.</span>
+                        </div>
+                    </div>
+
+                    <div class="gov-grid-1">
+                        <div class="gov-field">
+                            <label class="gov-label" for="businessBio">
+                                5.3 Executive Business Overview / Main Objects of the Company
+                            </label>
+                            <textarea id="businessBio" rows="4" class="gov-textarea" placeholder="Brief formal statement of corporate activities and statutory compliance scope."></textarea>
+                            <span class="gov-field-desc">This overview is published to your attested Business Passport and made verifiable to counterparties.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Statutory Declaration & Formal Submission Footer -->
+                <div class="gov-declaration-box">
+                    <div class="gov-decl-check">
+                        <input type="checkbox" id="declarationConsent" checked required>
+                        <label for="declarationConsent">
+                            <strong>Statutory Undertaking:</strong> I hereby solemnly declare and affirm that the particulars furnished in this application are true, correct, and complete to the best of my knowledge and belief, and that no material particulars have been suppressed. I authorize Ohana Trust Protocol to cross-reference the submitted identifiers with statutory government registries (MCA, GSTN, NSDL, Udyam) for verified identity attestation.
+                        </label>
+                    </div>
+
+                    <div class="gov-form-actions">
+                        <a href="/public-profile" class="gov-btn-back">← Back to Public Profile</a>
+                        <button type="submit" class="gov-btn-submit" id="btnSaveBottom">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </main>
+  `,
+  "script": `
+        const DEFAULT_IDENTITY = {
+            username: "Rahul Bawa",
+            legalName: "ABC Technologies Pvt. Ltd.",
+            tradeName: "ABC Tech Solutions",
+            entityType: "Private Limited Company",
+            incDate: "2021-01-15",
+            cinNumber: "U72200PN2021PTC198765",
+            rocOffice: "RoC Pune (Maharashtra)",
+            gstin: "27ABCDE1234F1Z5",
+            panNumber: "ABCDE1234F",
+            udyamNumber: "UDYAM-MH-26-0019284",
+            personalEmail: "rahul.bawa@gmail.com",
+            officialEmail: "info@abctechnologies.io",
+            officialPhone: "+91 20 6712 8900",
+            whatsappBusiness: "+91 98230 12345",
+            officialWebsite: "https://abctechnologies.io",
+            address1: "4th Floor, Tech Park One, Airport Road",
+            address2: "Yerawada Industrial Area",
+            city: "Pune",
+            state: "Maharashtra",
+            pincode: "411006",
+            country: "India",
+            googleMapsUrl: "https://maps.google.com/?cid=1029384756",
+            industryCategory: "Information Technology & Enterprise SaaS",
+            companySize: "51-200 Employees",
+            businessBio: "Audited provider of enterprise cloud operations, data engineering, and managed trust infrastructure services. Operating under verified statutory compliance on the Ohana Trust Protocol.",
+            logoUrl: "/assets/logo.png"
+        };
+
+        function loadBusinessIdentity() {
+            let data = null;
+            try {
+                const stored = localStorage.getItem('ohana_business_identity');
+                if (stored) data = JSON.parse(stored);
+            } catch (e) {
+                console.error('Error loading identity from localStorage', e);
+            }
+
+            if (!data) {
+                const currentUser = (typeof getCurrentOhanaUser === 'function') ? getCurrentOhanaUser() : null;
+                if (currentUser && currentUser.email && currentUser.email.includes('vikram')) {
+                    data = {
+                        username: "Vikram Malhotra",
+                        legalName: "TechCorp Solutions Global Private Limited",
+                        tradeName: "TechCorp Global",
+                        entityType: "Private Limited Company",
+                        incDate: "2022-06-20",
+                        cinNumber: "U74999KA2022PTC162840",
+                        rocOffice: "RoC Bangalore (Karnataka)",
+                        gstin: "29AABCT8842K1Z9",
+                        panNumber: "AABCT8842K",
+                        udyamNumber: "UDYAM-KR-03-0048123",
+                        personalEmail: "vikram.malhotra@gmail.com",
+                        officialEmail: "vikram@techcorp.com",
+                        officialPhone: "+91 80 4123 7700",
+                        whatsappBusiness: "+91 98450 67890",
+                        officialWebsite: "https://techcorpglobal.com",
+                        address1: "Level 6, Brigade Tech Gardens, Brookefield",
+                        address2: "Whitefield Road",
+                        city: "Bengaluru",
+                        state: "Karnataka",
+                        pincode: "560037",
+                        country: "India",
+                        googleMapsUrl: "https://maps.google.com/?q=TechCorp+Global",
+                        industryCategory: "Cloud Computing & Cybersecurity Solutions",
+                        companySize: "201-500 Employees",
+                        businessBio: "Enterprise cloud migration, identity security architecture, and automated compliance solutions for modern digital infrastructure.",
+                        logoUrl: "/assets/logo.png"
+                    };
+                } else if (currentUser && currentUser.email && currentUser.email.includes('rahul')) {
+                    data = DEFAULT_IDENTITY;
+                } else if (currentUser) {
+                    data = {
+                        username: currentUser.name || "Authorized Signatory",
+                        legalName: currentUser.orgName || "Enterprise",
+                        tradeName: currentUser.orgName || "Enterprise",
+                        entityType: "Private Limited Company",
+                        incDate: new Date().toISOString().split('T')[0],
+                        cinNumber: "",
+                        rocOffice: "",
+                        gstin: "",
+                        panNumber: "",
+                        udyamNumber: "",
+                        personalEmail: currentUser.email || "",
+                        officialEmail: currentUser.email || "",
+                        officialPhone: "",
+                        whatsappBusiness: "",
+                        officialWebsite: "",
+                        address1: "",
+                        address2: "",
+                        city: "",
+                        state: "",
+                        pincode: "",
+                        country: "India",
+                        googleMapsUrl: "",
+                        industryCategory: "Technology & Professional Services",
+                        companySize: "1-10 Employees",
+                        businessBio: "Official business entity profile for " + (currentUser.orgName || 'Enterprise') + ".",
+                        logoUrl: "/assets/logo.png"
+                    };
+                } else {
+                    data = DEFAULT_IDENTITY;
+                }
+            }
+
+            // Fallback for fields not yet stored in older sessions
+            if (!data.username) data.username = "Rahul Bawa";
+            if (!data.personalEmail) data.personalEmail = "rahul.bawa@gmail.com";
+            if (!data.country) data.country = "India";
+
+            // Populate form fields
+            Object.keys(data).forEach(key => {
+                const el = document.getElementById(key);
+                if (el) el.value = data[key];
+            });
+
+            if (data.logoUrl) {
+                const logoImg = document.getElementById('logoImg');
+                if (logoImg) logoImg.src = data.logoUrl;
+            }
+
+            // Sync sidebar organization name & dynamic level
+            const orgNameEl = document.getElementById('sidebarOrgName');
+            if (orgNameEl && data.legalName) {
+                orgNameEl.textContent = data.tradeName || data.legalName.replace(' Pvt. Ltd.', '').replace(' Private Limited', '');
+            }
+            try {
+                const storedV = localStorage.getItem('ohana_verification_state');
+                const v = storedV ? JSON.parse(storedV) : {};
+                const calc = typeof computeOhanaVerificationLevel === 'function' ? computeOhanaVerificationLevel(v) : { level: v.currentLevel || "L3" };
+                const lvlEl = document.getElementById('sidebarTrustLevel');
+                if (lvlEl) lvlEl.textContent = '✓ ' + calc.level + ' Verified';
+                const govMeta = document.getElementById('govMetaTier');
+                if (govMeta) govMeta.textContent = calc.level + ' Enhanced Verified';
+            } catch(e) {}
+        }
+
+        function saveBusinessIdentity() {
+            const formData = {
+                username: document.getElementById('username') ? document.getElementById('username').value.trim() : '',
+                legalName: document.getElementById('legalName').value.trim(),
+                tradeName: document.getElementById('tradeName').value.trim(),
+                entityType: document.getElementById('entityType').value,
+                incDate: document.getElementById('incDate').value,
+                cinNumber: document.getElementById('cinNumber').value.trim(),
+                rocOffice: document.getElementById('rocOffice').value.trim(),
+                gstin: document.getElementById('gstin').value.trim(),
+                panNumber: document.getElementById('panNumber').value.trim(),
+                udyamNumber: document.getElementById('udyamNumber').value.trim(),
+                personalEmail: document.getElementById('personalEmail') ? document.getElementById('personalEmail').value.trim() : '',
+                officialEmail: document.getElementById('officialEmail').value.trim(),
+                officialPhone: document.getElementById('officialPhone').value.trim(),
+                whatsappBusiness: document.getElementById('whatsappBusiness').value.trim(),
+                officialWebsite: document.getElementById('officialWebsite').value.trim(),
+                address1: document.getElementById('address1').value.trim(),
+                address2: document.getElementById('address2').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                pincode: document.getElementById('pincode').value.trim(),
+                country: document.getElementById('country') ? document.getElementById('country').value.trim() : 'India',
+                googleMapsUrl: document.getElementById('googleMapsUrl').value.trim(),
+                industryCategory: document.getElementById('industryCategory').value.trim(),
+                companySize: document.getElementById('companySize').value,
+                businessBio: document.getElementById('businessBio').value.trim(),
+                logoUrl: document.getElementById('logoImg') ? document.getElementById('logoImg').src : '/assets/logo.png'
+            };
+
+            try {
+                localStorage.setItem('ohana_business_identity', JSON.stringify(formData));
+                if (typeof persistCurrentAccountData === 'function') persistCurrentAccountData();
+                if (typeof syncOhanaGlobalState === 'function') syncOhanaGlobalState();
+            } catch (e) {
+                console.error('Error saving identity to localStorage', e);
+            }
+
+            // Update sidebar org name
+            const orgNameEl = document.getElementById('sidebarOrgName');
+            if (orgNameEl && formData.legalName) {
+                orgNameEl.textContent = formData.tradeName || formData.legalName.replace(' Pvt. Ltd.', '').replace(' Private Limited', '');
+            }
+
+            if (typeof showToast === 'function') {
+                showToast('Business identity saved! Statutory records updated successfully.', 'success');
+            } else {
+                alert('Business identity saved successfully!');
+            }
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logo = document.getElementById('logoImg');
+                if (logo) logo.src = e.target.result;
+                if (typeof showToast === 'function') {
+                    showToast('Official seal/logo updated! Save changes to record.', 'info');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function sendEmailOtp(type) {
+            const inputId = type === 'personal' ? 'personalEmail' : 'officialEmail';
+            const email = document.getElementById(inputId).value.trim();
+            if (!email) {
+                if (typeof showToast === 'function') {
+                    showToast('Please enter an email address first.', 'warning');
+                }
+                return;
+            }
+            const rowId = type === 'personal' ? 'otpRowPersonal' : 'otpRowOfficial';
+            const row = document.getElementById(rowId);
+            if (row) row.style.display = 'flex';
+            if (typeof showToast === 'function') {
+                showToast('OTP sent to ' + email + ' (Use 123456 to verify in this session)', 'info');
+            }
+        }
+
+        function verifyEmailOtp(type) {
+            const codeId = type === 'personal' ? 'otpCodePersonal' : 'otpCodeOfficial';
+            const code = document.getElementById(codeId).value.trim();
+            if (!code) {
+                if (typeof showToast === 'function') showToast('Please enter the 6-digit OTP code.', 'warning');
+                return;
+            }
+            if (code === '123456' || code.length === 6) {
+                const badgeId = type === 'personal' ? 'statusPersonalEmail' : 'statusOfficialEmail';
+                const badge = document.getElementById(badgeId);
+                if (badge) {
+                    badge.textContent = '✓ Verified';
+                    badge.style.color = '#16A34A';
+                }
+                const rowId = type === 'personal' ? 'otpRowPersonal' : 'otpRowOfficial';
+                const row = document.getElementById(rowId);
+                if (row) row.style.display = 'none';
+                if (typeof showToast === 'function') {
+                    showToast((type === 'personal' ? 'Personal' : 'Official business') + ' email verified successfully!', 'success');
+                }
+            } else {
+                if (typeof showToast === 'function') showToast('Invalid OTP code. Please enter 123456 to verify.', 'error');
+            }
+        }
+
+        function verifyWhatsApp() {
+            const num = document.getElementById('whatsappBusiness').value.trim();
+            if (!num) {
+                if (typeof showToast === 'function') showToast('Please enter a WhatsApp number first.', 'warning');
+                return;
+            }
+            if (typeof showToast === 'function') showToast('Sending verification code to ' + num + '...', 'info');
+            setTimeout(() => {
+                const badge = document.getElementById('whatsappBadge');
+                if (badge) {
+                    badge.textContent = '✓ Verified';
+                    badge.style.color = '#16A34A';
+                }
+                if (typeof showToast === 'function') showToast('WhatsApp Business number verified successfully!', 'success');
+            }, 800);
+        }
+
+        function toggleLocationPicker() {
+            const picker = document.getElementById('mapLocationPicker');
+            if (picker) {
+                picker.style.display = (picker.style.display === 'none' || !picker.style.display) ? 'block' : 'none';
+            }
+        }
+
+        function applyPresetLocation(type) {
+            if (type === 'pune') {
+                document.getElementById('address1').value = '4th Floor, Tech Park One, Airport Road';
+                document.getElementById('address2').value = 'Yerawada Industrial Area';
+                document.getElementById('city').value = 'Pune';
+                document.getElementById('state').value = 'Maharashtra';
+                document.getElementById('pincode').value = '411006';
+                document.getElementById('googleMapsUrl').value = 'https://maps.google.com/?cid=1029384756';
+            } else if (type === 'bangalore') {
+                document.getElementById('address1').value = 'Level 6, Brigade Tech Gardens, Brookefield';
+                document.getElementById('address2').value = 'Whitefield Road';
+                document.getElementById('city').value = 'Bengaluru';
+                document.getElementById('state').value = 'Karnataka';
+                document.getElementById('pincode').value = '560037';
+                document.getElementById('googleMapsUrl').value = 'https://maps.google.com/?q=Brigade+Tech+Gardens';
+            } else if (type === 'mumbai') {
+                document.getElementById('address1').value = 'Unit 802, One BKC, C-Wing, G-Block';
+                document.getElementById('address2').value = 'Bandra Kurla Complex, Bandra East';
+                document.getElementById('city').value = 'Mumbai';
+                document.getElementById('state').value = 'Maharashtra';
+                document.getElementById('pincode').value = '400051';
+                document.getElementById('googleMapsUrl').value = 'https://maps.google.com/?q=One+BKC+Mumbai';
+            }
+            const picker = document.getElementById('mapLocationPicker');
+            if (picker) picker.style.display = 'none';
+            if (typeof showToast === 'function') {
+                showToast('Address fields populated from selected Google Maps location.', 'success');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBusinessIdentity();
+        });
+  `
 };
