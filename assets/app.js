@@ -171,7 +171,7 @@ function initSidebarIcons() {
     }
   }
 
-  // 2. Organization Card Chevron
+  // 2. Organization Card Chevron & Switcher
   const org = sidebar.querySelector('.org');
   if (org) {
     const strong = org.querySelector('strong');
@@ -179,6 +179,7 @@ function initSidebarIcons() {
       const orgName = strong.textContent.replace(/[›>]/g, '').trim();
       strong.innerHTML = `<span class="org-name">${orgName}</span><svg class="org-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>`;
     }
+    initOrgSwitcher(org);
   }
 
   const icons = {
@@ -243,18 +244,14 @@ function initSidebarIcons() {
   sidebar.querySelectorAll('.side-bottom a').forEach(a => {
     const text = a.textContent.toLowerCase();
     const href = a.getAttribute('href') || '';
+    if (text.includes('setting') || href.includes('security') || href.includes('settings')) {
+      a.remove();
+      return;
+    }
     if (text.includes('profile') || href.includes('public-profile')) {
       a.innerHTML = `${icons['profile']} <span>Profile</span>`;
       a.href = profileHref;
       if (currentPath === 'public-profile') {
-        a.classList.add('active');
-      } else {
-        a.classList.remove('active');
-      }
-    } else if (text.includes('setting') || href.includes('security')) {
-      a.innerHTML = `${icons['settings']} <span>Settings</span>`;
-      a.href = settingsHref;
-      if (currentPath === 'security') {
         a.classList.add('active');
       } else {
         a.classList.remove('active');
@@ -264,19 +261,178 @@ function initSidebarIcons() {
       a.href = logoutHref;
     }
   });
+}
 
-  // Make all header profile chips click to open public-profile.html
-  document.querySelectorAll('.profile-chip').forEach(chip => {
-    chip.style.cursor = 'pointer';
-    chip.setAttribute('title', 'View Public Profile');
-    if (!chip.getAttribute('data-bound-profile')) {
-      chip.setAttribute('data-bound-profile', 'true');
-      chip.addEventListener('click', (e) => {
-        if (chip.getAttribute('onclick')) return;
-        const isPagesDir = window.location.pathname.includes('/pages/');
-        window.location.href = isPagesDir ? 'public-profile.html' : 'pages/public-profile.html';
+// 3.1. Interactive Active Organization Switcher
+function initOrgSwitcher(orgCard) {
+  if (!orgCard) orgCard = document.querySelector('.sidebar .org');
+  if (!orgCard) return;
+
+  orgCard.style.cursor = 'pointer';
+  orgCard.setAttribute('role', 'button');
+  orgCard.setAttribute('aria-haspopup', 'true');
+  orgCard.setAttribute('title', 'Click to switch active organization');
+
+  let menu = orgCard.querySelector('.org-switcher-menu');
+  if (!menu) {
+    menu = document.createElement('div');
+    menu.className = 'org-switcher-menu';
+    orgCard.appendChild(menu);
+  }
+
+  if (!orgCard.getAttribute('data-org-switcher-bound')) {
+    orgCard.setAttribute('data-org-switcher-bound', 'true');
+
+    orgCard.addEventListener('click', (e) => {
+      if (e.target.closest('.org-switcher-menu')) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const isOpen = menu.classList.contains('show');
+      document.querySelectorAll('.org-switcher-menu.show').forEach(m => {
+        m.classList.remove('show');
+        m.parentElement?.classList.remove('menu-open');
       });
+
+      if (!isOpen) {
+        renderOrgSwitcherList(menu);
+        menu.classList.add('show');
+        orgCard.classList.add('menu-open');
+      } else {
+        menu.classList.remove('show');
+        orgCard.classList.remove('menu-open');
+      }
+    });
+  }
+
+  if (!window.__ohanaOrgDismissBound) {
+    window.__ohanaOrgDismissBound = true;
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.sidebar .org')) {
+        document.querySelectorAll('.org-switcher-menu.show').forEach(m => {
+          m.classList.remove('show');
+          m.parentElement?.classList.remove('menu-open');
+        });
+      }
+    });
+  }
+}
+
+function renderOrgSwitcherList(menu) {
+  const currentUser = (typeof getCurrentOhanaUser === 'function') ? getCurrentOhanaUser() : null;
+  const accounts = (typeof getRegisteredAccounts === 'function') ? getRegisteredAccounts() : [];
+  const currentEmail = currentUser ? (currentUser.email || '').toLowerCase() : '';
+
+  let activeOrgName = currentUser ? (currentUser.orgName || 'Enterprise') : 'ABC Technologies';
+  try {
+    const storedId = localStorage.getItem('ohana_business_identity');
+    if (storedId) {
+      const parsed = JSON.parse(storedId);
+      activeOrgName = parsed.tradeName || parsed.legalName || activeOrgName;
     }
+  } catch(e) {}
+
+  let accountsHtml = '';
+
+  if (!accounts || accounts.length === 0) {
+    accountsHtml = `
+      <div style="padding:10px; text-align:center; color:#94A3B8; font-size:12px;">
+        No registered organizations found.
+      </div>
+    `;
+  } else {
+    accounts.forEach(acc => {
+      const isCurrent = currentUser && (
+        acc.email.toLowerCase() === currentEmail ||
+        (currentEmail.includes('rahul') && acc.email.includes('rahul')) ||
+        (currentEmail.includes('vikram') && acc.email.includes('vikram'))
+      );
+
+      let tierBadge = 'L3 Verified';
+      if (acc.email.includes('vikram')) tierBadge = 'L2 Verified';
+      else if (acc.email.includes('rahul')) tierBadge = 'L3 Verified';
+
+      const displayName = isCurrent ? activeOrgName : (acc.orgName || acc.fullName);
+      const initials = (typeof computeInitials === 'function') ? computeInitials(displayName) : displayName.substring(0, 2).toUpperCase();
+
+      accountsHtml += `
+        <div class="osm-item ${isCurrent ? 'active' : ''}" data-email="${acc.email}" role="button" tabindex="0">
+          <div class="osm-avatar">${initials}</div>
+          <div class="osm-info">
+            <div class="osm-name-row">
+              <span class="osm-name">${displayName}</span>
+              ${isCurrent ? '<span class="osm-active-badge">Active</span>' : ''}
+            </div>
+            <div class="osm-meta">
+              <span>${acc.fullName}</span>
+              <span class="osm-dot">•</span>
+              <span class="osm-tier">✓ ${tierBadge}</span>
+            </div>
+          </div>
+          ${isCurrent ? `
+            <div class="osm-check">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+          ` : `
+            <div class="osm-switch-arrow">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          `}
+        </div>
+      `;
+    });
+
+    if (accounts.length === 1) {
+      accountsHtml += `
+        <div style="padding: 8px 10px; font-size: 11px; color: #94A3B8; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px;">
+          No other organizations available
+        </div>
+      `;
+    }
+  }
+
+  menu.innerHTML = `
+    <div class="osm-header">
+      <span>SWITCH ORGANIZATION</span>
+      <small style="font-size:10px; color:#22C55E; font-weight:700;">● Active Session</small>
+    </div>
+    <div class="osm-list">
+      ${accountsHtml}
+    </div>
+  `;
+
+  menu.querySelectorAll('.osm-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const targetEmail = item.getAttribute('data-email');
+      if (item.classList.contains('active')) {
+        menu.classList.remove('show');
+        menu.parentElement?.classList.remove('menu-open');
+        return;
+      }
+
+      if (typeof switchOhanaAccount === 'function') {
+        const switchedUser = switchOhanaAccount(targetEmail);
+        if (typeof showToast === 'function') {
+          showToast(`Switched active organization to ${switchedUser.orgName || switchedUser.fullName}`, 'success');
+        }
+        menu.classList.remove('show');
+        menu.parentElement?.classList.remove('menu-open');
+
+        if (typeof syncOhanaGlobalState === 'function') {
+          syncOhanaGlobalState();
+        }
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      }
+    });
   });
 }
 
@@ -1833,8 +1989,23 @@ function renderUserProfileChips(user) {
     const displayName = user.fullName || user.name || (user.email ? user.email.split('@')[0] : 'User');
     const initials = user.initials || (typeof computeInitials === 'function' ? computeInitials(displayName) : (displayName ? displayName.charAt(0).toUpperCase() : 'U'));
 
+    const isPagesDir = typeof window !== 'undefined' && window.location.pathname.includes('/pages/');
+    const profileHref = isPagesDir ? 'public-profile.html' : '/public-profile';
+    const settingsHref = isPagesDir ? 'settings.html' : '/settings';
+    const logoutHref = isPagesDir ? '../index.html' : '/';
+
     const chips = document.querySelectorAll('.profile-chip');
     chips.forEach(chip => {
+        // Ensure wrapper for positioning dropdown menu
+        let wrapper = chip.closest('.profile-menu-container');
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'profile-menu-container';
+            chip.parentNode.insertBefore(wrapper, chip);
+            wrapper.appendChild(chip);
+        }
+
+        // Setup avatar
         let avatar = chip.querySelector('.avatar');
         if (!avatar) {
             avatar = document.createElement('span');
@@ -1843,23 +2014,120 @@ function renderUserProfileChips(user) {
         }
         avatar.textContent = initials;
 
-        // Remove plain text nodes
+        // Clean any old text nodes or legacy chevrons
         Array.from(chip.childNodes).forEach(node => {
-            if (node.nodeType === Node.TEXT_NODE) {
+            if (node.nodeType === Node.TEXT_NODE || (node.classList && (node.classList.contains('profile-chip-name') || node.classList.contains('profile-chip-chevron')))) {
                 node.remove();
             }
         });
 
-        chip.appendChild(document.createTextNode(' ' + displayName));
-        chip.setAttribute('title', `Signed in as ${displayName} (${user.email || ''})`);
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'profile-chip-name';
+        nameSpan.textContent = ' ' + displayName;
+        chip.appendChild(nameSpan);
+
+        const chevron = document.createElement('span');
+        chevron.className = 'profile-chip-chevron';
+        chevron.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+        chip.appendChild(chevron);
+
+        chip.setAttribute('title', 'Profile & Settings Menu');
         chip.style.cursor = 'pointer';
-        if (!chip.getAttribute('data-profile-bound')) {
-            chip.setAttribute('data-profile-bound', 'true');
+
+        // Setup or update the dropdown menu
+        let dropdown = wrapper.querySelector('.profile-dropdown-menu');
+        if (!dropdown) {
+            dropdown = document.createElement('div');
+            dropdown.className = 'profile-dropdown-menu';
+            wrapper.appendChild(dropdown);
+        }
+
+        dropdown.innerHTML = `
+            <div class="pdd-header">
+                <div class="pdd-avatar">${initials}</div>
+                <div class="pdd-info">
+                    <div class="pdd-name">${displayName}</div>
+                    <div class="pdd-email">${user.email || 'user@abctech.com'}</div>
+                    <div class="pdd-org">${user.orgName || 'ABC Technologies'}</div>
+                </div>
+            </div>
+            <div class="pdd-divider"></div>
+            <div class="pdd-items">
+                <a href="${profileHref}" class="pdd-item" data-action="profile">
+                    <svg class="pdd-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Profile</span>
+                </a>
+                <a href="${settingsHref}" class="pdd-item" data-action="settings">
+                    <svg class="pdd-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </div>
+            <div class="pdd-divider"></div>
+            <div class="pdd-items">
+                <a href="${logoutHref}" class="pdd-item pdd-logout" data-action="logout">
+                    <svg class="pdd-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        `;
+
+        chip.removeAttribute('onclick');
+        chip.onclick = null;
+
+        // Item navigation handlers
+        dropdown.querySelectorAll('.pdd-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                dropdown.classList.remove('show');
+                chip.classList.remove('menu-open');
+                const action = item.getAttribute('data-action');
+                if (action === 'logout') {
+                    e.preventDefault();
+                    logoutOhanaUser();
+                    window.location.href = '/';
+                } else if (action === 'settings') {
+                    e.preventDefault();
+                    window.location.href = isPagesDir ? 'settings.html' : '/settings';
+                } else if (action === 'profile') {
+                    e.preventDefault();
+                    window.location.href = isPagesDir ? 'public-profile.html' : '/public-profile';
+                }
+            });
+        });
+
+        // Toggle handler
+        if (!chip.getAttribute('data-dropdown-bound')) {
+            chip.setAttribute('data-dropdown-bound', 'true');
             chip.addEventListener('click', (e) => {
-                window.location.href = '/public-profile';
+                e.preventDefault();
+                e.stopPropagation();
+                const isOpen = dropdown.classList.contains('show');
+                document.querySelectorAll('.profile-dropdown-menu.show').forEach(d => d.classList.remove('show'));
+                document.querySelectorAll('.profile-chip.menu-open').forEach(c => c.classList.remove('menu-open'));
+                if (!isOpen) {
+                    dropdown.classList.add('show');
+                    chip.classList.add('menu-open');
+                }
             });
         }
     });
+
+    // Global click listener to dismiss profile dropdown
+    if (!window.__ohanaProfileDropdownDismissBound) {
+        window.__ohanaProfileDropdownDismissBound = true;
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-menu-container')) {
+                document.querySelectorAll('.profile-dropdown-menu.show').forEach(d => d.classList.remove('show'));
+                document.querySelectorAll('.profile-chip.menu-open').forEach(c => c.classList.remove('menu-open'));
+            }
+        });
+    }
 
     // Also update any other user profile representations across pages
     document.querySelectorAll('.user-name').forEach(el => {

@@ -123,9 +123,9 @@
         }
 
         .stepper-step.completed .step-circle {
-            background: var(--navy);
-            color: #FFFFFF;
-            border-color: var(--navy);
+            background: #16A34A !important;
+            color: #FFFFFF !important;
+            border-color: #16A34A !important;
         }
 
         .step-label {
@@ -142,7 +142,12 @@
         }
 
         .stepper-step.completed .step-label {
-            color: var(--navy);
+            color: #16A34A !important;
+        }
+
+        .stepper-step:disabled {
+            cursor: not-allowed !important;
+            opacity: 0.45;
         }
 
         .stepper-connector {
@@ -1061,6 +1066,18 @@
                     if (Array.isArray(data.evidence) && data.evidence.length > 0) {
                         uploadedEvidence = data.evidence;
                     }
+
+                    if (data.currentStep && data.currentStep >= 1 && data.currentStep <= TOTAL_STEPS) {
+                        let validUpTo = 1;
+                        for (let s = 1; s < data.currentStep; s++) {
+                            if (validateStep(s, false)) {
+                                validUpTo = s + 1;
+                            } else {
+                                break;
+                            }
+                        }
+                        currentStep = Math.min(data.currentStep, validUpTo);
+                    }
                 } else {
                     // Check if business_identity exists
                     const rawId = localStorage.getItem('ohana_business_identity');
@@ -1082,35 +1099,167 @@
             }
         }
 
+        function validateStep(step, showAlert = true) {
+            if (step === 1) {
+                const name = document.getElementById('legalName')?.value?.trim();
+                if (!name) {
+                    if (showAlert) {
+                        showToast('Step 1: Please enter your Legal Business Name before proceeding.', 'error');
+                        document.getElementById('legalName')?.focus();
+                    }
+                    return false;
+                }
+                return true;
+            }
+            if (step === 2) {
+                const curId = getActiveIdentityInput();
+                const profile = (typeof getBusinessRequirementProfile === 'function')
+                    ? getBusinessRequirementProfile(curId)
+                    : { normalizedEntity: curId.entityType, normalizedBusiness: curId.businessType };
+                const isCinApp = (typeof isRequirementApplicable === 'function')
+                    ? isRequirementApplicable('cin', curId)
+                    : (curId.entityType === 'Private Limited' || curId.entityType === 'Public Limited' || curId.entityType === 'LLP');
+
+                const cin = document.getElementById('cinNumber')?.value?.trim();
+                const gstin = document.getElementById('gstin')?.value?.trim();
+                const pan = document.getElementById('panNumber')?.value?.trim();
+
+                if (isCinApp && !cin) {
+                    if (showAlert) {
+                        showToast('Step 2: Please enter your CIN or LLPIN.', 'error');
+                        document.getElementById('cinNumber')?.focus();
+                    }
+                    return false;
+                }
+                if (!pan) {
+                    if (showAlert) {
+                        showToast('Step 2: Please enter your PAN.', 'error');
+                        document.getElementById('panNumber')?.focus();
+                    }
+                    return false;
+                }
+                if (isCinApp && !gstin) {
+                    if (showAlert) {
+                        showToast('Step 2: Please enter your GSTIN for corporate registration.', 'error');
+                        document.getElementById('gstin')?.focus();
+                    }
+                    return false;
+                }
+                if (profile.normalizedBusiness === 'Food & Restaurant') {
+                    const fssai = document.getElementById('fssaiReg')?.value?.trim();
+                    if (!fssai) {
+                        if (showAlert) {
+                            showToast('Step 2: Please enter your FSSAI Food Safety License.', 'error');
+                            document.getElementById('fssaiReg')?.focus();
+                        }
+                        return false;
+                    }
+                }
+                return true;
+            }
+            if (step === 3) {
+                const email = document.getElementById('businessEmail')?.value?.trim();
+                const address = document.getElementById('address')?.value?.trim();
+                if (!email) {
+                    if (showAlert) {
+                        showToast('Step 3: Please enter an official business email.', 'error');
+                        document.getElementById('businessEmail')?.focus();
+                    }
+                    return false;
+                }
+                if (!address) {
+                    if (showAlert) {
+                        showToast('Step 3: Please enter registered office address.', 'error');
+                        document.getElementById('address')?.focus();
+                    }
+                    return false;
+                }
+                return true;
+            }
+            if (step === 4) {
+                if (!uploadedEvidence || uploadedEvidence.length === 0) {
+                    if (showAlert) {
+                        showToast('Step 4: Please upload or attach at least one evidence document in the vault before proceeding.', 'error');
+                    }
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }
+
+        function validateCurrentStep() {
+            return validateStep(currentStep, true);
+        }
+
         function updateStepView() {
+            const stepValid = {};
+            for (let s = 1; s <= TOTAL_STEPS; s++) {
+                stepValid[s] = validateStep(s, false);
+            }
+
             for (let i = 1; i <= TOTAL_STEPS; i++) {
                 const section = document.getElementById(`stepSection${i}`);
                 const indicator = document.getElementById(`stepIndicator${i}`);
+                const circle = indicator ? indicator.querySelector('.step-circle') : null;
+
                 if (section) section.style.display = (i === currentStep) ? 'block' : 'none';
+
                 if (indicator) {
                     indicator.classList.remove('active', 'completed');
+
+                    let priorStepsValid = true;
+                    for (let p = 1; p < i; p++) {
+                        if (!stepValid[p]) {
+                            priorStepsValid = false;
+                            break;
+                        }
+                    }
+
                     if (i === currentStep) {
                         indicator.classList.add('active');
+                        indicator.removeAttribute('disabled');
+                        if (circle) circle.textContent = i;
                     } else if (i < currentStep) {
-                        indicator.classList.add('completed');
+                        indicator.removeAttribute('disabled');
+                        if (stepValid[i]) {
+                            indicator.classList.add('completed');
+                            if (circle) circle.innerHTML = '✓';
+                        } else {
+                            if (circle) circle.textContent = i;
+                        }
+                    } else if (priorStepsValid) {
+                        indicator.removeAttribute('disabled');
+                        if (stepValid[i]) {
+                            indicator.classList.add('completed');
+                            if (circle) circle.innerHTML = '✓';
+                        } else {
+                            if (circle) circle.textContent = i;
+                        }
+                    } else {
+                        indicator.setAttribute('disabled', 'true');
+                        if (circle) circle.textContent = i;
                     }
                 }
             }
 
             // Update Progress Connector line
             const fillPct = ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
-            document.getElementById('stepperFill').style.width = `${fillPct}%`;
+            const stepperFill = document.getElementById('stepperFill');
+            if (stepperFill) stepperFill.style.width = `${fillPct}%`;
 
             // Back button visibility
             const btnPrev = document.getElementById('btnPrev');
-            btnPrev.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+            if (btnPrev) btnPrev.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
 
             // Next button text
             const btnNext = document.getElementById('btnNext');
-            if (currentStep === TOTAL_STEPS) {
-                btnNext.innerHTML = `<span>Create Business Passport ★</span>`;
-            } else {
-                btnNext.innerHTML = `<span>Continue to Step ${currentStep + 1} →</span>`;
+            if (btnNext) {
+                if (currentStep === TOTAL_STEPS) {
+                    btnNext.innerHTML = `<span>Create Business Passport ★</span>`;
+                } else {
+                    btnNext.innerHTML = `<span>Continue to Step ${currentStep + 1} →</span>`;
+                }
             }
 
             // Dynamic Step triggers
@@ -1128,8 +1277,12 @@
         function navigateStep(delta) {
             // Check if final submission on Step 5
             if (currentStep === TOTAL_STEPS && delta > 0) {
-                if (!validateCurrentStep()) {
-                    return;
+                for (let s = 1; s <= 4; s++) {
+                    if (!validateStep(s, true)) {
+                        currentStep = s;
+                        updateStepView();
+                        return;
+                    }
                 }
                 saveCurrentState();
                 finalizePassportCreation();
@@ -1140,7 +1293,7 @@
             if (target < 1 || target > TOTAL_STEPS) return;
 
             // Validate current step if moving forward
-            if (delta > 0 && !validateCurrentStep()) {
+            if (delta > 0 && !validateStep(currentStep, true)) {
                 return;
             }
 
@@ -1152,64 +1305,23 @@
         }
 
         function jumpToStep(step) {
-            if (step > currentStep && !validateCurrentStep()) {
+            if (step === currentStep) return;
+            if (step < currentStep) {
+                saveCurrentState();
+                currentStep = step;
+                updateStepView();
                 return;
+            }
+            for (let s = 1; s < step; s++) {
+                if (!validateStep(s, true)) {
+                    currentStep = s;
+                    updateStepView();
+                    return;
+                }
             }
             saveCurrentState();
             currentStep = step;
             updateStepView();
-        }
-
-        function validateCurrentStep() {
-            if (currentStep === 1) {
-                const name = document.getElementById('legalName').value.trim();
-                if (!name) {
-                    showToast('Please enter your Legal Business Name', 'error');
-                    document.getElementById('legalName').focus();
-                    return false;
-                }
-            } else if (currentStep === 2) {
-                const curId = getActiveIdentityInput();
-                const isCinApp = (typeof isRequirementApplicable === 'function')
-                    ? isRequirementApplicable('cin', curId)
-                    : (curId.entityType === 'Private Limited' || curId.entityType === 'Public Limited');
-
-                const cin = document.getElementById('cinNumber').value.trim();
-                const gstin = document.getElementById('gstin').value.trim();
-                const pan = document.getElementById('panNumber').value.trim();
-
-                // CIN only required when applicable
-                if (isCinApp && !cin) {
-                    showToast('Please enter your CIN or LLPIN', 'error');
-                    document.getElementById('cinNumber').focus();
-                    return false;
-                }
-                if (!pan) {
-                    showToast('Please enter your PAN', 'error');
-                    document.getElementById('panNumber').focus();
-                    return false;
-                }
-                // GST only strictly mandatory for corporate
-                if (isCinApp && !gstin) {
-                    showToast('Please enter your GSTIN for corporate registration', 'error');
-                    document.getElementById('gstin').focus();
-                    return false;
-                }
-            } else if (currentStep === 3) {
-                const email = document.getElementById('businessEmail').value.trim();
-                const address = document.getElementById('address').value.trim();
-                if (!email) {
-                    showToast('Please enter an official business email', 'error');
-                    document.getElementById('businessEmail').focus();
-                    return false;
-                }
-                if (!address) {
-                    showToast('Please enter registered office address', 'error');
-                    document.getElementById('address').focus();
-                    return false;
-                }
-            }
-            return true;
         }
 
         function saveCurrentState() {
@@ -1239,6 +1351,7 @@
                 pincode: document.getElementById('pincode').value.trim(),
                 googleMaps: document.getElementById('googleMaps').value.trim(),
                 evidence: uploadedEvidence,
+                currentStep: currentStep,
                 updatedAt: new Date().toISOString()
             };
 

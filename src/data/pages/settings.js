@@ -1,0 +1,881 @@
+export const pageData = {
+  "slug": "settings",
+  "route": "/settings",
+  "title": "Settings | Ohana Busnilocker",
+  "bodyClass": "app",
+  "bodyId": "",
+  "style": `
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 900px) {
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .settings-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 3px rgba(11, 31, 58, 0.03);
+    }
+    .settings-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .settings-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0B1F3A;
+      margin: 0 0 4px;
+    }
+    .settings-card-sub {
+      font-size: 12.5px;
+      color: #64748B;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .settings-form-group {
+      margin-bottom: 16px;
+    }
+    .settings-form-group label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    .settings-form-control {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 12px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 13.5px;
+      color: #0B1F3A;
+      background: #FFFFFF;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+    .settings-form-control:focus {
+      outline: none;
+      border-color: #FF2028;
+      box-shadow: 0 0 0 3px rgba(255, 32, 40, 0.12);
+    }
+    .ohana-switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0;
+      border-bottom: 1px solid #F1F5F9;
+      gap: 16px;
+    }
+    .ohana-switch-row:last-child {
+      border-bottom: none;
+      padding-bottom: 6px;
+    }
+    .ohana-switch-text {
+      flex: 1;
+    }
+    .ohana-switch-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0B1F3A;
+      margin: 0;
+    }
+    .ohana-switch-desc {
+      font-size: 12px;
+      color: #64748B;
+      margin: 2px 0 0;
+      line-height: 1.4;
+    }
+    .ohana-toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .ohana-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .ohana-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #CBD5E1;
+      transition: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 24px;
+    }
+    .ohana-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .ohana-toggle input:checked + .ohana-toggle-slider {
+      background-color: #16A34A;
+    }
+    .ohana-toggle input:checked + .ohana-toggle-slider:before {
+      transform: translateX(20px);
+    }
+  `,
+  "html": `
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="/dashboard">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true">
+                    <img src="/assets/ohana-brand-logo.png" alt="Ohana Logo" class="oib-brand-img" style="height: 36px;">
+                </span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+
+        <nav>
+            <a href="/dashboard">⌂ &nbsp; Dashboard</a>
+            <a href="/business-passport">🪪 &nbsp; Business Passport</a>
+            <a href="/documents">▣ &nbsp; Documents</a>
+            <a href="/renewals">↻ &nbsp; Renewals</a>
+            <a href="/billing">💳 &nbsp; Billing & Plans</a>
+            <a href="/support">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="/public-profile">Profile</a>
+            <a href="/">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">PREFERENCES &amp; CONTROLS</span>
+                <h1>Settings</h1>
+                <p class="subtitle">Manage account preferences, email notifications, privacy controls, and display options.</p>
+            </div>
+            <div class="header-actions">
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Executive Summary Banner -->
+        <section class="welcome" style="margin-bottom:24px; background:linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #EFF6FF 100%); border-color:#DBEAFE;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <span class="badge badge-verified" id="settingsStatusBadge" style="font-size:12px; padding:3px 10px;">Preferences Synced</span>
+                    <span class="badge badge-neutral" style="font-size:11.5px;">Frontend Local Storage</span>
+                </div>
+                <h2 style="font-size:20px; color:var(--navy); margin:0 0 4px;">Organization Preferences Profile</h2>
+                <p style="color:#475569; margin:0; font-size:13px; max-width:700px;">
+                    Updates made below are applied instantly across your active session and persist securely in your browser storage.
+                </p>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:12px; color:#64748B; font-weight:600; display:block; margin-bottom:6px;">Current Account</span>
+                <strong style="color:var(--navy); font-size:14px;" id="summaryUserText">Rahul Bawa</strong>
+            </div>
+        </section>
+
+        <!-- 4-Card Settings Grid -->
+        <div class="settings-grid">
+            <!-- 1. Account Preferences -->
+            <section class="settings-card">
+                <div class="settings-card-head">
+                    <div>
+                        <h3 class="settings-card-title">Account Preferences</h3>
+                        <p class="settings-card-sub">Your personal identity and corporate details</p>
+                    </div>
+                    <span style="font-size:20px;">👤</span>
+                </div>
+
+                <form id="formAccountPrefs" onsubmit="saveAccountPreferences(event)">
+                    <div class="settings-form-group">
+                        <label for="setDisplayName">Display Name</label>
+                        <input type="text" id="setDisplayName" class="settings-form-control" placeholder="Your Full Name" required>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="setOrgName">Organization Legal / Trade Name</label>
+                        <input type="text" id="setOrgName" class="settings-form-control" placeholder="Company Name" required>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="setContactEmail">Contact Email Address</label>
+                        <input type="email" id="setContactEmail" class="settings-form-control" placeholder="name@company.com" required>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="setContactPhone">Official Phone Number</label>
+                        <input type="tel" id="setContactPhone" class="settings-form-control" placeholder="+91 20 6712 3400">
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="setTimezone">Preferred Timezone</label>
+                        <select id="setTimezone" class="settings-form-control">
+                            <option value="Asia/Kolkata">Asia/Kolkata (IST • GMT+05:30)</option>
+                            <option value="Asia/Dubai">Asia/Dubai (GST • GMT+04:00)</option>
+                            <option value="Europe/London">Europe/London (GMT • GMT+00:00)</option>
+                            <option value="America/New_York">America/New York (EST • GMT-05:00)</option>
+                            <option value="Asia/Singapore">Asia/Singapore (SGT • GMT+08:00)</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top:auto; padding-top:12px;">
+                        <button type="submit" class="btn" style="width:100%; justify-content:center;">Save Account Preferences</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- 2. Email Notification Preferences -->
+            <section class="settings-card">
+                <div class="settings-card-head">
+                    <div>
+                        <h3 class="settings-card-title">Email Notification Preferences</h3>
+                        <p class="settings-card-sub">Configure alerts sent to your contact address</p>
+                    </div>
+                    <span style="font-size:20px;">🔔</span>
+                </div>
+
+                <div>
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Document Expiry Alerts</h4>
+                            <p class="ohana-switch-desc">Reminder emails 30, 15, and 7 days before vault documents expire.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle document expiry alerts">
+                            <input type="checkbox" id="notifDocExpiry" onchange="saveNotificationPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Verification Status Updates</h4>
+                            <p class="ohana-switch-desc">Immediate alerts when statutory proofs or trust badges are verified.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle verification status updates">
+                            <input type="checkbox" id="notifVerifUpdates" onchange="saveNotificationPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Renewal Reminders</h4>
+                            <p class="ohana-switch-desc">Alerts for upcoming vendor, SaaS license, and trade renewals.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle renewal reminders">
+                            <input type="checkbox" id="notifRenewals" onchange="saveNotificationPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Weekly Compliance Digest</h4>
+                            <p class="ohana-switch-desc">Weekly Monday morning digest of compliance health and vault activity.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle weekly compliance digest">
+                            <input type="checkbox" id="notifWeeklyDigest" onchange="saveNotificationPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-top:auto; padding-top:20px; font-size:12px; color:#64748B; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                    ℹ️ Toggling an alert preference applies immediately to your local account profile.
+                </div>
+            </section>
+
+            <!-- 3. Privacy Preferences -->
+            <section class="settings-card">
+                <div class="settings-card-head">
+                    <div>
+                        <h3 class="settings-card-title">Privacy Preferences</h3>
+                        <p class="settings-card-sub">Control what is visible on your Public Passport</p>
+                    </div>
+                    <span style="font-size:20px;">🛡️</span>
+                </div>
+
+                <div>
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Display Statutory GSTIN</h4>
+                            <p class="ohana-switch-desc">Show your verified GSTIN publicly to verified trading partners.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle GSTIN visibility">
+                            <input type="checkbox" id="privShowGstin" onchange="savePrivacyPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Display Corporate Email</h4>
+                            <p class="ohana-switch-desc">Allow prospective clients to contact via verified business email.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle email visibility">
+                            <input type="checkbox" id="privShowEmail" onchange="savePrivacyPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Display Official Phone</h4>
+                            <p class="ohana-switch-desc">Show corporate telephone on verified public identity showcase.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle phone visibility">
+                            <input type="checkbox" id="privShowPhone" onchange="savePrivacyPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Display Registered Address</h4>
+                            <p class="ohana-switch-desc">Show corporate office address and jurisdiction on passport.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle address visibility">
+                            <input type="checkbox" id="privShowAddress" onchange="savePrivacyPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="ohana-switch-row">
+                        <div class="ohana-switch-text">
+                            <h4 class="ohana-switch-title">Display Corporate CIN</h4>
+                            <p class="ohana-switch-desc">Show MCA Certificate of Incorporation number publicly.</p>
+                        </div>
+                        <label class="ohana-toggle" aria-label="Toggle CIN visibility">
+                            <input type="checkbox" id="privShowCin" onchange="savePrivacyPreferences()">
+                            <span class="ohana-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-top:auto; padding-top:14px; font-size:12px; color:#047857; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:10px 12px;">
+                    ✓ Synchronized with your Public Passport and Share Room view settings.
+                </div>
+            </section>
+
+            <!-- 4. Display Preferences -->
+            <section class="settings-card">
+                <div class="settings-card-head">
+                    <div>
+                        <h3 class="settings-card-title">Basic Display Preferences</h3>
+                        <p class="settings-card-sub">Interface date formatting, row density, and paging</p>
+                    </div>
+                    <span style="font-size:20px;">🖥️</span>
+                </div>
+
+                <form id="formDisplayPrefs" onsubmit="saveDisplayPreferences(event)">
+                    <div class="settings-form-group">
+                        <label for="dispDateFormat">Preferred Date Format</label>
+                        <select id="dispDateFormat" class="settings-form-control">
+                            <option value="DD/MM/YYYY">DD/MM/YYYY (e.g. 12/10/2026)</option>
+                            <option value="DD Mon YYYY">DD Mon YYYY (e.g. 12 Oct 2026)</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD (e.g. 2026-10-12)</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="dispDensity">Table View Density</label>
+                        <select id="dispDensity" class="settings-form-control">
+                            <option value="comfortable">Comfortable (Standard row spacing)</option>
+                            <option value="compact">Compact (Dense data view)</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="dispPageSize">Default Table Rows per Page</label>
+                        <select id="dispPageSize" class="settings-form-control">
+                            <option value="10">10 rows per page</option>
+                            <option value="25">25 rows per page</option>
+                            <option value="50">50 rows per page</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top:auto; padding-top:16px;">
+                        <button type="submit" class="btn outline" style="width:100%; justify-content:center;">Save Display Preferences</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- 5. Change Password -->
+            <section class="settings-card" id="cardChangePassword" style="grid-column: span 2;">
+                <div class="settings-card-head">
+                    <div>
+                        <h3 class="settings-card-title">Change Password</h3>
+                        <p class="settings-card-sub">Update your account credentials and login security</p>
+                    </div>
+                    <span style="font-size:20px;">🔒</span>
+                </div>
+
+                <div style="margin-bottom:18px; padding:12px 14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-size:12px; color:#475569; line-height:1.45;">
+                    <div style="font-weight:700; color:#0B1F3A; margin-bottom:3px; display:flex; align-items:center; gap:6px;">
+                        <span>ℹ️ Prototype Demonstration Environment</span>
+                    </div>
+                    Authentication in this workspace operates in client-side prototype demonstration mode. Changes made here are simulated locally. Passwords are never stored in plain text in browser storage.
+                </div>
+
+                <form id="formChangePassword" onsubmit="handleChangePassword(event)" style="max-width:580px;" novalidate>
+                    <div class="settings-form-group">
+                        <label for="currentPassword">Current Password <span style="color:#FF2028;">*</span></label>
+                        <div style="position:relative; display:flex; align-items:center;">
+                            <input type="password" id="currentPassword" class="settings-form-control" style="padding-right:42px;" placeholder="Enter current password" required autocomplete="current-password">
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('currentPassword', 'eyeIconCurrent')" aria-label="Toggle current password visibility" style="position:absolute; right:10px; background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:#64748B;">
+                                <svg id="eyeIconCurrent" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <small style="font-size:11px; color:#64748B; margin-top:3px; display:block;">Default demo password: <code>password123</code></small>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="newPassword">New Password <span style="color:#FF2028;">*</span></label>
+                        <div style="position:relative; display:flex; align-items:center;">
+                            <input type="password" id="newPassword" class="settings-form-control" style="padding-right:42px;" placeholder="Enter new password (min. 8 characters)" required autocomplete="new-password">
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('newPassword', 'eyeIconNew')" aria-label="Toggle new password visibility" style="position:absolute; right:10px; background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:#64748B;">
+                                <svg id="eyeIconNew" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                        <small style="font-size:11px; color:#64748B; margin-top:3px; display:block;">Must be at least 8 characters with a mix of letters and numbers/symbols.</small>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="confirmNewPassword">Confirm New Password <span style="color:#FF2028;">*</span></label>
+                        <div style="position:relative; display:flex; align-items:center;">
+                            <input type="password" id="confirmNewPassword" class="settings-form-control" style="padding-right:42px;" placeholder="Re-enter new password" required autocomplete="new-password">
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('confirmNewPassword', 'eyeIconConfirm')" aria-label="Toggle confirm password visibility" style="position:absolute; right:10px; background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:#64748B;">
+                                <svg id="eyeIconConfirm" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="passwordAlertBox" style="display:none; padding:10px 14px; border-radius:8px; font-size:12.5px; margin-bottom:14px;"></div>
+
+                    <div style="padding-top:8px;">
+                        <button type="submit" id="btnChangePassword" class="btn" style="min-width:180px; justify-content:center; background:#0B1F3A; color:#FFFFFF; border:none;">
+                            Change Password
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+  `,
+  "script": `
+    document.addEventListener('DOMContentLoaded', () => {
+      initSettingsPage();
+    });
+
+    function initSettingsPage() {
+      loadAccountPreferences();
+      loadNotificationPreferences();
+      loadPrivacyPreferences();
+      loadDisplayPreferences();
+    }
+
+    /* 1. Account Preferences */
+    function loadAccountPreferences() {
+      let user = null;
+      try {
+        const stored = localStorage.getItem('ohana_current_user');
+        if (stored) user = JSON.parse(stored);
+      } catch (e) {}
+
+      let bizId = null;
+      try {
+        const idStored = localStorage.getItem('ohana_business_identity');
+        if (idStored) bizId = JSON.parse(idStored);
+      } catch (e) {}
+
+      const nameInput = document.getElementById('setDisplayName');
+      const orgInput = document.getElementById('setOrgName');
+      const emailInput = document.getElementById('setContactEmail');
+      const phoneInput = document.getElementById('setContactPhone');
+      const tzInput = document.getElementById('setTimezone');
+      const summaryText = document.getElementById('summaryUserText');
+
+      const currentName = (user && (user.fullName || user.name)) || 'Rahul Bawa';
+      const currentOrg = (user && user.orgName) || (bizId && (bizId.tradeName || bizId.legalName)) || 'ABC Technologies';
+      const currentEmail = (user && user.email) || 'rahul@abctech.com';
+      const currentPhone = (bizId && bizId.contactPhone) || (user && user.phone) || '+91 20 6712 3400';
+      const currentTimezone = (user && user.timezone) || 'Asia/Kolkata';
+
+      if (nameInput) nameInput.value = currentName;
+      if (orgInput) orgInput.value = currentOrg;
+      if (emailInput) emailInput.value = currentEmail;
+      if (phoneInput) phoneInput.value = currentPhone;
+      if (tzInput) tzInput.value = currentTimezone;
+      if (summaryText) summaryText.textContent = currentName;
+    }
+
+    function saveAccountPreferences(e) {
+      if (e) e.preventDefault();
+
+      const nameVal = (document.getElementById('setDisplayName')?.value || '').trim();
+      const orgVal = (document.getElementById('setOrgName')?.value || '').trim();
+      const emailVal = (document.getElementById('setContactEmail')?.value || '').trim();
+      const phoneVal = (document.getElementById('setContactPhone')?.value || '').trim();
+      const tzVal = document.getElementById('setTimezone')?.value || 'Asia/Kolkata';
+
+      if (!nameVal || !orgVal || !emailVal) {
+        if (typeof showToast === 'function') showToast('Please fill in required name, org, and email fields.', 'error');
+        return;
+      }
+
+      // Update current user
+      let user = {};
+      try {
+        const stored = localStorage.getItem('ohana_current_user');
+        if (stored) user = JSON.parse(stored);
+      } catch (e) {}
+
+      user.fullName = nameVal;
+      user.name = nameVal;
+      user.orgName = orgVal;
+      user.email = emailVal;
+      user.phone = phoneVal;
+      user.timezone = tzVal;
+
+      try {
+        localStorage.setItem('ohana_current_user', JSON.stringify(user));
+      } catch (e) {}
+
+      // Update business identity
+      let bizId = {};
+      try {
+        const idStored = localStorage.getItem('ohana_business_identity');
+        if (idStored) bizId = JSON.parse(idStored);
+      } catch (e) {}
+
+      bizId.legalName = bizId.legalName || orgVal;
+      bizId.tradeName = orgVal;
+      bizId.contactEmail = emailVal;
+      bizId.contactPhone = phoneVal;
+
+      try {
+        localStorage.setItem('ohana_business_identity', JSON.stringify(bizId));
+      } catch (e) {}
+
+      // Update UI elements in page
+      const summaryText = document.getElementById('summaryUserText');
+      if (summaryText) summaryText.textContent = nameVal;
+
+      const sidebarOrg = document.getElementById('sidebarOrgName');
+      if (sidebarOrg) {
+        const chevron = sidebarOrg.querySelector('.org-chevron');
+        if (chevron) {
+          sidebarOrg.innerHTML = '<span class="org-name">' + orgVal + '</span>' + chevron.outerHTML;
+        } else {
+          sidebarOrg.textContent = orgVal;
+        }
+      }
+
+      // Re-render header chips
+      if (typeof renderUserProfileChips === 'function') {
+        renderUserProfileChips(user);
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('Account preferences saved successfully!', 'success');
+      }
+    }
+
+    /* 2. Email Notification Preferences */
+    function loadNotificationPreferences() {
+      let notifs = {
+        docExpiry: true,
+        verifUpdates: true,
+        renewals: true,
+        weeklyDigest: false
+      };
+
+      try {
+        const stored = localStorage.getItem('ohana_notification_settings');
+        if (stored) {
+          notifs = Object.assign(notifs, JSON.parse(stored));
+        }
+      } catch (e) {}
+
+      const elExpiry = document.getElementById('notifDocExpiry');
+      const elVerif = document.getElementById('notifVerifUpdates');
+      const elRenew = document.getElementById('notifRenewals');
+      const elDigest = document.getElementById('notifWeeklyDigest');
+
+      if (elExpiry) elExpiry.checked = !!notifs.docExpiry;
+      if (elVerif) elVerif.checked = !!notifs.verifUpdates;
+      if (elRenew) elRenew.checked = !!notifs.renewals;
+      if (elDigest) elDigest.checked = !!notifs.weeklyDigest;
+    }
+
+    function saveNotificationPreferences() {
+      const notifs = {
+        docExpiry: !!document.getElementById('notifDocExpiry')?.checked,
+        verifUpdates: !!document.getElementById('notifVerifUpdates')?.checked,
+        renewals: !!document.getElementById('notifRenewals')?.checked,
+        weeklyDigest: !!document.getElementById('notifWeeklyDigest')?.checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem('ohana_notification_settings', JSON.stringify(notifs));
+        if (typeof showToast === 'function') {
+          showToast('Notification preferences updated.', 'success');
+        }
+      } catch (e) {}
+    }
+
+    /* 3. Privacy Preferences (Integrates with ohana_public_profile) */
+    function loadPrivacyPreferences() {
+      let priv = {
+        showGstin: true,
+        showEmail: true,
+        showPhone: true,
+        showAddress: true,
+        showCin: true
+      };
+
+      try {
+        const stored = localStorage.getItem('ohana_public_profile');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            priv = Object.assign(priv, parsed);
+          }
+        }
+      } catch (e) {}
+
+      const elGstin = document.getElementById('privShowGstin');
+      const elEmail = document.getElementById('privShowEmail');
+      const elPhone = document.getElementById('privShowPhone');
+      const elAddress = document.getElementById('privShowAddress');
+      const elCin = document.getElementById('privShowCin');
+
+      if (elGstin) elGstin.checked = !!priv.showGstin;
+      if (elEmail) elEmail.checked = !!priv.showEmail;
+      if (elPhone) elPhone.checked = !!priv.showPhone;
+      if (elAddress) elAddress.checked = !!priv.showAddress;
+      if (elCin) elCin.checked = !!priv.showCin;
+    }
+
+    function savePrivacyPreferences() {
+      let current = {};
+      try {
+        const stored = localStorage.getItem('ohana_public_profile');
+        if (stored) current = JSON.parse(stored);
+      } catch (e) {}
+
+      current.showGstin = !!document.getElementById('privShowGstin')?.checked;
+      current.showEmail = !!document.getElementById('privShowEmail')?.checked;
+      current.showPhone = !!document.getElementById('privShowPhone')?.checked;
+      current.showAddress = !!document.getElementById('privShowAddress')?.checked;
+      current.showCin = !!document.getElementById('privShowCin')?.checked;
+      current.updatedAt = new Date().toISOString();
+
+      try {
+        localStorage.setItem('ohana_public_profile', JSON.stringify(current));
+        if (typeof showToast === 'function') {
+          showToast('Public profile privacy settings updated.', 'success');
+        }
+      } catch (e) {}
+    }
+
+    /* 4. Display Preferences */
+    function loadDisplayPreferences() {
+      let disp = {
+        dateFormat: 'DD/MM/YYYY',
+        density: 'comfortable',
+        pageSize: '10'
+      };
+
+      try {
+        const stored = localStorage.getItem('ohana_display_settings');
+        if (stored) {
+          disp = Object.assign(disp, JSON.parse(stored));
+        }
+      } catch (e) {}
+
+      const elDate = document.getElementById('dispDateFormat');
+      const elDensity = document.getElementById('dispDensity');
+      const elPageSize = document.getElementById('dispPageSize');
+
+      if (elDate && disp.dateFormat) elDate.value = disp.dateFormat;
+      if (elDensity && disp.density) elDensity.value = disp.density;
+      if (elPageSize && disp.pageSize) elPageSize.value = disp.pageSize;
+    }
+
+    function saveDisplayPreferences(e) {
+      if (e) e.preventDefault();
+
+      const disp = {
+        dateFormat: document.getElementById('dispDateFormat')?.value || 'DD/MM/YYYY',
+        density: document.getElementById('dispDensity')?.value || 'comfortable',
+        pageSize: document.getElementById('dispPageSize')?.value || '10',
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem('ohana_display_settings', JSON.stringify(disp));
+        if (typeof showToast === 'function') {
+          showToast('Display preferences saved successfully!', 'success');
+        }
+      } catch (e) {}
+    }
+
+    /* 5. Change Password Handler */
+    function togglePasswordVisibility(fieldId, iconId) {
+      const input = document.getElementById(fieldId);
+      const icon = document.getElementById(iconId);
+      if (!input) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+          icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+        }
+      } else {
+        input.type = 'password';
+        if (icon) {
+          icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+        }
+      }
+    }
+
+    function handleChangePassword(e) {
+      if (e) e.preventDefault();
+
+      const curInput = document.getElementById('currentPassword');
+      const newInput = document.getElementById('newPassword');
+      const confInput = document.getElementById('confirmNewPassword');
+      const alertBox = document.getElementById('passwordAlertBox');
+      const btn = document.getElementById('btnChangePassword');
+
+      const curVal = curInput ? curInput.value.trim() : '';
+      const newVal = newInput ? newInput.value.trim() : '';
+      const confVal = confInput ? confInput.value.trim() : '';
+
+      function showAlert(msg, isError) {
+        if (alertBox) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = isError ? '#FEF2F2' : '#F0FDF4';
+          alertBox.style.color = isError ? '#991B1B' : '#166534';
+          alertBox.style.border = isError ? '1px solid #FECACA' : '1px solid #BBF7D0';
+          alertBox.innerHTML = (isError ? '⚠️ ' : '✓ ') + msg;
+        }
+        if (typeof showToast === 'function') {
+          showToast(msg, isError ? 'error' : 'success');
+        }
+      }
+
+      // 1. All three fields required
+      if (!curVal) {
+        showAlert('Current password is required.', true);
+        if (curInput) curInput.focus();
+        return;
+      }
+      if (!newVal) {
+        showAlert('New password is required.', true);
+        if (newInput) newInput.focus();
+        return;
+      }
+      if (!confVal) {
+        showAlert('Please confirm your new password.', true);
+        if (confInput) confInput.focus();
+        return;
+      }
+
+      // 2. Validate current password against existing authentication mechanism
+      // In the prototype, passwords must meet minimum length of 6 characters
+      if (curVal.length < 6) {
+        showAlert('Current password must be at least 6 characters.', true);
+        if (curInput) curInput.focus();
+        return;
+      }
+
+      // 3. Password strength validation for new password:
+      // Minimum 8 characters
+      if (newVal.length < 8) {
+        showAlert('New password must be at least 8 characters long.', true);
+        if (newInput) newInput.focus();
+        return;
+      }
+      // Must contain at least one letter and at least one digit or symbol
+      const hasLetter = /[a-zA-Z]/.test(newVal);
+      const hasNumberOrSymbol = /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newVal);
+      if (!hasLetter || !hasNumberOrSymbol) {
+        showAlert('New password must contain letters and at least one number or special character.', true);
+        if (newInput) newInput.focus();
+        return;
+      }
+
+      // 4. Do not allow new password to be identical to current password
+      if (newVal === curVal) {
+        showAlert('New password cannot be identical to your current password.', true);
+        if (newInput) newInput.focus();
+        return;
+      }
+
+      // 5. Ensure new password and confirmation match
+      if (newVal !== confVal) {
+        showAlert('New password and confirmation password do not match.', true);
+        if (confInput) confInput.focus();
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+
+      setTimeout(() => {
+        if (btn) btn.disabled = false;
+
+        // Clear all fields after successful change
+        if (curInput) curInput.value = '';
+        if (newInput) newInput.value = '';
+        if (confInput) confInput.value = '';
+
+        // Record timestamp only (NEVER store plain-text passwords in localStorage)
+        try {
+          localStorage.setItem('ohana_pwd_last_updated', new Date().toISOString());
+        } catch (err) {}
+
+        showAlert('Password successfully changed for current session! (Simulated Prototype)', false);
+      }, 350);
+    }
+  `
+};

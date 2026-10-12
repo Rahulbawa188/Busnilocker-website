@@ -36,7 +36,6 @@
         </nav>
         <div class="side-bottom">
             <a href="public-profile.html">Profile</a>
-            <a href="security.html">⚙ Settings</a>
             <a href="../index.html">↪ Logout</a>
         </div>
     </aside>
@@ -50,7 +49,6 @@
             </div>
             <div class="header-actions">
                 <a href="public-profile.html" class="btn outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">← Back to Public Profile</a>
-                <button type="button" class="btn outline" onclick="resetIdentityDefaults()">Reset Defaults</button>
                 <button type="button" class="btn" id="btnSaveTop" onclick="saveBusinessIdentity()">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -533,16 +531,6 @@
             }
 
             showToast('Business identity saved! All updates persisted securely.', 'success');
-        }
-
-        function resetIdentityDefaults() {
-            if (confirm('Reset identity information to demo defaults?')) {
-                try {
-                    localStorage.removeItem('ohana_business_identity');
-                } catch(e) {}
-                loadBusinessIdentity();
-                showToast('Reset to default ABC Technologies identity.', 'info');
-            }
         }
 
         function handleLogoUpload(event) {

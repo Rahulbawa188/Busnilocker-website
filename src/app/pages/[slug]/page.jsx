@@ -25,6 +25,7 @@ const pageModules = {
   'public-profile': () => import('@/data/pages/public-profile'),
   renewals: () => import('@/data/pages/renewals'),
   security: () => import('@/data/pages/security'),
+  settings: () => import('@/data/pages/settings'),
   'share-room': () => import('@/data/pages/share-room'),
   signup: () => import('@/data/pages/signup'),
   support: () => import('@/data/pages/support'),

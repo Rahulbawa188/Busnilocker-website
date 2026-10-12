@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Documentation &amp; User Guides | Ohana Busnilocker</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/app.js" defer></script>
+    <style>
+        .doc-nav-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .doc-nav-link {
+            padding: 8px 14px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0B1F3A;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .doc-nav-link:hover {
+            background: #EFF6FF;
+            border-color: #BFDBFE;
+            color: #1D4ED8;
+        }
+
+        .doc-section {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(11, 31, 58, 0.04);
+        }
+
+        .doc-section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #F1F5F9;
+            margin-bottom: 18px;
+        }
+
+        .doc-step-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+
+        .doc-step-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #0B1F3A;
+            margin: 0 0 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #0B1F3A;
+            color: #FFFFFF;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .doc-step-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        .doc-tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .doc-tier-card {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+            background: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body class="app" id="documentationBody">
+    <aside class="sidebar">
+        <a class="brand sidebar-brand" href="dashboard.html">
+            <span class="ohana-inline-brand oib-dark">
+                <span class="oib-icon" aria-hidden="true"><img src="../assets/ohana-brand-logo.png" alt="Ohana Busnilocker Logo" class="oib-brand-img" style="height: 36px;"></span>
+                <span class="oib-text">
+                    <span class="oib-wordmark"><span class="oib-ohana">Ohana</span><span class="oib-biz">Busnilocker</span></span>
+                    <span class="oib-sub">BUSINESS PASSPORT &bull; VERIFIED</span>
+                </span>
+            </span>
+        </a>
+
+        <div class="org">
+            <small>ACTIVE ORGANIZATION</small>
+            <strong id="sidebarOrgName">ABC Technologies</strong>
+            <span id="sidebarTierBadge">✓ L3 Verified</span>
+        </div>
+
+        <nav>
+            <a href="dashboard.html">⌂ &nbsp; Dashboard</a>
+            <a href="business-passport.html">🪪 &nbsp; Business Passport</a>
+            <a href="documents.html">▣ &nbsp; Documents</a>
+            <a href="renewals.html">↻ &nbsp; Renewals</a>
+            <a href="billing.html">💳 &nbsp; Billing & Plans</a>
+            <a class="active" href="support.html">❓ &nbsp; Help & Support</a>
+        </nav>
+        <div class="side-bottom">
+            <a href="public-profile.html">Profile</a>
+            <a href="../index.html">↪ Logout</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="app-header">
+            <div>
+                <span class="eyebrow">KNOWLEDGE BASE &amp; USER GUIDES</span>
+                <h1>Documentation</h1>
+                <p class="subtitle">Complete step-by-step guidance for managing your Business Passport, verification tiers, documents vault, and renewals.</p>
+            </div>
+            <div class="header-actions">
+                <a href="support.html" class="btn outline" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                    ← Back to Support
+                </a>
+                <div class="profile-chip"><span class="avatar">--</span> Profile</div>
+            </div>
+        </header>
+
+        <!-- Prototype Disclaimer Banner -->
+        <div class="welcome" style="margin-bottom:24px; background:linear-gradient(135deg,#FFFFFF 0%,#F8FAFC 60%,#EFF6FF 100%); border-color:#DBEAFE;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <span class="badge badge-verified" style="font-size:12px; padding:3px 10px;">Platform Guide</span>
+                    <span class="badge badge-neutral" style="font-size:11.5px;">Frontend Demonstration</span>
+                </div>
+                <h2 style="font-size:20px; color:var(--navy); margin:0 0 4px;">Ohana Business Locker User Manual</h2>
+                <p style="color:#475569; margin:0; font-size:13px; max-width:760px; line-height:1.5;">
+                    Learn how each module in Ohana operates. This prototype validates statutory records and simulates due-diligence verifications locally within your active browser session.
+                </p>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:12px; color:#64748B; font-weight:600; display:block; margin-bottom:6px;">Standard Version</span>
+                <strong style="color:var(--navy); font-size:14px;">v1.4 Enterprise</strong>
+            </div>
+        </div>
+
+        <!-- Quick Jump Bar -->
+        <nav class="doc-nav-card" aria-label="Documentation Table of Contents">
+            <a href="#section-identity" class="doc-nav-link">1. Business Passport &amp; Identity</a>
+            <a href="#section-verification" class="doc-nav-link">2. Verification Levels (L0–L4)</a>
+            <a href="#section-documents" class="doc-nav-link">3. Documents Vault</a>
+            <a href="#section-renewals" class="doc-nav-link">4. Renewals &amp; Reminders</a>
+            <a href="#section-public" class="doc-nav-link">5. Public Profile &amp; Share Room</a>
+        </nav>
+
+        <!-- 1. Business Passport & Business Identity -->
+        <section class="doc-section" id="section-identity">
+            <div class="doc-section-head">
+                <span style="font-size:24px;">🪪</span>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#0B1F3A;">1. Business Passport and Business Identity</h3>
+                    <p style="margin:2px 0 0; font-size:13px; color:#64748B;">Establishing statutory presence, legal records, and corporate identifiers</p>
+                </div>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">1</span> Corporate Legal Entity Registration</h4>
+                <p class="doc-step-desc">
+                    Navigate to <strong>Business Identity</strong> from your sidebar or profile menu. Provide your registered Legal Business Name, Trade Name (DBA), Entity Type (e.g. Private Limited, LLP, Sole Proprietorship), and Date of Incorporation. Enter your 21-character MCA Corporate Identification Number (CIN) or LLPIN.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">2</span> Statutory Indian Tax &amp; MSME Identifiers</h4>
+                <p class="doc-step-desc">
+                    Enter your 15-character GSTIN, 10-character Business PAN, and 19-character Udyam Registration Number. In this prototype, identifiers are validated against standard Indian statutory regex rules and persisted securely to your browser storage.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">3</span> Official Contact Channels &amp; Physical Operating Location</h4>
+                <p class="doc-step-desc">
+                    Add your official corporate website, verified domain email address, corporate landline phone, and registered office address (Address Lines, City, State, and 6-digit PIN Code).
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">4</span> Saving and Applying Changes</h4>
+                <p class="doc-step-desc">
+                    Click <strong>Save Changes</strong> at the top or bottom of the page. All inputs are saved to your account session and instantly synchronized across your Business Passport, Public Profile, and sidebar.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. Verification Framework (L0–L4) -->
+        <section class="doc-section" id="section-verification">
+            <div class="doc-section-head">
+                <span style="font-size:24px;">🛡️</span>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#0B1F3A;">2. Verification Levels (L0–L4)</h3>
+                    <p style="margin:2px 0 0; font-size:13px; color:#64748B;">Understanding the progressive tiered trust model and compliance requirements</p>
+                </div>
+            </div>
+
+            <p style="font-size:13.5px; color:#475569; line-height:1.6; margin-top:0;">
+                The Ohana Trust Protocol structures business credibility into five distinct assurance levels. Higher tiers unlock greater counterparty confidence, simplified vendor onboarding, and preferential terms:
+            </p>
+
+            <div class="doc-tier-grid">
+                <div class="doc-tier-card" style="border-top: 3px solid #64748B;">
+                    <div style="font-size:12px; font-weight:800; color:#64748B; text-transform:uppercase;">Level 0</div>
+                    <h4 style="margin:6px 0 4px; font-size:14px; color:#0B1F3A;">Account Claimed</h4>
+                    <p style="font-size:12px; color:#64748B; margin:0; line-height:1.45;">Initial sign-up completed, basic organization profile created without external statutory evidence.</p>
+                </div>
+
+                <div class="doc-tier-card" style="border-top: 3px solid #B45309;">
+                    <div style="font-size:12px; font-weight:800; color:#B45309; text-transform:uppercase;">Level 1</div>
+                    <h4 style="margin:6px 0 4px; font-size:14px; color:#0B1F3A;">Contact Verified</h4>
+                    <p style="font-size:12px; color:#64748B; margin:0; line-height:1.45;">Corporate email domain ownership and mobile telephone two-factor confirmation validated.</p>
+                </div>
+
+                <div class="doc-tier-card" style="border-top: 3px solid #1D4ED8;">
+                    <div style="font-size:12px; font-weight:800; color:#1D4ED8; text-transform:uppercase;">Level 2</div>
+                    <h4 style="margin:6px 0 4px; font-size:14px; color:#0B1F3A;">Business Verified</h4>
+                    <p style="font-size:12px; color:#64748B; margin:0; line-height:1.45;">Statutory registration authenticated: Active GSTIN, MCA Certificate of Incorporation, and Business PAN.</p>
+                </div>
+
+                <div class="doc-tier-card" style="border-top: 3px solid #15803D;">
+                    <div style="font-size:12px; font-weight:800; color:#15803D; text-transform:uppercase;">Level 3</div>
+                    <h4 style="margin:6px 0 4px; font-size:14px; color:#0B1F3A;">Enhanced Verified</h4>
+                    <p style="font-size:12px; color:#64748B; margin:0; line-height:1.45;">Physical commercial operating address confirmed via commercial utility records and banking verification.</p>
+                </div>
+
+                <div class="doc-tier-card" style="border-top: 3px solid #0B1F3A;">
+                    <div style="font-size:12px; font-weight:800; color:#0B1F3A; text-transform:uppercase;">Level 4</div>
+                    <h4 style="margin:6px 0 4px; font-size:14px; color:#0B1F3A;">Enterprise Assured</h4>
+                    <p style="font-size:12px; color:#64748B; margin:0; line-height:1.45;">Comprehensive compliance audit, authorized officer KYC, and cryptographic attestation token issued.</p>
+                </div>
+            </div>
+
+            <div style="margin-top:16px; padding:12px 14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-size:12px; color:#475569;">
+                <strong>Notice:</strong> In this prototype, verification status updates are computed dynamically by the client engine based on completed form fields and submitted evidence files.
+            </div>
+        </section>
+
+        <!-- 3. Uploading & Managing Documents -->
+        <section class="doc-section" id="section-documents">
+            <div class="doc-section-head">
+                <span style="font-size:24px;">▣</span>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#0B1F3A;">3. Uploading and Managing Documents</h3>
+                    <p style="margin:2px 0 0; font-size:13px; color:#64748B;">Organizing statutory certificates, contracts, and tax filings in the Evidence Vault</p>
+                </div>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">1</span> Navigating to the Documents Vault</h4>
+                <p class="doc-step-desc">
+                    Click <strong>Documents</strong> in the sidebar. You will find categorized document tabs including <em>Statutory Registrations</em>, <em>Tax Filings</em>, <em>Licenses &amp; Permits</em>, and <em>Corporate Agreements</em>.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">2</span> Uploading Document Evidence</h4>
+                <p class="doc-step-desc">
+                    Click <strong>Upload Document</strong> to open the upload modal. Select your document type (GST REG-06, PAN Card, Certificate of Incorporation, MSME Certificate, FSSAI, or Shop Act), provide the issuing authority, document reference number, issue date, and expiry date.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">3</span> Document Management and Storage</h4>
+                <p class="doc-step-desc">
+                    Uploaded documents are stored within your active user profile partition. You can preview details, filter by category or validity status (Active, Expiring Soon, Expired), and replace certificates when renewed.
+                </p>
+            </div>
+        </section>
+
+        <!-- 4. Tracking Renewals & Reminders -->
+        <section class="doc-section" id="section-renewals">
+            <div class="doc-section-head">
+                <span style="font-size:24px;">↻</span>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#0B1F3A;">4. Tracking Renewals and Email Reminders</h3>
+                    <p style="margin:2px 0 0; font-size:13px; color:#64748B;">Never miss a regulatory deadline with automated reminder schedules</p>
+                </div>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">1</span> Monitoring Active Filing Deadlines</h4>
+                <p class="doc-step-desc">
+                    Open the <strong>Renewals</strong> module to view upcoming renewal schedules for business licenses, certifications, trademarks, and annual compliance returns. Each filing displays days remaining and risk categorization.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">2</span> Automated Reminder Cadence</h4>
+                <p class="doc-step-desc">
+                    Ohana triggers automated reminders at 90 days, 60 days, and 30 days prior to license expiry via dashboard alert badges and simulated email dispatches configured in <em>Settings &gt; Email Notifications</em>.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">3</span> Recording Renewal Submissions</h4>
+                <p class="doc-step-desc">
+                    When a license is renewed, click <strong>Mark Renewed</strong>, enter the updated expiration date and upload the latest renewal receipt to reset the compliance clock.
+                </p>
+            </div>
+        </section>
+
+        <!-- 5. Public Business Profile & Share Room -->
+        <section class="doc-section" id="section-public">
+            <div class="doc-section-head">
+                <span style="font-size:24px;">🌐</span>
+                <div>
+                    <h3 style="margin:0; font-size:18px; color:#0B1F3A;">5. Public Business Profile and Share Room</h3>
+                    <p style="margin:2px 0 0; font-size:13px; color:#64748B;">Showcase verified credentials and securely share due diligence packs</p>
+                </div>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">1</span> Public Profile Visibility Controls</h4>
+                <p class="doc-step-desc">
+                    In <strong>Public Profile</strong>, use the visibility drawer to configure exactly which attributes counterparties can see. You can independently show or hide your GSTIN, official email, telephone, operating address, and MCA CIN.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">2</span> QR Code &amp; Verified Share Links</h4>
+                <p class="doc-step-desc">
+                    Click <strong>QR Code &amp; Share</strong> to generate a shareable URL and smartphone-scannable QR code that allows clients and financial partners to review your verified Business Passport instantly.
+                </p>
+            </div>
+
+            <div class="doc-step-box">
+                <h4 class="doc-step-title"><span class="doc-step-num">3</span> Download Trust Certificate</h4>
+                <p class="doc-step-desc">
+                    Download an official attested compliance summary PDF certificate containing your active trust rating, verification tier, and cryptographic evidence hashes for offline audit submissions.
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

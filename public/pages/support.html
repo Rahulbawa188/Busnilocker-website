@@ -36,7 +36,6 @@
         </nav>
         <div class="side-bottom">
             <a href="public-profile.html">Profile</a>
-            <a href="security.html">⚙ Settings</a>
             <a href="../index.html">↪ Logout</a>
         </div>
     </aside>
@@ -63,7 +62,7 @@
                     <h3 style="margin:10px 0 6px;">Need help?</h3>
                     <p class="muted" style="margin:0 0 16px;font-size:13.5px;line-height:1.5;">Browse step-by-step guides on verification tiers, tax compliance, and automated sharing rooms.</p>
                 </div>
-                <button class="btn outline btn-sm" onclick="openDocSupport()">Read Documentation</button>
+                <a href="documentation.html" class="btn outline btn-sm" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Read Documentation</a>
             </div>
 
             <!-- Card 2 -->
@@ -185,11 +184,7 @@
         }
 
         function openDocSupport() {
-            const faq = document.querySelector('.faq-accordion');
-            if (faq) {
-                faq.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                showToast('Viewing Ohana statutory documentation & verification FAQs', 'info');
-            }
+            window.location.href = 'documentation.html';
         }
 
         function openTicketForm() {
