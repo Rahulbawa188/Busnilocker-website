@@ -482,6 +482,8 @@ function initForms() {
 function initHeroSlider() {
   const slider = document.getElementById('heroSlider');
   if (!slider) return;
+  if (slider.dataset.initialized === 'true') return;
+  slider.dataset.initialized = 'true';
 
   const slides = slider.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.slider-dots .dot');

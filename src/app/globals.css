@@ -1552,7 +1552,12 @@ body.app {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 26px;
-    gap: 16px;
+    gap: 20px;
+}
+
+.app-header > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .app-header .eyebrow {
@@ -2418,6 +2423,18 @@ span.pending {
         padding: 24px 18px;
     }
 
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
     .welcome {
         flex-direction: column;
         align-items: flex-start;
@@ -2467,6 +2484,18 @@ span.pending {
     .app-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 14px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .header-actions .btn {
+        padding: 0 14px;
+        font-size: 13px;
     }
 
     .auth-card {
@@ -2488,6 +2517,8 @@ span.pending {
     font-size: 14px;
     color: var(--text-muted);
     font-weight: 400;
+    max-width: 640px;
+    line-height: 1.5;
 }
 
 .header-actions {
@@ -2495,6 +2526,36 @@ span.pending {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+@media (min-width: 861px) {
+    .header-actions {
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+    }
+}
+
+.header-actions .btn {
+    height: 44px;
+    padding: 0 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.header-actions .profile-chip {
+    height: 44px;
+    padding: 4px 14px 4px 5px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
 }
 
 /* Clean Search & Filter Bars */

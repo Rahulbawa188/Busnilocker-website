@@ -3,6 +3,47 @@
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
+function prepareIsolatedScript(rawScript) {
+  if (!rawScript || !rawScript.trim()) return '';
+
+  // Extract top-level function declarations (including async)
+  const funcRegex = /(?:^|\n)\s*(?:async\s+)?function\s+([a-zA-Z0-9_$]+)\s*\(/g;
+  const funcs = [];
+  let m;
+  while ((m = funcRegex.exec(rawScript)) !== null) {
+    if (!funcs.includes(m[1])) funcs.push(m[1]);
+  }
+
+  // Extract top-level variable declarations that may be needed globally
+  const varRegex = /(?:^|\n)\s*(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=/g;
+  const vars = [];
+  while ((m = varRegex.exec(rawScript)) !== null) {
+    if (!vars.includes(m[1])) vars.push(m[1]);
+  }
+
+  // 1. Hoisted exports to window: ensure inline HTML handlers (e.g. onclick="openUploadModal()") work immediately
+  const hoistedExports = funcs
+    .map(f => `try { if (typeof ${f} !== 'undefined') window.${f} = ${f}; } catch(e){}`)
+    .join('\n');
+
+  // 2. Post-execution exports: export variables and functions after execution
+  const postExports = [
+    ...funcs.map(f => `try { if (typeof ${f} !== 'undefined') window.${f} = ${f}; } catch(e){}`),
+    ...vars.map(v => `try { if (typeof ${v} !== 'undefined') window.${v} = ${v}; } catch(e){}`)
+  ].join('\n');
+
+  return `(function() {
+// 1. Hoisted function exports to window
+${hoistedExports}
+
+// 2. Main page script execution
+${rawScript}
+
+// 3. Post-execution exports
+${postExports}
+})();`;
+}
+
 export default function PageRenderer({ data }) {
   const containerRef = useRef(null);
   const router = useRouter();
@@ -39,31 +80,67 @@ export default function PageRenderer({ data }) {
       }
     }
 
-    // 2. Execute page-specific inline script in browser global context
-    let scriptEl = null;
+    // 2. Execute page-specific script safely with scope isolation and listener tracking
+    // This prevents "Identifier '...' has already been declared" and duplicate event listeners
+    const pageInitCallbacks = [];
+    const pageCleanupFns = [];
+    const activeIntervals = [];
+
     if (data.script && data.script.trim()) {
+      const origDocAddEventListener = document.addEventListener;
+      const origWinAddEventListener = window.addEventListener;
+      const origSetInterval = window.setInterval;
+
+      // Intercept document.addEventListener to capture DOMContentLoaded and track listeners for cleanup
+      document.addEventListener = function (type, listener, options) {
+        if (type === 'DOMContentLoaded' && typeof listener === 'function') {
+          pageInitCallbacks.push(listener);
+          return;
+        }
+        pageCleanupFns.push(() => {
+          document.removeEventListener(type, listener, options);
+        });
+        return origDocAddEventListener.call(document, type, listener, options);
+      };
+
+      // Intercept window.addEventListener to track listeners for cleanup
+      window.addEventListener = function (type, listener, options) {
+        pageCleanupFns.push(() => {
+          window.removeEventListener(type, listener, options);
+        });
+        return origWinAddEventListener.call(window, type, listener, options);
+      };
+
+      // Track intervals registered by the page script
+      window.setInterval = function (fn, ms, ...args) {
+        const id = origSetInterval.call(window, fn, ms, ...args);
+        activeIntervals.push(id);
+        return id;
+      };
+
       try {
-        scriptEl = document.createElement('script');
-        scriptEl.type = 'text/javascript';
-        scriptEl.setAttribute('data-ohana-script', data.slug);
-        scriptEl.text = data.script;
-        document.body.appendChild(scriptEl);
+        const isolatedScript = prepareIsolatedScript(data.script);
+        // Execute synchronously so all functions and state are defined immediately
+        (0, eval)(isolatedScript);
       } catch (err) {
         console.error(`[Ohana] Error executing script for ${data.slug}:`, err);
-        try {
-          (0, eval)(data.script);
-        } catch (evalErr) {
-          console.error(`[Ohana] Error executing script fallback for ${data.slug}:`, evalErr);
-        }
+      } finally {
+        document.addEventListener = origDocAddEventListener;
+        window.addEventListener = origWinAddEventListener;
+        window.setInterval = origSetInterval;
       }
+
+      // Execute captured page-specific init logic once now that the page DOM is rendered
+      pageInitCallbacks.forEach((initFn) => {
+        try {
+          initFn();
+        } catch (initErr) {
+          console.error(`[Ohana] Error running page initializer for ${data.slug}:`, initErr);
+        }
+      });
     }
 
-    // 3. Dispatch DOMContentLoaded to trigger registered listeners
-    try {
-      document.dispatchEvent(new Event('DOMContentLoaded'));
-    } catch (e) {}
-
-    // 4. Run global Ohana application initializers
+    // 3. Run global Ohana application initializers
     if (typeof window !== 'undefined') {
       try {
         if (window.enforceOhanaAuthGuard && !window.enforceOhanaAuthGuard()) {
@@ -86,16 +163,19 @@ export default function PageRenderer({ data }) {
       }
     }
 
-    // Cleanup when navigating away
+    // 4. Cleanup when navigating away: remove styles, event listeners, intervals, and lingering backdrops
     return () => {
       if (styleEl && styleEl.parentNode) {
         styleEl.parentNode.removeChild(styleEl);
       }
-      if (scriptEl && scriptEl.parentNode) {
-        scriptEl.parentNode.removeChild(scriptEl);
-      }
-      // Remove any lingering sidebar backdrops
-      const backdrops = document.querySelectorAll('.sidebar-backdrop');
+      pageCleanupFns.forEach((cleanup) => {
+        try {
+          cleanup();
+        } catch (e) {}
+      });
+      activeIntervals.forEach((id) => clearInterval(id));
+
+      const backdrops = document.querySelectorAll('.sidebar-backdrop, .modal-backdrop');
       backdrops.forEach(b => b.remove());
     };
   }, [data]);
@@ -107,6 +187,13 @@ export default function PageRenderer({ data }) {
 
     const href = link.getAttribute('href');
     if (!href) return;
+
+    // Trigger logout session cleanup if logout link is clicked
+    if (link.textContent.toLowerCase().includes('logout') || href === '/' || href.includes('index.html')) {
+      if (typeof window !== 'undefined' && window.logoutOhanaUser) {
+        window.logoutOhanaUser();
+      }
+    }
 
     // Skip external, fragment, or protocol links
     if (
