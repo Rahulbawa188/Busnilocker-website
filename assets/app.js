@@ -2178,31 +2178,38 @@ function bindSidebarLogoutLinks() {
 
 // Auth Guard: Enforce login requirement for protected dashboard & module pages
 function enforceOhanaAuthGuard() {
-    const curPath = window.location.pathname.split('/').pop().split('?')[0] || 'index.html';
+    const rawPath = window.location.pathname.split('?')[0] || '';
+    const curFile = rawPath.split('/').filter(Boolean).pop() || '';
+    const cleanSlug = curFile.replace(/\.html$/, '').toLowerCase();
 
-    const publicPages = [
+    const publicSlugs = [
         '',
-        'index.html',
-        'login.html',
-        'signup.html',
-        'onboarding.html',
-        'features.html',
-        'about.html',
-        'contact.html',
-        'security.html',
-        'public-profile.html'
+        'index',
+        'home',
+        'login',
+        'signup',
+        'features',
+        'about',
+        'contact',
+        'security',
+        'documentation'
     ];
 
-    const isProtected = !publicPages.includes(curPath) && curPath.endsWith('.html');
+    const isProtected = !publicSlugs.includes(cleanSlug);
     const isLoggedIn = Boolean(
         localStorage.getItem(OHANA_USER_LOGGED_IN_KEY) === 'true' &&
         localStorage.getItem(OHANA_CURRENT_USER_KEY)
     );
 
     if (isProtected && !isLoggedIn) {
+        const isNextApp = typeof window !== 'undefined' && (
+            !!document.querySelector('.ohana-nextjs-page-root') ||
+            !window.location.pathname.endsWith('.html')
+        );
         const isPagesDir = window.location.pathname.includes('/pages/');
-        const loginUrl = isPagesDir ? 'login.html' : 'pages/login.html';
-        const redir = encodeURIComponent(curPath + (window.location.search || ''));
+        const loginUrl = isNextApp ? '/login' : (isPagesDir ? 'login.html' : 'pages/login.html');
+        const targetRedir = isNextApp ? `/${cleanSlug}` : `${cleanSlug}.html`;
+        const redir = encodeURIComponent(targetRedir + (window.location.search || ''));
         window.location.replace(`${loginUrl}?redirect=${redir}`);
         return false;
     }
@@ -2216,9 +2223,14 @@ function initProtectedNavInterceptors() {
         localStorage.getItem(OHANA_CURRENT_USER_KEY)
     );
 
+    const isNextApp = typeof window !== 'undefined' && (
+        !!document.querySelector('.ohana-nextjs-page-root') ||
+        !window.location.pathname.endsWith('.html')
+    );
+
     const isRoot = !window.location.pathname.includes('/pages/');
-    const loginPath = isRoot ? 'pages/login.html' : 'login.html';
-    const dashPath = isRoot ? 'pages/dashboard.html' : 'dashboard.html';
+    const loginPath = isNextApp ? '/login' : (isRoot ? 'pages/login.html' : 'login.html');
+    const dashPath = isNextApp ? '/dashboard' : (isRoot ? 'pages/dashboard.html' : 'dashboard.html');
 
     // 1. Dynamic Header CTA updates if already logged in
     const loginNavLinks = document.querySelectorAll('.btn-nav-login');
@@ -2237,15 +2249,17 @@ function initProtectedNavInterceptors() {
     }
 
     // 2. Configure PDP module cards, CTAs, and protected footer links
-    const publicPages = [
-        'index.html',
-        'login.html',
-        'signup.html',
-        'features.html',
-        'about.html',
-        'contact.html',
-        'security.html',
-        'public-profile.html'
+    const publicSlugs = [
+        '',
+        'index',
+        'home',
+        'login',
+        'signup',
+        'features',
+        'about',
+        'contact',
+        'security',
+        'documentation'
     ];
 
     const targets = document.querySelectorAll('.pdp-card, .btn-enterprise-primary, .hero-actions-group a, .fd-nav-col a');
@@ -2262,16 +2276,19 @@ function initProtectedNavInterceptors() {
             el.setAttribute('data-orig-href', origHref);
         }
 
-        const targetFile = origHref.split('/').pop().split('?')[0];
-        const isProtectedTarget = !publicPages.includes(targetFile) && targetFile.endsWith('.html');
+        const rawClean = origHref.split('?')[0].split('#')[0].trim();
+        const targetSeg = rawClean.split('/').filter(Boolean).pop() || '';
+        const targetSlug = targetSeg.replace(/\.html$/, '').toLowerCase();
+        const isProtectedTarget = !publicSlugs.includes(targetSlug);
 
         if (isProtectedTarget) {
+            const cleanTarget = isNextApp ? `/${targetSlug}` : (isRoot ? `pages/${targetSlug}.html` : `${targetSlug}.html`);
             if (!isLoggedIn) {
                 // Route unauthenticated visitors to login with target redirect parameter
-                el.href = `${loginPath}?redirect=${encodeURIComponent(targetFile)}`;
+                el.href = `${loginPath}?redirect=${encodeURIComponent(cleanTarget)}`;
             } else {
                 // Restore direct protected module target when authenticated
-                el.href = origHref;
+                el.href = cleanTarget;
             }
         }
     });

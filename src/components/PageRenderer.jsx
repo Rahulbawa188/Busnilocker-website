@@ -51,6 +51,34 @@ export default function PageRenderer({ data }) {
   useEffect(() => {
     if (!data) return;
 
+    // Immediate auth check for protected routes in Next.js
+    const currentSlug = (data.slug || '').toLowerCase();
+    const publicSlugs = [
+      '',
+      'home',
+      'index',
+      'login',
+      'signup',
+      'features',
+      'about',
+      'contact',
+      'security',
+      'documentation'
+    ];
+    const isProtected = !publicSlugs.includes(currentSlug);
+    const isLoggedIn = typeof window !== 'undefined' && Boolean(
+      localStorage.getItem('ohana_user_logged_in') === 'true' &&
+      localStorage.getItem('ohana_current_user')
+    );
+
+    if (isProtected && !isLoggedIn) {
+      const targetParam = '/' + (currentSlug === 'company-assets' ? 'company-assets' : currentSlug);
+      const queryPart = typeof window !== 'undefined' ? window.location.search : '';
+      const redirParam = encodeURIComponent(targetParam + queryPart);
+      router.replace(`/login?redirect=${redirParam}`);
+      return;
+    }
+
     // 1. Synchronize document title and body attributes
     if (data.title) {
       document.title = data.title;
@@ -188,8 +216,10 @@ export default function PageRenderer({ data }) {
     const href = link.getAttribute('href');
     if (!href) return;
 
-    // Trigger logout session cleanup if logout link is clicked
-    if (link.textContent.toLowerCase().includes('logout') || href === '/' || href.includes('index.html')) {
+    // Trigger logout session cleanup only if an explicit logout link is clicked
+    const linkText = link.textContent.trim().toLowerCase();
+    const isLogoutLink = linkText.includes('logout') || link.getAttribute('data-action') === 'logout';
+    if (isLogoutLink) {
       if (typeof window !== 'undefined' && window.logoutOhanaUser) {
         window.logoutOhanaUser();
       }
@@ -221,7 +251,31 @@ export default function PageRenderer({ data }) {
     if (cleanPath === '/index') cleanPath = '/';
     if (cleanPath === '/assets' || cleanPath === '/pages/assets') cleanPath = '/company-assets';
 
-    const finalUrl = queryPart ? `${cleanPath}?${queryPart}` : cleanPath;
+    const targetSlug = cleanPath.replace(/^\//, '').toLowerCase();
+    const publicSlugs = [
+      '',
+      'index',
+      'login',
+      'signup',
+      'features',
+      'about',
+      'contact',
+      'security',
+      'documentation'
+    ];
+    const isPublic = publicSlugs.includes(targetSlug);
+
+    const isLoggedIn = typeof window !== 'undefined' && Boolean(
+      localStorage.getItem('ohana_user_logged_in') === 'true' &&
+      localStorage.getItem('ohana_current_user')
+    );
+
+    let finalUrl = queryPart ? `${cleanPath}?${queryPart}` : cleanPath;
+
+    // If destination requires authentication and user is not logged in, prompt to log in first
+    if (!isPublic && !isLoggedIn && cleanPath !== '/login') {
+      finalUrl = `/login?redirect=${encodeURIComponent(finalUrl)}`;
+    }
 
     e.preventDefault();
     router.push(finalUrl);
